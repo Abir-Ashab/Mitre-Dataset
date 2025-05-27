@@ -1,0 +1,2 @@
+- Just upload an exe file **“WebBrowserPassView”** in **“E:\Hacking\Web Browser Password View”** via RAT's **"upload and execute the command"**.
+- Then open the desktop via RAT and see the passwords.
