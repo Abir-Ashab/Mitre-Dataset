@@ -15,20 +15,20 @@
 * Download: [https://www.elastic.co/downloads/elasticsearch](https://www.elastic.co/downloads/elasticsearch)
 * Extract the zip.
 * Replace the **config/elasticsearch.yml** with the following:
-    ```yml
-    xpack.security.enabled: false
-    xpack.security.enrollment.enabled: true
-    xpack.security.http.ssl:
-    enabled: false
-    keystore.path: certs/http.p12
-    xpack.security.transport.ssl:
-    enabled: true
-    verification_mode: certificate
-    keystore.path: certs/transport.p12
-    truststore.path: certs/transport.p12
-    cluster.initial_master_nodes: ["DESKTOP-NCN90P2"]
-    http.host: 0.0.0.0
-    ```
+```yml
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: true
+xpack.security.http.ssl:
+enabled: false
+keystore.path: certs/http.p12
+xpack.security.transport.ssl:
+enabled: true
+verification_mode: certificate
+keystore.path: certs/transport.p12
+truststore.path: certs/transport.p12
+cluster.initial_master_nodes: ["DESKTOP-NCN90P2"]
+http.host: 0.0.0.0
+```
 
 * Open a terminal (PowerShell or CMD), navigate to the bin folder:
 
@@ -46,10 +46,10 @@ or click on the file, and click **run as administrator**
 * Download: [https://www.elastic.co/downloads/kibana](https://www.elastic.co/downloads/kibana)
 * Extract it.
 * Replace the **config/elasticsearch.yml** with the following:
-    ```yml
-    server.host: "0.0.0.0"
-    server.port: 5601
-    elasticsearch.hosts: ["http://localhost:9200"]
+```yml
+server.host: "0.0.0.0"
+server.port: 5601
+elasticsearch.hosts: ["http://localhost:9200"]
     ```
 * Run:
 
