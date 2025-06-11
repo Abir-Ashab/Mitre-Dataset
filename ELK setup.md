@@ -73,30 +73,36 @@ or click on the file, and click **run as administrator**
 
 #### 2.1 Download Filebeat
 
-* Download: [https://www.elastic.co/downloads/beats/filebeat](https://www.elastic.co/downloads/beats/filebeat)
+* Download: [https://www.elastic.co/downloads/beats/filebeat](https://www.elastic.co/downloads/beats/filebeat) as zip from dropdown
 * Extract it, e.g., `C:\filebeat`.
 
 #### 2.2 Enable Windows Event Log Module
 
-Open PowerShell in the Filebeat folder:
-
-```powershell
-cd C:\filebeat
-.\filebeat.exe modules enable windows
-```
 
 #### 2.3 Configure Filebeat
 
 Edit `filebeat.yml` in Notepad or VS Code:
 
 ```yaml
-# Output to Elasticsearch
-output.elasticsearch:
-  hosts: ["localhost:9200"]
+filebeat.inputs:
+  - type: winlog
+    enabled: true
+    event_logs:
+      - name: Application
+      - name: Security
+      - name: System
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
 
-# Optional: to visualize dashboards in Kibana
+output.elasticsearch:
+  hosts: ["http://localhost:9200"]
+
 setup.kibana:
-  host: "localhost:5601"
+  host: "http://localhost:5601"
+
+setup.dashboards.enabled: true
+
 ```
 
 (If you want to use Logstash instead of Elasticsearch, just switch the `output.elasticsearch` block with `output.logstash`.)
@@ -154,3 +160,4 @@ filebeat.inputs:
 ```
 
 ---
+
