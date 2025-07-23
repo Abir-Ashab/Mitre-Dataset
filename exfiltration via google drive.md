@@ -155,7 +155,7 @@ Your file (e.g., `secret.txt`) should now appear in the root of your Google Driv
 * Start the playit.gg both from homescreen and the playit-0.9.3-signed from **E:\Hacking\Tools\PlayIt.gg**
 * E.g., start the server from **E:\Hacking\rclone-v1.69.2-windows-amd64\rclone-payload** :
    ```bash
-   python -m http.server 1335
+   python -m http.server 8000
    ```
 * Then do the following:
   ```powershall
