@@ -50,9 +50,9 @@ or click on the file, and click **run as administrator**
 server.host: "0.0.0.0"
 server.port: 5601
 elasticsearch.hosts: ["http://localhost:9200"]
-    ```
-* Run:
+```
 
+* Run:
 ```sh
 cd C:\kibana\bin
 kibana.bat
@@ -160,4 +160,5 @@ filebeat.inputs:
 ```
 
 ---
+
 
