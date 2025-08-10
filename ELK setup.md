@@ -22,7 +22,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
 3. **Install Elasticsearch as a Service**:
    - Open PowerShell as Administrator and navigate to the Elasticsearch bin directory:
      ```powershell
-     cd "E:\Hacking\ELK Stack\elasticsearch-9.0.2"
+     cd "E:\Hacking\ELK Stack\elasticsearch-9.0.2\bin"
      ```
    - Run the service installation script:
      ```powershell
@@ -247,3 +247,4 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Consider a multi-node setup for high availability in production environments.
 
 ---
+
