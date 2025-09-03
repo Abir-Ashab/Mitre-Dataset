@@ -167,6 +167,68 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
      ```
      Find a recommended configuration file from [SwiftOnSecurity’s GitHub](https://github.com/SwiftOnSecurity/sysmon-config).
 
+     I used the following:
+     ```xml
+     <Sysmon schemaversion="4.81">
+        <EventFiltering>
+          <RuleGroup name="" groupRelation="or">
+            <ProcessCreate onmatch="exclude">
+              <Image condition="is">C:\Windows\System32\svchost.exe</Image>
+              <Image condition="is">C:\Windows\System32\csrss.exe</Image>
+              <Image condition="is">C:\Windows\System32\smss.exe</Image>
+              <Image condition="is">C:\Windows\System32\winlogon.exe</Image>
+              <Image condition="is">C:\Windows\System32\services.exe</Image>
+              <Image condition="is">C:\Windows\System32\lsass.exe</Image>
+              <Image condition="is">C:\Windows\System32\wininit.exe</Image>
+              <Image condition="is">C:\Windows\System32\dwm.exe</Image>
+              <Image condition="is">C:\Windows\System32\taskhostw.exe</Image>
+            </ProcessCreate>
+          </RuleGroup>
+          <RuleGroup name="" groupRelation="or">
+            <NetworkConnect onmatch="include">
+              <DestinationPort name="Common Ports" condition="is">80</DestinationPort>
+              <DestinationPort name="Common Ports" condition="is">443</DestinationPort>
+              <DestinationPort name="Common Ports" condition="is">3389</DestinationPort>
+              <DestinationPort name="Common Ports" condition="is">445</DestinationPort>
+            </NetworkConnect>
+          </RuleGroup>
+          <RuleGroup name="" groupRelation="or">
+            <FileCreate onmatch="include">
+              <TargetFilename condition="contains">\AppData\Local\Temp\</TargetFilename>
+              <TargetFilename condition="contains">\Downloads\</TargetFilename>
+              <TargetFilename condition="end with">.exe</TargetFilename>
+              <TargetFilename condition="end with">.dll</TargetFilename>
+            </FileCreate>
+          </RuleGroup>
+          <RuleGroup name="" groupRelation="or">
+            <RegistryEvent onmatch="include">
+              <TargetObject condition="contains">HKLM\Software\Microsoft\Windows\CurrentVersion\Run</TargetObject>
+              <TargetObject condition="contains">HKCU\Software\Microsoft\Windows\CurrentVersion\Run</TargetObject>
+            </RegistryEvent>
+          </RuleGroup>
+          <RuleGroup name="" groupRelation="or">
+            <FileDelete onmatch="include">
+              <TargetFilename name="T1070.004" condition="contains">\Users\</TargetFilename>
+              <TargetFilename name="T1070.004" condition="contains">\AppData\Local\Temp\</TargetFilename>
+              <TargetFilename name="T1070.004" condition="contains">\Downloads\</TargetFilename>
+              <Image name="T1070.004" condition="contains">\AppData\Local\Temp\</Image>
+              <Image name="T1070.004" condition="contains">Revenge-RAT</Image>
+              <TargetFilename name="T1070.004" condition="end with">.exe</TargetFilename>
+              <TargetFilename name="T1070.004" condition="end with">.dll</TargetFilename>
+              <TargetFilename name="T1070.004" condition="end with">.sys</TargetFilename>
+            </FileDelete>
+          </RuleGroup>
+          <RuleGroup name="" groupRelation="or">
+            <FileDelete onmatch="exclude">
+              <Image condition="is">C:\Windows\System32\svchost.exe</Image>
+              <Image condition="contains">explorer.exe</Image>
+              <TargetFilename condition="contains">\Temp\~</TargetFilename>
+            </FileDelete>
+          </RuleGroup>
+        </EventFiltering>
+      </Sysmon>
+     ```
+
 #### **Step 6: Analyze Logs in Kibana**
 1. **Access Kibana**:
    - Navigate to `http://localhost:5601` and log in with the `elastic` user and password.
@@ -176,6 +238,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Import the Winlogbeat dashboard from the [Elastic downloads page](https://www.elastic.co/downloads/beats/winlogbeat) or search for it in “Kibana Apps.”
    - Use the dashboard to monitor security events like logon failures (Event ID 4625), new service installations (Event ID 4798), or suspicious PowerShell activity (Sysmon Event ID 3).
 ---
+
 
 
 
