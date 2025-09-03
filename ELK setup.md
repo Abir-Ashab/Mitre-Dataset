@@ -52,11 +52,23 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Open `E:\Hacking\ELK Stack\kibana\config\kibana.yml` in a text editor.
    - Add or modify the following settings:
      ```yaml
-     server.port: 5601
-     server.host: "127.0.0.1"
-     elasticsearch.hosts: ["http://localhost:9200"]
-     elasticsearch.username: "elastic"
-     elasticsearch.password: "your_elastic_password"
+      server.port: 5601
+      server.host: "127.0.0.1"
+      
+      elasticsearch.hosts: ["http://localhost:9200"]
+      # elasticsearch.username: "elastic"
+      # elasticsearch.password: "rvrveOxs5wrmyI9Ld0hV"
+      
+      # Use service account token instead
+      elasticsearch.serviceAccountToken: "AAEAAWVsYXN0aWMva2liYW5hL2tpYmFuYS10b2tlbjpnVF9FS0tzeFRkaUQ5cDBoVTEtQkRn"
+      
+      # Encryption keys (replace with your own generated keys)
+      xpack.encryptedSavedObjects.encryptionKey: 50efe4f8b8bb7208a04a35b6fffb7d3b
+      xpack.reporting.encryptionKey: b4d79a09e9e00c78e4de198c6e2305ab
+      xpack.security.encryptionKey: b2a64a1396097cce56e95901646cea3e
+      
+      # Optional: Increase logging
+      logging.root.level: info
      ```
      By default there is no username, password. So no worries.
 
@@ -250,5 +262,6 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Consider a multi-node setup for high availability in production environments.
 
 ---
+
 
 
