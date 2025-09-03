@@ -229,6 +229,16 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
       </Sysmon>
      ```
 
+     To update `sysmonconfig.xml` use this command:
+     ```powershell
+     Sysmon64.exe -c sysmonconfig-export.xml
+     ```
+
+     To see the current `xml` use this:
+     ```powershell
+     Sysmon64.exe -c
+     ```
+
 #### **Step 6: Analyze Logs in Kibana**
 1. **Access Kibana**:
    - Navigate to `http://localhost:5601` and log in with the `elastic` user and password.
@@ -238,6 +248,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Import the Winlogbeat dashboard from the [Elastic downloads page](https://www.elastic.co/downloads/beats/winlogbeat) or search for it in “Kibana Apps.”
    - Use the dashboard to monitor security events like logon failures (Event ID 4625), new service installations (Event ID 4798), or suspicious PowerShell activity (Sysmon Event ID 3).
 ---
+
 
 
 
