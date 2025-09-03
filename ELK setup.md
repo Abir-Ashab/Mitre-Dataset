@@ -149,13 +149,15 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Open `E:\Hacking\ELK Stack\winlogbeat\winlogbeat.yml` in a text editor.
    - Configure it to collect Windows security event logs and send them to Logstash:
      ```yaml
-     winlogbeat.event_logs:
-       - name: Security
-         ignore_older: 72h
-       - name: System
-       - name: Application
-     output.logstash:
-       hosts: ["127.0.0.1:5044"]
+      winlogbeat.event_logs:
+        - name: Security
+          ignore_older: 72h
+        - name: System
+        - name: Application
+        - name: Microsoft-Windows-Sysmon/Operational
+      
+      output.logstash:
+        hosts: ["127.0.0.1:5044"]
      ```
    - Save the file.
 
@@ -262,6 +264,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Consider a multi-node setup for high availability in production environments.
 
 ---
+
 
 
 
