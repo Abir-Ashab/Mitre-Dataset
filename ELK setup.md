@@ -32,7 +32,10 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
      ```powershell
      .\elasticsearch-service.bat start
      ```
-   - During the first startup, Elasticsearch generates a default password for the `elastic` user. Check the output in the PowerShell window or the logs in `E:\Hacking\ELK Stack\elasticsearch\logs` for the password. Save it for later use.
+   - Get the password:
+     ```powershell
+      .\elasticsearch-reset-password.bat -u elastic
+     ```
      - Example output: `Password for the elastic user: Cd8FuiCptd0mJlNGQSZJ`.
 
 4. **Verify Elasticsearch**:
@@ -247,4 +250,5 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Consider a multi-node setup for high availability in production environments.
 
 ---
+
 
