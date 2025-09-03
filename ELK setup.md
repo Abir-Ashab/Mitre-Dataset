@@ -187,21 +187,6 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
      ```
      Find a recommended configuration file from [SwiftOnSecurity’s GitHub](https://github.com/SwiftOnSecurity/sysmon-config).
 
-2. **Update Winlogbeat Configuration**:
-   - Add the Sysmon event log channel to `winlogbeat.yml`:
-     ```yaml
-     winlogbeat.event_logs:
-       - name: Security
-         ignore_older: 72h
-       - name: System
-       - name: Application
-       - name: Microsoft-Windows-Sysmon/Operational
-     ```
-   - Restart the Winlogbeat service:
-     ```powershell
-     Restart-Service winlogbeat
-     ```
-
 #### **Step 6: Analyze Logs in Kibana**
 1. **Access Kibana**:
    - Navigate to `http://localhost:5601` and log in with the `elastic` user and password.
@@ -224,28 +209,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
      - Suspicious network connections logged by Sysmon.
    - Example rule: Create a query for `event.code: 4625` with a threshold of 5 occurrences in 10 minutes to trigger an alert.
 
-#### **Step 7: Secure the ELK Stack**
-1. **Enable SSL/TLS**:
-   - Generate certificates for Elasticsearch and Kibana using the `elasticsearch-certutil` tool:
-     ```powershell
-     cd E:\Hacking\ELK Stack\elasticsearch\bin
-     .\elasticsearch-certutil http
-     ```
-     Follow the prompts to generate certificates and place them in `E:\Hacking\ELK Stack\elasticsearch\config\certs`.
-   - Update `elasticsearch.yml` and `kibana.yml` to use these certificates, as described in [Elastic’s security documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-basic-setup.html).
-
-2. **Configure Access Controls**:
-   - Create additional users in Kibana under “Stack Management” > “Users” to restrict access.
-   - Use NGINX as a reverse proxy for Kibana to add an extra layer of security, as described in [Logit.io’s guide](https://logit.io/blog/post/complete-guide-to-elk-2024).[](https://logit.io/blog/post/elk-stack-guide/)
-
-3. **Enable Audit Logging**:
-   - In `elasticsearch.yml`, enable audit logging:
-     ```yaml
-     xpack.security.audit.enabled: true
-     ```
-   - This logs all user and system activity for compliance and monitoring.
-
-#### **Step 8: Test and Monitor**
+#### **Step 7: Test and Monitor**
 1. **Generate Test Events**:
    - Trigger security events (e.g., failed logins or PowerShell commands) to ensure logs are captured.
    - Example: Run a PowerShell command to simulate malicious activity:
@@ -264,6 +228,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Consider a multi-node setup for high availability in production environments.
 
 ---
+
 
 
 
