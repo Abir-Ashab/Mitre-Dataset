@@ -96,7 +96,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
 2. **Create a Logstash Configuration File**:
    - Create a file named `logstash.conf` in `E:\Hacking\ELK Stack\logstash\config`.
    - Add a basic configuration to process logs from Winlogbeat and send them to Elasticsearch:
-     ```conf
+     ```yaml
      input {
        beats {
          port => 5044
@@ -228,6 +228,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Consider a multi-node setup for high availability in production environments.
 
 ---
+
 
 
 
