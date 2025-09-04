@@ -155,8 +155,15 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
      Start-Service winlogbeat
      ```
 
-4. **Verify Winlogbeat**:
-   - Check the logs in `E:\Hacking\ELK Stack\winlogbeat\logs` to ensure Winlogbeat is sending data to Logstash without errors.
+     If you find that less data is coming, you stop the service using this:
+     ```powershell
+     Stop-Service winlogbeat
+     ```
+
+     Then run this:
+     ```powershell
+     .\winlogbeat.exe -e -c winlogbeat.yml
+     ```
 
 #### **Step 5: Enhance Security Monitoring with Sysmon (Optional but Recommended)**
 1. **Install Sysmon**:
@@ -248,6 +255,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Import the Winlogbeat dashboard from the [Elastic downloads page](https://www.elastic.co/downloads/beats/winlogbeat) or search for it in “Kibana Apps.”
    - Use the dashboard to monitor security events like logon failures (Event ID 4625), new service installations (Event ID 4798), or suspicious PowerShell activity (Sysmon Event ID 3).
 ---
+
 
 
 
