@@ -19,7 +19,7 @@
 **Step 2: Install Browser Extension**
 
 1. For **Chrome**: [ActivityWatch Extension - Chrome Web Store](https://chromewebstore.google.com/detail/activitywatch-web-watcher/nglaklhklhcoonedhgnpgddginnjdadi)
-2. After installing, **click the extension icon** and allow permissions when prompted. And manually add from browser like this : ![alt text](<Screenshot (696).png>)
+2. After installing, **click the extension icon** and allow permissions when prompted. And manually add from browser like this :  
 
 ### Output and Export
 
@@ -29,6 +29,7 @@
    * Title of the page
    * Duration
 
-2. Click the **Raw Data Button**.  Then export the highlighted bucket![alt text](<Screenshot (697).png>)
-3. Then open the bucket file and you will see json formatted data.
-4. Use [https://jsonlint.com/] (https://jsonlint.com/) to format the json nicely.
+2. Click the **Raw Data Button**.  Then export the highlighted bucket.
+4. Then open the bucket file and you will see json formatted data.
+5. Use [https://jsonlint.com/] (https://jsonlint.com/) to format the json nicely.
+
