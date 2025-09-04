@@ -1,4 +1,4 @@
-Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system to observe Windows logs for security threats involves several steps. The process includes installing the core ELK components and configuring a log shipper like Winlogbeat to collect and send Windows event logs to the stack for analysis. Below is a step-by-step guide to help you install and configure the ELK Stack on a Windows Server (e.g., Windows Server 2019 or later) for monitoring security threats. This guide assumes you are starting from scratch and focuses on a basic setup suitable for security log analysis.
+Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system to observe Windows logs for security threats involves several steps. The process includes installing the core ELK components and configuring a log shipper like Winlogbeat to collect and send Windows event logs to the stack for analysis. Below is a step-by-step guide to help you install and configure the ELK Stack on a Windows Server (e.g., Windows Server 2019 or later) for monitoring security threats. This guide assumes you are starting from scratch and focuses on a basic setup suitable for security log analysis. 
 
 ### **Step-by-Step Installation Guide**
 
@@ -255,6 +255,17 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
    - Import the Winlogbeat dashboard from the [Elastic downloads page](https://www.elastic.co/downloads/beats/winlogbeat) or search for it in “Kibana Apps.”
    - Use the dashboard to monitor security events like logon failures (Event ID 4625), new service installations (Event ID 4798), or suspicious PowerShell activity (Sysmon Event ID 3).
 ---
+
+#### **Step 7: Setup Wireshark**
+1. Download Wireshark from here [wireshark](https://www.wireshark.org/download.html)
+2. Add the path of Wireshark (e.g, C:\Program Files\Wireshark`) in the environment variable
+
+#### **Step 8: Setup Activity Watch**
+1. Download Wireshark from here [activity watch]([https://www.wireshark.org/download.html](https://chromewebstore.google.com/detail/activitywatch-web-watcher/nglaklhklhcoonedhgnpgddginnjdadi))
+2. Click and run the `aw-qt.exe` file.
+3. Go to [timeline](http://localhost:5600/#/timeline) if you want to see the browser log.
+
+
 
 
 
