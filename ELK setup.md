@@ -113,9 +113,27 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
      }
      ```
      Replace `your_elastic_password` with the Elasticsearch password, if you have any. No password needed for my device, just paste the above.
+3. **Install nssm**
+   - Download [nssm](https://nssm.cc/download) and go to `C:\ELK\nssm-2.24\win64` in powershell.
+   - Install the Service:
+   ```powershell
+   .\nssm.exe install Logstash
+   ```
+   In the NSSM GUI's Application Tab:
+   - Path:
+      ```cmd
+      C:\ELK\logstash-9.1.3\bin\logstash.bat
+      ```
+   - Startup directory:
+      ```cmd
+      C:\ELK\logstash-9.1.3\bin
+      ```
+   - Arguments:
+      ```cmd
+      -f "C:\ELK\logstash-9.1.3\config\logstash.conf"
+      ```
 
-     
-   - Run Logstash in CMD(Amdin):
+   If it doesn't work as a service using `nssm`, then run Logstash in CMD(Amdin):
      ```powershell
      .\logstash.bat -f "C:\ELK\logstash-9.1.3\config\logstash.conf"
      ```
@@ -264,6 +282,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
 1. Download Wireshark from here [activity watch]([https://www.wireshark.org/download.html](https://chromewebstore.google.com/detail/activitywatch-web-watcher/nglaklhklhcoonedhgnpgddginnjdadi))
 2. Click and run the `aw-qt.exe` file.
 3. Go to [timeline](http://localhost:5600/#/timeline) if you want to see the browser log.
+
 
 
 
