@@ -1,0 +1,7 @@
+requests
+pytz
+elasticsearch
+python-dotenv
+opencv-python
+numpy
+pywin32
