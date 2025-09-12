@@ -5,6 +5,7 @@ import sys
 import re
 from datetime import datetime
 import ctypes
+from upload_to_gdrive import upload_file_from_path
 
 def is_admin():
     """Check if the script is running with administrator privileges on Windows."""
@@ -30,38 +31,53 @@ def get_env_or_fail(var):
         sys.exit(1)
     return value
 
-def capture_packets(interface, output_folder, timestamp, duration=None):
-    """Capture packets using tshark for the specified duration and save with provided timestamp."""
-    os.makedirs(output_folder, exist_ok=True)
-    output_file = os.path.join(output_folder, f"packet_capture_{timestamp}.pcap")
+def capture_packets(interface, folder_id, timestamp, duration=None):
+    """Capture packets using tshark for the specified duration and upload to Google Drive."""
+    
+    # Create temporary directory for local capture
+    temp_dir = "temp_captures"
+    os.makedirs(temp_dir, exist_ok=True)
+    temp_file = os.path.join(temp_dir, f"packet_capture_{timestamp}.pcap")
+    
     if duration is None:
         duration = int(get_env_or_fail("PACKET_CAPTURE_DURATION_MINUTES")) * 60
     tshark_cmd = [
         'tshark',
         '-i', interface,
         '-a', f'duration:{duration}',
-        '-w', output_file
+        '-w', temp_file
     ]
     
     print(f"Starting capture for {duration} seconds on interface: {interface}")
-    print(f"Output file: {output_file}")
+    print(f"Temporary file: {temp_file}")
     print("Capture in progress... (this will take some time)")
     
     try:
         # Don't capture output so we can see tshark's progress
         result = subprocess.run(tshark_cmd, check=True)
-        print(f"Saved packet capture: {output_file}")
+        print(f"Local capture completed: {temp_file}")
         
         # Check if file was created and has content
-        if os.path.exists(output_file):
-            file_size = os.path.getsize(output_file)
+        if os.path.exists(temp_file):
+            file_size = os.path.getsize(temp_file)
             print(f"File size: {file_size} bytes")
             if file_size > 0:
                 print("✓ Packet capture successful!")
+                
+                # Upload to Google Drive
+                filename = f"packet_capture_{timestamp}.pcap"
+                upload_file_from_path(temp_file, folder_id, filename)
+                
+                # Clean up temporary file
+                os.remove(temp_file)
+                print(f"Uploaded and cleaned up: {filename}")
+                return filename
             else:
                 print("⚠ Warning: Capture file is empty - no packets captured")
+                os.remove(temp_file)
+                return None
         
-        return output_file
+        return None
     except subprocess.CalledProcessError as e:
         print(f"Error during packet capture: {e}")
         print("Possible issues:")
@@ -101,16 +117,19 @@ if __name__ == "__main__":
         
         # If called from main.py with arguments, create an error file instead of exiting
         if len(sys.argv) > 3:
-            output_folder = sys.argv[1]
+            folder_id = sys.argv[1]  # Now Google Drive folder ID
             timestamp = sys.argv[2]
-            os.makedirs(output_folder, exist_ok=True)
-            error_file = os.path.join(output_folder, f"packet_capture_error_{timestamp}.txt")
-            with open(error_file, 'w') as f:
-                f.write("PACKET CAPTURE FAILED\n")
-                f.write("Reason: Administrator privileges required\n")
-                f.write(f"Attempted at: {datetime.now()}\n")
-                f.write("Solution: Run the main script as Administrator\n")
-            print(f"Error logged to: {error_file}")
+            
+            # Upload error message to Google Drive
+            from upload_to_gdrive import upload_file_from_content
+            error_content = f"""PACKET CAPTURE FAILED
+Reason: Administrator privileges required
+Attempted at: {datetime.now()}
+Solution: Run the main script as Administrator
+"""
+            filename = f"packet_capture_error_{timestamp}.txt"
+            upload_file_from_content(error_content, folder_id, filename, 'text/plain')
+            print(f"Error uploaded to Google Drive: {filename}")
             sys.exit(1)
         else:
             print("Please run PowerShell or Command Prompt as Administrator and try again.")
@@ -123,12 +142,12 @@ if __name__ == "__main__":
             sys.exit(1)
     
     if len(sys.argv) > 3:
-        output_folder = sys.argv[1]
+        folder_id = sys.argv[1]  # Now Google Drive folder ID
         timestamp = sys.argv[2]
         interface_num = sys.argv[3]
         interfaces = get_network_interfaces()
         # Use the interface number directly instead of parsing device path
-        capture_packets(interface_num, output_folder, timestamp)
+        capture_packets(interface_num, folder_id, timestamp)
     else:
         interfaces = get_network_interfaces()
         print("Available network interfaces:")

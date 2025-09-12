@@ -1,5 +1,8 @@
 monitoring_outputs
-packet_captures
-screen_recordings
+temp_captures
+temp_recordings
+__pycache__
 system_logs
 .env
+credentials.json
+token.pickle
