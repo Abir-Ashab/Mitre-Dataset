@@ -31,14 +31,6 @@ def screen_capture(folder_id, timestamp):
     fps = float(get_env_or_fail("SCREEN_FPS"))
     segment_duration = int(get_env_or_fail("SCREEN_SEGMENT_DURATION_MINUTES")) * 60
 
-    # Check actual screen size and adjust if needed
-    actual_width, actual_height = get_actual_screen_size()
-    if actual_width < screen_width or actual_height < screen_height:
-        print(f"Warning: Configured resolution {screen_width}x{screen_height} exceeds actual screen {actual_width}x{actual_height}")
-        screen_width = min(screen_width, actual_width)
-        screen_height = min(screen_height, actual_height)
-        print(f"Adjusted to: {screen_width}x{screen_height}")
-
     # Create temporary local file
     temp_dir = "temp_recordings"
     os.makedirs(temp_dir, exist_ok=True)
