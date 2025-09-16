@@ -53,7 +53,7 @@ export const attackSteps = {
     "Watering hole attack on compromised website",
     "USB drop attack with malicious payload",
   ],
-  operationAfterInitialAccess: ["Delete files", "Edit files"],
+  operationAfterInitialAccess: ["Delete/Edit files"],
   credentialHarvesting: ["RAT + WebBrowserPassView credential extraction"],
   attackerControl: [
     "Immediate control after compromise (RAT activation)",
