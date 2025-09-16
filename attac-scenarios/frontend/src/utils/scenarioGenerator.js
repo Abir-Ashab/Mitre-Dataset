@@ -73,7 +73,7 @@ export const generateAllScenarios = () => {
     });
 
   // Generate alternative scenarios (limited to 50 total)
-  const maxAlternativeScenarios = Math.min(50, 250 - scenarios.length);
+  const maxAlternativeScenarios = Math.min(50, 2000 - scenarios.length);
   const remainingInitialAccess = attackSteps.initialAccess.slice(
     maxInitialAccessForPrimary
   );
@@ -81,7 +81,7 @@ export const generateAllScenarios = () => {
   remainingInitialAccess
     .slice(0, Math.min(5, remainingInitialAccess.length))
     .forEach((initialAccess) => {
-      if (scenarios.length >= 250) return;
+      if (scenarios.length >= 2000) return;
 
       // Create alternative scenarios with different combinations
       const alternativeSteps = [
@@ -90,9 +90,9 @@ export const generateAllScenarios = () => {
         "finalPayload",
       ];
       alternativeSteps.forEach((stepKey) => {
-        if (scenarios.length >= 250) return;
+        if (scenarios.length >= 2000) return;
         attackSteps[stepKey].forEach((variation) => {
-          if (scenarios.length >= 250) return;
+          if (scenarios.length >= 2000) return;
           scenarios.push({
             id: scenarioId++,
             type: "Alternative",
@@ -105,5 +105,5 @@ export const generateAllScenarios = () => {
       });
     });
 
-  return scenarios.slice(0, 250); // Ensure we don't exceed 250 scenarios
+  return scenarios.slice(0, 2000); // Ensure we don't exceed 2000 scenarios
 };
