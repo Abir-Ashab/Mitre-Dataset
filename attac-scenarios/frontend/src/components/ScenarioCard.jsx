@@ -9,20 +9,28 @@ const ScenarioCard = ({
   loading,
   isMultiSelectMode = false,
   isSelected = false,
-  onSelect
+  onSelect,
+  onViewDetails
 }) => {
   const scenarioSteps = priorityStepOrder.filter(key => scenario[key]);
   
   return (
     <div 
-      className={`relative rounded-xl border-2 transition-all duration-300 hover:shadow-xl group ${
+      className={`relative rounded-xl border-2 transition-all duration-300 hover:shadow-xl group cursor-pointer ${
         isSelected 
           ? 'border-blue-500 bg-blue-50 shadow-lg' 
           : scenario.type === 'Alternative' 
             ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 hover:border-orange-400' 
             : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 hover:border-blue-400'
-      } hover:shadow-md ${isMultiSelectMode ? 'cursor-pointer' : ''}`}
-      onClick={isMultiSelectMode ? onSelect : undefined}
+      } hover:shadow-md`}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (isMultiSelectMode) {
+          onSelect();
+        } else {
+          onViewDetails();
+        }
+      }}
     >
       {/* Header */}
       <div className={`p-4 border-b ${
@@ -86,13 +94,13 @@ const ScenarioCard = ({
         })}
         
         {priorityStepOrder.filter(key => scenario[key]).length > 4 && (
-          <div className="text-center pt-2 border-t border-gray-200">
-            <span className={`text-xs font-medium px-3 py-1 rounded-full ${
+          <div className={`text-center pt-2 border-t border-gray-200 ${!isMultiSelectMode ? 'group-hover:border-gray-300' : ''}`}>
+            <span className={`text-xs font-medium px-3 py-1 rounded-full transition-colors ${
               scenario.type === 'Alternative' 
-                ? 'bg-orange-100 text-orange-700 border border-orange-200' 
-                : 'bg-blue-100 text-blue-700 border border-blue-200'
+                ? 'bg-orange-100 text-orange-700 border border-orange-200 group-hover:bg-orange-200' 
+                : 'bg-blue-100 text-blue-700 border border-blue-200 group-hover:bg-blue-200'
             }`}>
-              +{priorityStepOrder.filter(key => scenario[key]).length - 4} more steps
+              +{priorityStepOrder.filter(key => scenario[key]).length - 4} more steps • Click to view details
             </span>
           </div>
         )}

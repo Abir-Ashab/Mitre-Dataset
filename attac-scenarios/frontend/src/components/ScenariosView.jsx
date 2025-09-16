@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Filter, X, Search, CheckSquare, Square, Users } from 'lucide-react';
 import ScenarioCard from './ScenarioCard';
+import ScenarioDetailModal from './ScenarioDetailModal';
 import { attackSteps } from '../utils/attackData';
 
 const ScenariosView = ({ 
@@ -15,6 +16,8 @@ const ScenariosView = ({
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [selectedScenarios, setSelectedScenarios] = useState(new Set());
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
+  const [selectedScenarioForDetails, setSelectedScenarioForDetails] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   // Get exact initial access methods for filtering
   const initialAccessMethods = useMemo(() => {
@@ -96,6 +99,21 @@ const ScenariosView = ({
     
     // Clear selections after bulk operation
     setSelectedScenarios(new Set());
+  };
+
+  const handleViewScenarioDetails = (scenario) => {
+    setSelectedScenarioForDetails(scenario);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleMarkCompleteFromModal = async (scenario) => {
+    const success = await onSaveScenario(scenario);
+    if (success) {
+      const scenarioId = `SC${scenario.id.toString().padStart(3, '0')}`;
+      await onMarkComplete(scenarioId);
+      return true;
+    }
+    return false;
   };
   return (
     <>
@@ -299,11 +317,24 @@ const ScenariosView = ({
                 isMultiSelectMode={isMultiSelectMode}
                 isSelected={selectedScenarios.has(scenario.id)}
                 onSelect={() => handleScenarioSelect(scenario.id)}
+                onViewDetails={() => handleViewScenarioDetails(scenario)}
               />
             </div>
           ))}
         </div>
       )}
+      
+      {/* Scenario Detail Modal */}
+      <ScenarioDetailModal
+        scenario={selectedScenarioForDetails}
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedScenarioForDetails(null);
+        }}
+        onMarkComplete={handleMarkCompleteFromModal}
+        loading={loading}
+      />
     </>
   );
 };

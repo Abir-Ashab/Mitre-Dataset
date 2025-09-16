@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CheckCircle, Clock, RefreshCw } from 'lucide-react';
 import CompletedScenarioCard from './CompletedScenarioCard';
+import ScenarioDetailModal from './ScenarioDetailModal';
 
 const CompletedView = ({ 
   completedScenarios, 
@@ -9,6 +10,13 @@ const CompletedView = ({
   onViewScenarios,
   loading 
 }) => {
+  const [selectedScenarioForDetails, setSelectedScenarioForDetails] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+
+  const handleViewScenarioDetails = (scenario) => {
+    setSelectedScenarioForDetails(scenario);
+    setIsDetailModalOpen(true);
+  };
   return (
     <>
       {/* Completed Scenarios Header */}
@@ -62,10 +70,24 @@ const CompletedView = ({
               scenario={scenario}
               onMarkIncomplete={onMarkIncomplete}
               loading={loading}
+              onViewDetails={() => handleViewScenarioDetails(scenario)}
             />
           ))}
         </div>
       )}
+      
+      {/* Scenario Detail Modal */}
+      <ScenarioDetailModal
+        scenario={selectedScenarioForDetails}
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedScenarioForDetails(null);
+        }}
+        isCompleted={true}
+        onMarkIncomplete={onMarkIncomplete}
+        loading={loading}
+      />
     </>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { CheckCircle, RotateCcw, Activity } from 'lucide-react';
 
-const CompletedScenarioCard = ({ scenario, onMarkIncomplete, loading }) => {
+const CompletedScenarioCard = ({ scenario, onMarkIncomplete, loading, onViewDetails }) => {
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -13,7 +13,10 @@ const CompletedScenarioCard = ({ scenario, onMarkIncomplete, loading }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl border-2 border-green-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+    <div 
+      className="bg-white rounded-xl border-2 border-green-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer hover:border-green-300"
+      onClick={onViewDetails}
+    >
       {/* Header */}
       <div className="p-4 border-b border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
         <div className="flex items-center justify-between">
@@ -28,7 +31,10 @@ const CompletedScenarioCard = ({ scenario, onMarkIncomplete, loading }) => {
           </div>
           <div className="flex space-x-2">
             <button
-              onClick={() => onMarkIncomplete(scenario.scenarioId)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMarkIncomplete(scenario.scenarioId);
+              }}
               disabled={loading}
               className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
               title="Mark as incomplete"
@@ -58,8 +64,8 @@ const CompletedScenarioCard = ({ scenario, onMarkIncomplete, loading }) => {
               </div>
             ))}
             {scenario.attackTechniques.length > 3 && (
-              <div className="text-xs text-green-600 font-medium">
-                +{scenario.attackTechniques.length - 3} more techniques
+              <div className="text-xs text-green-600 font-medium hover:text-green-700 transition-colors">
+                +{scenario.attackTechniques.length - 3} more techniques • Click to view details
               </div>
             )}
           </div>
