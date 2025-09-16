@@ -9,7 +9,8 @@ const ScenariosView = ({
   onMarkComplete,
   loading 
 }) => {
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  // Start with the first initial access method as default
+  const [selectedFilters, setSelectedFilters] = useState([attackSteps.initialAccess[0]]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
@@ -22,11 +23,14 @@ const ScenariosView = ({
   const filteredScenarios = useMemo(() => {
     let filtered = allScenarios;
 
-    // Apply initial access filters
+    // Always apply initial access filters - never show all scenarios at once
     if (selectedFilters.length > 0) {
       filtered = filtered.filter(scenario => 
         selectedFilters.some(filter => scenario.initialAccess === filter)
       );
+    } else {
+      // If no filters selected, show empty results
+      filtered = [];
     }
 
     // Apply search term
@@ -51,7 +55,7 @@ const ScenariosView = ({
   };
 
   const clearFilters = () => {
-    setSelectedFilters([]);
+    setSelectedFilters([attackSteps.initialAccess[0]]); // Reset to default filter
     setSearchTerm('');
   };
   return (
@@ -72,7 +76,10 @@ const ScenariosView = ({
               <span className="font-medium text-gray-700">Alternative ({filteredScenarios.filter(s => s.type === 'Alternative').length})</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="font-medium text-gray-700">Total: {filteredScenarios.length}</span>
+              <span className="font-medium text-gray-700">Showing: {filteredScenarios.length} scenarios</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-gray-500">Total Available: {allScenarios.length}</span>
             </div>
           </div>
         </div>
@@ -99,7 +106,7 @@ const ScenariosView = ({
             >
               <Filter className="h-4 w-4 text-blue-600" />
               <span className="text-blue-600 font-medium">
-                Filter by Initial Access {selectedFilters.length > 0 && `(${selectedFilters.length})`}
+                Filter by Initial Access {selectedFilters.length > 0 && `(${selectedFilters.length} selected)`}
               </span>
             </button>
 
@@ -107,16 +114,14 @@ const ScenariosView = ({
               <div className="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 z-10 max-h-96 overflow-y-auto">
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium text-gray-900">Filter by Initial Access Method</h3>
-                    {selectedFilters.length > 0 && (
-                      <button
-                        onClick={clearFilters}
-                        className="text-sm text-gray-500 hover:text-gray-700 flex items-center space-x-1"
-                      >
-                        <X className="h-3 w-3" />
-                        <span>Clear all</span>
-                      </button>
-                    )}
+                    <h3 className="font-medium text-gray-900">Select Initial Access Methods</h3>
+                    <button
+                      onClick={clearFilters}
+                      className="text-sm text-gray-500 hover:text-gray-700 flex items-center space-x-1"
+                    >
+                      <X className="h-3 w-3" />
+                      <span>Reset to default</span>
+                    </button>
                   </div>
 
                   <div className="space-y-1">
@@ -142,32 +147,31 @@ const ScenariosView = ({
         </div>
 
         {/* Active Filters Display */}
-        {selectedFilters.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            <span className="text-sm text-gray-600">Active filters:</span>
-            {selectedFilters.map(filter => (
-              <span
-                key={filter}
-                className="inline-flex items-center space-x-1 bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+        <div className="flex flex-wrap gap-2 mb-4">
+          <span className="text-sm text-gray-600">Currently showing scenarios for:</span>
+          {selectedFilters.map(filter => (
+            <span
+              key={filter}
+              className="inline-flex items-center space-x-1 bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+            >
+              <span className="truncate max-w-md">{filter.length > 60 ? `${filter.substring(0, 60)}...` : filter}</span>
+              <button
+                onClick={() => handleFilterToggle(filter)}
+                className="hover:bg-blue-200 rounded-full p-0.5"
               >
-                <span className="truncate max-w-md">{filter.length > 60 ? `${filter.substring(0, 60)}...` : filter}</span>
-                <button
-                  onClick={() => handleFilterToggle(filter)}
-                  className="hover:bg-blue-200 rounded-full p-0.5"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+        </div>
       </div>
 
       {filteredScenarios.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
           <Filter className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No scenarios found</h3>
-          <p className="text-gray-600">Try adjusting your filters or search terms.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Select initial access methods to view scenarios</h3>
+          <p className="text-gray-600">Use the filter dropdown above to choose which initial access methods you want to explore.</p>
+          <p className="text-gray-500 text-sm mt-2">Total scenarios available: {allScenarios.length}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
