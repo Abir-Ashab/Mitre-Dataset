@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Filter, X, Search } from 'lucide-react';
+import { Filter, X, Search, CheckSquare, Square, Users } from 'lucide-react';
 import ScenarioCard from './ScenarioCard';
 import { attackSteps } from '../utils/attackData';
 
@@ -13,6 +13,8 @@ const ScenariosView = ({
   const [selectedFilters, setSelectedFilters] = useState([attackSteps.initialAccess[0]]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [selectedScenarios, setSelectedScenarios] = useState(new Set());
+  const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
 
   // Get exact initial access methods for filtering
   const initialAccessMethods = useMemo(() => {
@@ -58,6 +60,43 @@ const ScenariosView = ({
     setSelectedFilters([attackSteps.initialAccess[0]]); // Reset to default filter
     setSearchTerm('');
   };
+
+  const handleScenarioSelect = (scenarioId) => {
+    setSelectedScenarios(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(scenarioId)) {
+        newSet.delete(scenarioId);
+      } else {
+        newSet.add(scenarioId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedScenarios.size === filteredScenarios.length) {
+      setSelectedScenarios(new Set());
+    } else {
+      setSelectedScenarios(new Set(filteredScenarios.map(s => s.id)));
+    }
+  };
+
+  const handleBulkMarkComplete = async () => {
+    if (selectedScenarios.size === 0) return;
+    
+    const selectedScenariosList = filteredScenarios.filter(s => selectedScenarios.has(s.id));
+    
+    for (const scenario of selectedScenariosList) {
+      const success = await onSaveScenario(scenario);
+      if (success) {
+        const scenarioId = `SC${scenario.id.toString().padStart(3, '0')}`;
+        await onMarkComplete(scenarioId);
+      }
+    }
+    
+    // Clear selections after bulk operation
+    setSelectedScenarios(new Set());
+  };
   return (
     <>
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 mb-8">
@@ -83,6 +122,65 @@ const ScenariosView = ({
             </div>
           </div>
         </div>
+
+        {/* Multi-Select Controls */}
+        {filteredScenarios.length > 0 && (
+          <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 rounded-lg border">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setIsMultiSelectMode(!isMultiSelectMode)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                  isMultiSelectMode 
+                    ? 'bg-blue-100 text-blue-700 border border-blue-300' 
+                    : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {isMultiSelectMode ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
+                <span className="font-medium">Multi-Select Mode</span>
+              </button>
+              
+              {isMultiSelectMode && (
+                <>
+                  <button
+                    onClick={handleSelectAll}
+                    className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    <Users className="h-4 w-4" />
+                    <span>
+                      {selectedScenarios.size === filteredScenarios.length ? 'Deselect All' : 'Select All'}
+                    </span>
+                  </button>
+                  
+                  {selectedScenarios.size > 0 && (
+                    <span className="text-sm text-gray-600 bg-white px-3 py-2 rounded-lg border">
+                      {selectedScenarios.size} scenario{selectedScenarios.size !== 1 ? 's' : ''} selected
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+            
+            {isMultiSelectMode && selectedScenarios.size > 0 && (
+              <button
+                onClick={handleBulkMarkComplete}
+                disabled={loading}
+                className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckSquare className="h-4 w-4" />
+                    <span>Mark {selectedScenarios.size} as Complete</span>
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Search and Filter Controls */}
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
@@ -176,13 +274,33 @@ const ScenariosView = ({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredScenarios.map(scenario => (
-            <ScenarioCard 
-              key={scenario.id} 
-              scenario={scenario}
-              onSave={onSaveScenario}
-              onMarkComplete={onMarkComplete}
-              loading={loading}
-            />
+            <div key={scenario.id} className="relative">
+              {isMultiSelectMode && (
+                <div className="absolute top-2 right-2 z-10">
+                  <button
+                    onClick={() => handleScenarioSelect(scenario.id)}
+                    className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
+                      selectedScenarios.has(scenario.id)
+                        ? 'bg-blue-500 border-blue-500 text-white'
+                        : 'bg-white border-gray-300 hover:border-blue-400'
+                    }`}
+                  >
+                    {selectedScenarios.has(scenario.id) && (
+                      <CheckSquare className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              )}
+              <ScenarioCard 
+                scenario={scenario}
+                onSave={onSaveScenario}
+                onMarkComplete={onMarkComplete}
+                loading={loading}
+                isMultiSelectMode={isMultiSelectMode}
+                isSelected={selectedScenarios.has(scenario.id)}
+                onSelect={() => handleScenarioSelect(scenario.id)}
+              />
+            </div>
           ))}
         </div>
       )}

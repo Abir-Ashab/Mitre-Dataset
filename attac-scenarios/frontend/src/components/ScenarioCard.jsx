@@ -6,17 +6,23 @@ const ScenarioCard = ({
   scenario, 
   onSave,
   onMarkComplete,
-  loading 
+  loading,
+  isMultiSelectMode = false,
+  isSelected = false,
+  onSelect
 }) => {
   const scenarioSteps = priorityStepOrder.filter(key => scenario[key]);
   
   return (
     <div 
       className={`relative rounded-xl border-2 transition-all duration-300 hover:shadow-xl group ${
-        scenario.type === 'Alternative' 
-          ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 hover:border-orange-400' 
-          : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 hover:border-blue-400'
-      } hover:shadow-md`}
+        isSelected 
+          ? 'border-blue-500 bg-blue-50 shadow-lg' 
+          : scenario.type === 'Alternative' 
+            ? 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 hover:border-orange-400' 
+            : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 hover:border-blue-400'
+      } hover:shadow-md ${isMultiSelectMode ? 'cursor-pointer' : ''}`}
+      onClick={isMultiSelectMode ? onSelect : undefined}
     >
       {/* Header */}
       <div className={`p-4 border-b ${
@@ -93,32 +99,35 @@ const ScenarioCard = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="p-4 pt-0 flex items-center space-x-2">
-        <button
-          onClick={async (e) => {
-            e.stopPropagation();
-            const success = await onSave(scenario);
-            if (success) {
-              const scenarioId = `SC${scenario.id.toString().padStart(3, '0')}`;
-              await onMarkComplete(scenarioId);
-            }
-          }}
-          disabled={loading}
-          className="flex-1 flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? (
-            <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span>Processing...</span>
-            </>
-          ) : (
-            <>
-              <CheckCircle className="h-4 w-4" />
-              <span>Mark As Completed</span>
-            </>
-          )}
-        </button>
-      </div>
+      {!isMultiSelectMode && (
+        <div className="p-4 pt-0 flex items-center space-x-2">
+          <button
+            onClick={async (e) => {
+              e.stopPropagation();
+              const success = await onSave(scenario);
+              if (success) {
+                const scenarioId = `SC${scenario.id.toString().padStart(3, '0')}`;
+                await onMarkComplete(scenarioId);
+                // Don't navigate away - stay on scenarios page
+              }
+            }}
+            disabled={loading}
+            className="flex-1 flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Processing...</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle className="h-4 w-4" />
+                <span>Mark As Completed</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
