@@ -115,7 +115,7 @@ export const stepConfig = {
     defaultIndex: 0,
   },
   postAttackCleanup: {
-    required: false,
+    required: true,
     label: "Attack Cleanup",
     description: "How traces are handled",
   },
