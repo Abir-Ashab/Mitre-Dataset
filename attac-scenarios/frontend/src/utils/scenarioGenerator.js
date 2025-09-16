@@ -4,16 +4,8 @@ export const generateAllScenarios = () => {
   const scenarios = [];
   let scenarioId = 1;
 
-  // Generate primary scenarios (with required defaults) - limited to 200
-  const maxPrimaryScenarios = 2000;
-  const maxInitialAccessForPrimary = Math.min(
-    10,
-    attackSteps.initialAccess.length
-  );
-
-  attackSteps.initialAccess
-    .slice(0, maxInitialAccessForPrimary)
-    .forEach((initialAccess) => {
+  // Generate all possible scenarios without limits
+  attackSteps.initialAccess.forEach((initialAccess) => {
       // Base scenario with required steps only
       const baseScenario = {
         id: scenarioId++,
@@ -26,9 +18,7 @@ export const generateAllScenarios = () => {
       // Add base scenario
       scenarios.push(baseScenario);
 
-      if (scenarios.length >= maxPrimaryScenarios) return;
-
-      // Generate limited combinations with optional steps
+      // Generate all combinations with optional steps
       const optionalSteps = [
         "operationAfterInitialAccess",
         "credentialHarvesting",
@@ -40,9 +30,7 @@ export const generateAllScenarios = () => {
 
       // Add single optional step scenarios
       optionalSteps.forEach((stepKey) => {
-        if (scenarios.length >= maxPrimaryScenarios) return;
         attackSteps[stepKey].forEach((variation) => {
-          if (scenarios.length >= maxPrimaryScenarios) return;
           scenarios.push({
             ...baseScenario,
             id: scenarioId++,
@@ -51,14 +39,12 @@ export const generateAllScenarios = () => {
         });
       });
 
-      // Add a few combinations with 2 optional steps
-      if (scenarios.length < maxPrimaryScenarios - 10) {
-        ["credentialHarvesting", "dataExfiltration"].forEach((step1) => {
-          ["persistence", "finalPayload"].forEach((step2) => {
-            if (scenarios.length >= maxPrimaryScenarios) return;
+      // Add combinations with multiple optional steps
+      optionalSteps.forEach((step1) => {
+        optionalSteps.forEach((step2) => {
+          if (step1 !== step2) {
             attackSteps[step1].forEach((var1) => {
               attackSteps[step2].forEach((var2) => {
-                if (scenarios.length >= maxPrimaryScenarios) return;
                 scenarios.push({
                   ...baseScenario,
                   id: scenarioId++,
@@ -67,21 +53,78 @@ export const generateAllScenarios = () => {
                 });
               });
             });
+          }
+        });
+      });
+
+      // Add combinations with three optional steps
+      optionalSteps.forEach((step1) => {
+        optionalSteps.forEach((step2) => {
+          optionalSteps.forEach((step3) => {
+            if (step1 !== step2 && step1 !== step3 && step2 !== step3) {
+              attackSteps[step1].forEach((var1) => {
+                attackSteps[step2].forEach((var2) => {
+                  attackSteps[step3].forEach((var3) => {
+                    scenarios.push({
+                      ...baseScenario,
+                      id: scenarioId++,
+                      [step1]: var1,
+                      [step2]: var2,
+                      [step3]: var3,
+                    });
+                  });
+                });
+              });
+            }
           });
+        });
+      });
+
+      // Continue with 4, 5, and all 6 optional steps combinations
+      // Generate all possible combinations systematically
+      const generateCombinations = (arr, r) => {
+        if (r === 1) return arr.map(x => [x]);
+        const result = [];
+        arr.forEach((item, index) => {
+          const rest = arr.slice(index + 1);
+          const combinations = generateCombinations(rest, r - 1);
+          combinations.forEach(combo => {
+            result.push([item, ...combo]);
+          });
+        });
+        return result;
+      };
+
+      // Generate combinations for 4, 5, and 6 optional steps
+      for (let r = 4; r <= 6; r++) {
+        const combinations = generateCombinations(optionalSteps, r);
+        combinations.forEach(stepCombination => {
+          const generateVariations = (steps, index, currentScenario) => {
+            if (index === steps.length) {
+              scenarios.push({
+                ...currentScenario,
+                id: scenarioId++,
+              });
+              return;
+            }
+            
+            const stepKey = steps[index];
+            attackSteps[stepKey].forEach(variation => {
+              generateVariations(steps, index + 1, {
+                ...currentScenario,
+                [stepKey]: variation,
+              });
+            });
+          };
+          
+          generateVariations(stepCombination, 0, { ...baseScenario });
         });
       }
     });
 
-  // Generate alternative scenarios (limited to 50 total)
-  const maxAlternativeScenarios = Math.min(50, 2000 - scenarios.length);
-  const remainingInitialAccess = attackSteps.initialAccess.slice(
-    maxInitialAccessForPrimary
-  );
-
-  remainingInitialAccess
-    .slice(0, Math.min(5, remainingInitialAccess.length))
-    .forEach((initialAccess) => {
-      if (scenarios.length >= 2000) return;
+  // Generate alternative scenarios with different control methods
+  attackSteps.initialAccess.forEach((initialAccess) => {
+    attackSteps.attackerControl.slice(1).forEach((controlMethod) => {
 
       // Create alternative scenarios with different combinations
       const alternativeSteps = [
@@ -90,20 +133,18 @@ export const generateAllScenarios = () => {
         "finalPayload",
       ];
       alternativeSteps.forEach((stepKey) => {
-        if (scenarios.length >= 2000) return;
         attackSteps[stepKey].forEach((variation) => {
-          if (scenarios.length >= 2000) return;
           scenarios.push({
             id: scenarioId++,
             type: "Alternative",
             initialAccess,
-            attackerControl:
-              attackSteps.attackerControl[1] || attackSteps.attackerControl[0],
+            attackerControl: controlMethod,
             [stepKey]: variation,
           });
         });
       });
     });
+  });
 
-  return scenarios.slice(0, 2000); // Ensure we don't exceed 2000 scenarios
+  return scenarios;
 };
