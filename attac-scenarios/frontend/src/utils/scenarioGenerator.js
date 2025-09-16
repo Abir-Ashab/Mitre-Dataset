@@ -5,7 +5,7 @@ export const generateAllScenarios = () => {
   let scenarioId = 1;
 
   // Generate primary scenarios (with required defaults) - limited to 200
-  const maxPrimaryScenarios = 200;
+  const maxPrimaryScenarios = 2000;
   const maxInitialAccessForPrimary = Math.min(
     10,
     attackSteps.initialAccess.length
