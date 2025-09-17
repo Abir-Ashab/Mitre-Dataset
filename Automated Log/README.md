@@ -82,17 +82,51 @@ Google Drive/
 ```
 
 ### Configuration
-Edit the `.env` file to customize:
-- Monitoring intervals
-- Screen recording settings
-- Elasticsearch connection details
-- File naming patterns
+Edit the `.env` file to customize your monitoring settings:
+
+**Main Settings:**
+
+- `INTERVAL_MINUTES=20` - How often to run monitoring cycles (default: 20 minutes)
+
+**Elasticsearch Configuration:**
+
+- `ELASTIC_USERNAME=elastic` - Elasticsearch username
+- `ELASTIC_PASSWORD=QpMrkrtX7eF9_nUePmtj` - Elasticsearch password
+- `ELASTIC_HOST=localhost` - Elasticsearch server host
+- `ELASTIC_PORT=9200` - Elasticsearch server port
+- `ELASTIC_INDEX_PATTERN=winlogbeat-*` - Index pattern for log extraction
+
+**Screen Recording Settings:**
+
+- `SCREEN_WIDTH=1920` - Recording resolution width
+- `SCREEN_HEIGHT=1080` - Recording resolution height  
+- `SCREEN_FPS=10.0` - Frames per second for recording
+- `SCREEN_SEGMENT_DURATION_MINUTES=20` - Duration of each recording segment
+
+**Network Packet Capture:**
+
+- `PACKET_CAPTURE_DURATION_MINUTES=20` - Duration for packet capture
+- `NETWORK_INTERFACE=5` - Network interface ID (run `tshark -D` to list available interfaces)
+
+**Browser Activity Monitoring:**
+
+- `BROWSER_API_BASE=http://localhost:5600/api/0` - ActivityWatch API endpoint
+- `BROWSER_LOGS_INTERVAL_MINUTES=20` - Interval for browser log extraction
+
+**Output Directories:**
+
+- `BASE_OUTPUT_DIR=monitoring_outputs` - Base directory for local outputs
+- `SCREEN_RECORDINGS_DIR=screen_recordings` - Screen recording subdirectory
+- `BROWSER_LOGS_DIR=logs` - Browser logs subdirectory
+- `SYSLOGS_DIR=system_logs` - System logs subdirectory
 
 ### Troubleshooting
+
 - **Packet Capture Fails:** Ensure you're running as Administrator
 - **Google Drive Authentication:** Delete `token.pickle` and re-authenticate
 - **Missing Data:** Check that all prerequisite services are running
 - **Upload Errors:** Verify your Google Cloud credentials and API quotas
 
 ## License
+
 This project is licensed under the MIT License.
