@@ -5,6 +5,7 @@ import ScenarioDetailModal from './ScenarioDetailModal';
 import { attackSteps } from '../utils/attackData';
 
 const ScenariosView = ({ 
+  completedScenarioIds = new Set(),
   onSaveScenario,
   onMarkComplete,
   loading 
@@ -53,12 +54,20 @@ const ScenariosView = ({
         postAttackCleanup: attackSteps.postAttackCleanup[0],
       };
 
+      // Check if scenario is already completed
+      const baseScenarioId = `SC${baseScenario.id.toString().padStart(3, '0')}`;
+      const isCompleted = completedScenarioIds.has(baseScenarioId);
+      
+      if (isCompleted) {
+        console.log(`Filtering out completed scenario: ${baseScenarioId}`);
+      }
+
       // Check if matches search term
       const matchesSearch = !searchTerm || 
         initialAccess.toLowerCase().includes(searchTerm.toLowerCase()) ||
         baseScenario.type.toLowerCase().includes(searchTerm.toLowerCase());
 
-      if (matchesSearch) {
+      if (matchesSearch && !isCompleted) {
         if (matchCount >= startIndex && matchCount < endIndex) {
           scenarios.push(baseScenario);
         }
@@ -85,11 +94,15 @@ const ScenariosView = ({
             [stepKey]: variation,
           };
 
+          // Check if scenario is already completed
+          const scenarioIdFormatted = `SC${scenario.id.toString().padStart(3, '0')}`;
+          const isCompleted = completedScenarioIds.has(scenarioIdFormatted);
+
           const stepMatchesSearch = !searchTerm || 
             variation.toLowerCase().includes(searchTerm.toLowerCase()) ||
             initialAccess.toLowerCase().includes(searchTerm.toLowerCase());
 
-          if (stepMatchesSearch) {
+          if (stepMatchesSearch && !isCompleted) {
             if (matchCount >= startIndex && matchCount < endIndex) {
               scenarios.push(scenario);
             }
@@ -135,7 +148,7 @@ const ScenariosView = ({
   // Load scenarios when filters change
   useEffect(() => {
     loadScenarios(selectedFilters, debouncedSearchTerm, 1);
-  }, [selectedFilters, debouncedSearchTerm]);
+  }, [selectedFilters, debouncedSearchTerm, completedScenarioIds]);
 
   // Initial load
   useEffect(() => {
@@ -223,8 +236,9 @@ const ScenariosView = ({
       }
     }
     
-    // Clear selections after bulk operation
+    // Clear selections and reload scenarios after bulk operation
     setSelectedScenarios(new Set());
+    loadScenarios(selectedFilters, debouncedSearchTerm, 1);
   };
 
   const handleViewScenarioDetails = (scenario) => {
@@ -236,8 +250,12 @@ const ScenariosView = ({
     const success = await onSaveScenario(scenario);
     if (success) {
       const scenarioId = `SC${scenario.id.toString().padStart(3, '0')}`;
-      await onMarkComplete(scenarioId);
-      return true;
+      const markCompleteSuccess = await onMarkComplete(scenarioId);
+      if (markCompleteSuccess) {
+        // Reload scenarios to remove the completed one from the list
+        loadScenarios(selectedFilters, debouncedSearchTerm, 1);
+      }
+      return markCompleteSuccess;
     }
     return false;
   };

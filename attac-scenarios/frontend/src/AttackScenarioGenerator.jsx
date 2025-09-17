@@ -27,6 +27,7 @@ const AttackScenarioGenerator = () => {
   // Update completed scenario IDs when completedScenarios changes
   useEffect(() => {
     const ids = new Set(completedScenarios.map(scenario => scenario.scenarioId));
+    console.log('Updated completed scenario IDs:', ids);
     setCompletedScenarioIds(ids);
   }, [completedScenarios]);
 
@@ -114,6 +115,7 @@ const AttackScenarioGenerator = () => {
       case 'scenarios':
         return (
           <ScenariosView
+            completedScenarioIds={completedScenarioIds}
             onSaveScenario={saveScenarioToDatabase}
             onMarkComplete={handleMarkScenarioComplete}
             loading={loading}
