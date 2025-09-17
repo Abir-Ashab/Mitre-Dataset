@@ -42,7 +42,6 @@ export const attackSteps = {
     "Phishing in telegram through direct zip download",
     "Phishing in telegram through direct rar download(without password)",
     "Phishing in telegram through direct rar download(with password)",
-    "Phishing in telegram through link bound to image",
     "Phishing in telegram through link bound to pdf",
     "Payload from public GitHub repo by cloning (click exe directly)",
     "Payload from public GitHub repo by cloning (click to a pdf file)",

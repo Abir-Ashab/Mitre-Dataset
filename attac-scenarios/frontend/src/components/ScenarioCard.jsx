@@ -77,9 +77,6 @@ const ScenarioCard = ({
                 ? 'bg-white/60 border border-orange-200/50' 
                 : 'bg-white/60 border border-blue-200/50'
             }`}>
-              <div className={`flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-${color}-400 to-${color}-600 flex items-center justify-center text-white shadow-sm`}>
-                <IconComponent className="h-4 w-4" />
-              </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center space-x-2 mb-1">
                   <span className={`text-sm font-medium text-${color}-700`}>{config.label}</span>
@@ -106,7 +103,6 @@ const ScenarioCard = ({
         )}
       </div>
 
-      {/* Action Buttons */}
       {!isMultiSelectMode && (
         <div className="p-4 pt-0 flex items-center space-x-2">
           <button
@@ -116,7 +112,6 @@ const ScenarioCard = ({
               if (success) {
                 const scenarioId = `SC${scenario.id.toString().padStart(3, '0')}`;
                 await onMarkComplete(scenarioId);
-                // Don't navigate away - stay on scenarios page
               }
             }}
             disabled={loading}
