@@ -1,67 +1,192 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Filter, X, Search, CheckSquare, Square, Users } from 'lucide-react';
 import ScenarioCard from './ScenarioCard';
 import ScenarioDetailModal from './ScenarioDetailModal';
 import { attackSteps } from '../utils/attackData';
 
 const ScenariosView = ({ 
-  allScenarios, 
   onSaveScenario,
   onMarkComplete,
   loading 
 }) => {
-  // Start with the first initial access method as default
   const [selectedFilters, setSelectedFilters] = useState([attackSteps.initialAccess[0]]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [selectedScenarios, setSelectedScenarios] = useState(new Set());
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
   const [selectedScenarioForDetails, setSelectedScenarioForDetails] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  
+  // New state for server-side filtering
+  const [scenarios, setScenarios] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingScenarios, setIsLoadingScenarios] = useState(false);
+  
+  const SCENARIOS_PER_PAGE = 50;
+  
+  // Ref for dropdown click-outside detection
+  const dropdownRef = useRef(null);
 
-  // Get exact initial access methods for filtering
+  // Get exact initial access methods for filtering (memoized once)
   const initialAccessMethods = useMemo(() => {
     return attackSteps.initialAccess;
   }, []);
 
-  // Filter scenarios based on selected filters and search term
-  const filteredScenarios = useMemo(() => {
-    let filtered = allScenarios;
+  // Function to generate scenarios server-side (replacing the heavy client-side generation)
+  const generateScenariosForFilters = (filters, searchTerm = '', page = 1) => {
+    const scenarios = [];
+    let scenarioId = 1;
+    let matchCount = 0;
+    const startIndex = (page - 1) * SCENARIOS_PER_PAGE;
+    const endIndex = startIndex + SCENARIOS_PER_PAGE;
 
-    // Always apply initial access filters - never show all scenarios at once
-    if (selectedFilters.length > 0) {
-      filtered = filtered.filter(scenario => 
-        selectedFilters.some(filter => scenario.initialAccess === filter)
-      );
-    } else {
-      // If no filters selected, show empty results
-      filtered = [];
+    // Only generate scenarios for selected initial access methods
+    filters.forEach((initialAccess) => {
+      // Base scenario
+      const baseScenario = {
+        id: scenarioId++,
+        type: "Primary",
+        initialAccess,
+        attackerControl: attackSteps.attackerControl[0],
+        postAttackCleanup: attackSteps.postAttackCleanup[0],
+      };
+
+      // Check if matches search term
+      const matchesSearch = !searchTerm || 
+        initialAccess.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        baseScenario.type.toLowerCase().includes(searchTerm.toLowerCase());
+
+      if (matchesSearch) {
+        if (matchCount >= startIndex && matchCount < endIndex) {
+          scenarios.push(baseScenario);
+        }
+        matchCount++;
+      }
+
+      // Generate scenarios with optional steps (limited to prevent memory overload)
+      const optionalSteps = [
+        "operationAfterInitialAccess",
+        "credentialHarvesting", 
+        "persistence",
+        "dataExfiltration",
+        "lateralMovement",
+        "finalPayload",
+      ];
+
+      // Add single optional step scenarios (first few variations only)
+      optionalSteps.forEach((stepKey) => {
+        // Limit to first 5 variations to keep it manageable
+        attackSteps[stepKey].slice(0, 5).forEach((variation) => {
+          const scenario = {
+            ...baseScenario,
+            id: scenarioId++,
+            [stepKey]: variation,
+          };
+
+          const stepMatchesSearch = !searchTerm || 
+            variation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            initialAccess.toLowerCase().includes(searchTerm.toLowerCase());
+
+          if (stepMatchesSearch) {
+            if (matchCount >= startIndex && matchCount < endIndex) {
+              scenarios.push(scenario);
+            }
+            matchCount++;
+          }
+        });
+      });
+    });
+
+    return { scenarios, totalCount: matchCount };
+  };
+
+  // Function to load scenarios based on current filters
+  const loadScenarios = async (filters = selectedFilters, searchTerm = debouncedSearchTerm, page = 1) => {
+    if (filters.length === 0) {
+      setScenarios([]);
+      setTotalCount(0);
+      return;
     }
 
-    // Apply search term
-    if (searchTerm) {
-      filtered = filtered.filter(scenario => 
-        scenario.initialAccess.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        Object.values(scenario).some(value => 
-          typeof value === 'string' && value.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
+    setIsLoadingScenarios(true);
+    try {
+      // Simulate async operation (in real app, this would be an API call)
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const { scenarios: newScenarios, totalCount: count } = generateScenariosForFilters(filters, searchTerm, page);
+      
+      if (page === 1) {
+        setScenarios(newScenarios);
+      } else {
+        // Append to existing scenarios for pagination
+        setScenarios(prev => [...prev, ...newScenarios]);
+      }
+      setTotalCount(count);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error('Error loading scenarios:', error);
+    } finally {
+      setIsLoadingScenarios(false);
     }
+  };
 
-    return filtered;
-  }, [allScenarios, selectedFilters, searchTerm]);
+  // Load scenarios when filters change
+  useEffect(() => {
+    loadScenarios(selectedFilters, debouncedSearchTerm, 1);
+  }, [selectedFilters, debouncedSearchTerm]);
+
+  // Initial load
+  useEffect(() => {
+    loadScenarios();
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowFilterDropdown(false);
+      }
+    };
+
+    if (showFilterDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [showFilterDropdown]);
+
+  // Debounce search term for better performance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Clear selections when scenarios change
+  useEffect(() => {
+    setSelectedScenarios(new Set());
+  }, [scenarios]);
 
   const handleFilterToggle = (method) => {
-    setSelectedFilters(prev => 
-      prev.includes(method) 
+    setSelectedFilters(prev => {
+      const newFilters = prev.includes(method) 
         ? prev.filter(f => f !== method)
-        : [...prev, method]
-    );
+        : [...prev, method];
+      return newFilters;
+    });
+    setCurrentPage(1); // Reset to first page when filters change
   };
 
   const clearFilters = () => {
     setSelectedFilters([attackSteps.initialAccess[0]]); // Reset to default filter
     setSearchTerm('');
+    setDebouncedSearchTerm(''); // Clear debounced term immediately
+    setShowFilterDropdown(false); // Close dropdown after clearing
   };
 
   const handleScenarioSelect = (scenarioId) => {
@@ -77,17 +202,18 @@ const ScenariosView = ({
   };
 
   const handleSelectAll = () => {
-    if (selectedScenarios.size === filteredScenarios.length) {
+    const allIds = scenarios.map(s => s.id);
+    if (selectedScenarios.size === allIds.length) {
       setSelectedScenarios(new Set());
     } else {
-      setSelectedScenarios(new Set(filteredScenarios.map(s => s.id)));
+      setSelectedScenarios(new Set(allIds));
     }
   };
 
   const handleBulkMarkComplete = async () => {
     if (selectedScenarios.size === 0) return;
     
-    const selectedScenariosList = filteredScenarios.filter(s => selectedScenarios.has(s.id));
+    const selectedScenariosList = scenarios.filter(s => selectedScenarios.has(s.id));
     
     for (const scenario of selectedScenariosList) {
       const success = await onSaveScenario(scenario);
@@ -115,6 +241,14 @@ const ScenariosView = ({
     }
     return false;
   };
+
+  // Function to load more scenarios (pagination)
+  const loadMoreScenarios = () => {
+    if (!isLoadingScenarios && scenarios.length < totalCount) {
+      loadScenarios(selectedFilters, debouncedSearchTerm, currentPage + 1);
+    }
+  };
+  
   return (
     <>
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 mb-8">
@@ -126,23 +260,29 @@ const ScenariosView = ({
           <div className="flex items-center space-x-4 text-sm">
             <div className="flex items-center space-x-2">
               <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
-              <span className="font-medium text-gray-700">Primary ({filteredScenarios.filter(s => s.type === 'Primary').length})</span>
+              <span className="font-medium text-gray-700">Primary ({scenarios.filter(s => s.type === 'Primary').length})</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-4 h-4 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full"></div>
-              <span className="font-medium text-gray-700">Alternative ({filteredScenarios.filter(s => s.type === 'Alternative').length})</span>
+              <span className="font-medium text-gray-700">Alternative ({scenarios.filter(s => s.type === 'Alternative').length})</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="font-medium text-gray-700">Showing: {filteredScenarios.length} scenarios</span>
+              <span className="font-medium text-gray-700">Showing: {scenarios.length} scenarios</span>
+              {scenarios.length < totalCount && (
+                <span className="text-blue-600 font-medium">of {totalCount} total</span>
+              )}
             </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-gray-500">Total Available: {allScenarios.length}</span>
-            </div>
+            {isLoadingScenarios && (
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-gray-600 text-sm">Loading...</span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Multi-Select Controls */}
-        {filteredScenarios.length > 0 && (
+        {scenarios.length > 0 && (
           <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 rounded-lg border">
             <div className="flex items-center space-x-4">
               <button
@@ -165,7 +305,7 @@ const ScenariosView = ({
                   >
                     <Users className="h-4 w-4" />
                     <span>
-                      {selectedScenarios.size === filteredScenarios.length ? 'Deselect All' : 'Select All'}
+                      {selectedScenarios.size === scenarios.length ? 'Deselect All' : 'Select All'}
                     </span>
                   </button>
                   
@@ -200,7 +340,7 @@ const ScenariosView = ({
           </div>
         )}
 
-        {/* Search and Filter Controls */}
+
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
           {/* Search Bar */}
           <div className="flex-1 relative">
@@ -215,7 +355,7 @@ const ScenariosView = ({
           </div>
 
           {/* Filter Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowFilterDropdown(!showFilterDropdown)}
               className="flex items-center space-x-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
@@ -282,46 +422,76 @@ const ScenariosView = ({
         </div>
       </div>
 
-      {filteredScenarios.length === 0 ? (
+      {scenarios.length === 0 && !isLoadingScenarios ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
           <Filter className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Select initial access methods to view scenarios</h3>
-          <p className="text-gray-600">Use the filter dropdown above to choose which initial access methods you want to explore.</p>
-          <p className="text-gray-500 text-sm mt-2">Total scenarios available: {allScenarios.length}</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            {selectedFilters.length === 0 ? 'Select initial access methods to view scenarios' : 'No scenarios found'}
+          </h3>
+          <p className="text-gray-600">
+            {selectedFilters.length === 0 
+              ? 'Use the filter dropdown above to choose which initial access methods you want to explore.'
+              : 'Try adjusting your filters or search terms.'
+            }
+          </p>
+          {totalCount > 0 && (
+            <p className="text-gray-500 text-sm mt-2">Total scenarios available: {totalCount}</p>
+          )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredScenarios.map(scenario => (
-            <div key={scenario.id} className="relative">
-              {isMultiSelectMode && (
-                <div className="absolute top-2 right-2 z-10">
-                  <button
-                    onClick={() => handleScenarioSelect(scenario.id)}
-                    className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
-                      selectedScenarios.has(scenario.id)
-                        ? 'bg-blue-500 border-blue-500 text-white'
-                        : 'bg-white border-gray-300 hover:border-blue-400'
-                    }`}
-                  >
-                    {selectedScenarios.has(scenario.id) && (
-                      <CheckSquare className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-              )}
-              <ScenarioCard 
-                scenario={scenario}
-                onSave={onSaveScenario}
-                onMarkComplete={onMarkComplete}
-                loading={loading}
-                isMultiSelectMode={isMultiSelectMode}
-                isSelected={selectedScenarios.has(scenario.id)}
-                onSelect={() => handleScenarioSelect(scenario.id)}
-                onViewDetails={() => handleViewScenarioDetails(scenario)}
-              />
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {scenarios.map(scenario => (
+              <div key={scenario.id} className="relative">
+                {isMultiSelectMode && (
+                  <div className="absolute top-2 right-2 z-10">
+                    <button
+                      onClick={() => handleScenarioSelect(scenario.id)}
+                      className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
+                        selectedScenarios.has(scenario.id)
+                          ? 'bg-blue-500 border-blue-500 text-white'
+                          : 'bg-white border-gray-300 hover:border-blue-400'
+                      }`}
+                    >
+                      {selectedScenarios.has(scenario.id) && (
+                        <CheckSquare className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                )}
+                <ScenarioCard 
+                  scenario={scenario}
+                  onSave={onSaveScenario}
+                  onMarkComplete={onMarkComplete}
+                  loading={loading}
+                  isMultiSelectMode={isMultiSelectMode}
+                  isSelected={selectedScenarios.has(scenario.id)}
+                  onSelect={() => handleScenarioSelect(scenario.id)}
+                  onViewDetails={() => handleViewScenarioDetails(scenario)}
+                />
+              </div>
+            ))}
+          </div>
+
+          {scenarios.length < totalCount && (
+            <div className="flex justify-center mt-8">
+              <button
+                onClick={loadMoreScenarios}
+                disabled={isLoadingScenarios}
+                className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoadingScenarios ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Loading more...</span>
+                  </>
+                ) : (
+                  <span>Load More Scenarios ({scenarios.length} of {totalCount})</span>
+                )}
+              </button>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
       
       {/* Scenario Detail Modal */}

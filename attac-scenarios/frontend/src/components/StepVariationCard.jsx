@@ -20,39 +20,19 @@ const StepVariationCard = ({
         ? `border-${color}-400 shadow-lg ring-2 ring-${color}-200` 
         : 'border-gray-200 hover:border-gray-300'
     }`}>
-      {/* Header */}
       <div className={`p-5 border-b border-gray-100 bg-gradient-to-r from-${color}-50 to-${color}-100 rounded-t-xl`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br from-${color}-500 to-${color}-600 flex items-center justify-center text-white shadow-lg`}>
-              <IconComponent className="h-6 w-6" />
-            </div>
             <div>
               <h3 className={`font-bold text-lg text-${color}-800 flex items-center space-x-2`}>
                 <span>{stepIndex + 1}. {config.label}</span>
-                {config.required && (
-                  <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">Required</span>
-                )}
               </h3>
               <p className="text-sm text-gray-600 mt-1">{config.description}</p>
             </div>
           </div>
-          <div className="flex flex-col items-end space-y-2">
-            <button
-              onClick={() => onRandomSelect(stepKey)}
-              className={`flex items-center space-x-2 bg-white text-${color}-700 px-3 py-2 rounded-lg text-sm font-medium hover:shadow-md transition-all border border-${color}-200 hover:border-${color}-300`}
-            >
-              <Shuffle className="h-4 w-4" />
-              <span>Random</span>
-            </button>
-            <span className={`bg-white text-${color}-700 text-xs px-3 py-1 rounded-full font-medium shadow-sm border border-${color}-200`}>
-              {variations.length} options
-            </span>
-          </div>
         </div>
       </div>
-      
-      {/* Selected Item */}
+
       {selected && (
         <div className="p-4 border-b border-gray-100 bg-green-50">
           <div className="flex items-start space-x-3">
@@ -69,7 +49,6 @@ const StepVariationCard = ({
         </div>
       )}
       
-      {/* Options List */}
       <div className="p-4">
         <div className="space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
           {variations.map((variation, index) => (

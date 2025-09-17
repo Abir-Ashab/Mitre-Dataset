@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import BuilderView from './components/BuilderView';
 import ScenariosView from './components/ScenariosView';
@@ -6,7 +6,6 @@ import CompletedView from './components/CompletedView';
 import Notification from './components/Notification';
 import { useApi } from './hooks/useApi';
 import { attackSteps } from './utils/attackData';
-import { generateAllScenarios } from './utils/scenarioGenerator';
 
 const AttackScenarioGenerator = () => {
   const [selectedValues, setSelectedValues] = useState({});
@@ -24,17 +23,6 @@ const AttackScenarioGenerator = () => {
     markScenarioComplete,
     markScenarioIncomplete
   } = useApi();
-
-  // Generate all possible scenarios
-  const allScenarios = useMemo(() => generateAllScenarios(), []);
-
-  // Filter out completed scenarios from the scenarios view
-  const availableScenarios = useMemo(() => {
-    return allScenarios.filter(scenario => {
-      const scenarioId = `SC${scenario.id.toString().padStart(3, '0')}`;
-      return !completedScenarioIds.has(scenarioId);
-    });
-  }, [allScenarios, completedScenarioIds]);
 
   // Update completed scenario IDs when completedScenarios changes
   useEffect(() => {
@@ -126,7 +114,6 @@ const AttackScenarioGenerator = () => {
       case 'scenarios':
         return (
           <ScenariosView
-            allScenarios={availableScenarios}
             onSaveScenario={saveScenarioToDatabase}
             onMarkComplete={handleMarkScenarioComplete}
             loading={loading}
@@ -154,7 +141,6 @@ const AttackScenarioGenerator = () => {
           viewMode={viewMode}
           setViewMode={setViewMode}
           apiStatus={apiStatus}
-          allScenariosLength={availableScenarios.length}
           completedScenariosLength={completedScenarios.length}
         />
 

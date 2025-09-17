@@ -25,9 +25,8 @@ const ScenarioDetailModal = ({ scenario, isOpen, onClose, isCompleted = false, o
     : priorityStepOrder.filter(key => scenario[key]);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-white/10 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden w-full">
-        {/* Header */}
         <div className={`p-6 border-b ${
           isCompleted 
             ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200'
