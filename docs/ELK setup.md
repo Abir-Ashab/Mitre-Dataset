@@ -2,6 +2,10 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
 
 ### **Step-by-Step Installation Guide**
 
+#### Install jdk
+
+Install the installer from this link: [jdk](https://www.oracle.com/java/technologies/downloads/#jdk25-windows)
+
 #### **Step 1: Install Elasticsearch**
 1. **Download and Extract**:
    - Download the Elasticsearch ZIP file from [Elastic downloads](https://www.elastic.co/downloads/elasticsearch) (e.g., `elasticsearch-8.17.2-windows-x86_64.zip`).
@@ -70,7 +74,10 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
       # Optional: Increase logging
       logging.root.level: info
      ```
-     By default there is no username, password. So no worries.
+By default there is no username, password. So no worries. Get the service acc token by the following after going to `F:\elk\elasticsearch-9.1.5\bin`: 
+  ```powershell
+  .\elasticsearch-service-tokens.bat create elastic/kibana kibana-token
+  ```
 
 3. **Start Kibana**:
    - In PowerShell, navigate to the Kibana bin directory:
@@ -279,7 +286,7 @@ Setting up the ELK Stack (Elasticsearch, Logstash, Kibana) on a Windows system t
 2. Add the path of Wireshark (e.g, C:\Program Files\Wireshark`) in the environment variable
 
 #### **Step 8: Setup Activity Watch**
-1. Download Wireshark from here [activity watch]([https://www.wireshark.org/download.html](https://chromewebstore.google.com/detail/activitywatch-web-watcher/nglaklhklhcoonedhgnpgddginnjdadi))
+1. Download activity watch from here [activity watch](https://chromewebstore.google.com/detail/activitywatch-web-watcher/nglaklhklhcoonedhgnpgddginnjdadi))
 2. Click and run the `aw-qt.exe` file.
 3. Go to [timeline](http://localhost:5600/#/timeline) if you want to see the browser log.
 
