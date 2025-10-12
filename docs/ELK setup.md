@@ -196,7 +196,7 @@ Install the installer from this link: [jdk](https://www.oracle.com/java/technolo
    - Download Sysmon from [Microsoft Sysinternals](https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon).
    - Install Sysmon with a configuration file (e.g., SwiftOnSecurity’s config) for detailed security event logging:
      ```powershell
-     sysmon64.exe -i sysmonconfig-export.xml
+     Sysmon64.exe -i sysmonconfig-export.xml
      ```
      Find a recommended configuration file from [SwiftOnSecurity’s GitHub](https://github.com/SwiftOnSecurity/sysmon-config).
 
