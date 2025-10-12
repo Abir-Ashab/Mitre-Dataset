@@ -74,10 +74,11 @@ Install the installer from this link: [jdk](https://www.oracle.com/java/technolo
       # Optional: Increase logging
       logging.root.level: info
      ```
-By default there is no username, password. So no worries. Get the service acc token by the following after going to `F:\elk\elasticsearch-9.1.5\bin`: 
-  ```powershell
-  .\elasticsearch-service-tokens.bat create elastic/kibana kibana-token
-  ```
+      By default there is no username, password. So no worries. Get the service acc token by the following after going to `F:\elk\elasticsearch-9.1.5\bin`:
+     
+        ```powershell
+        .\elasticsearch-service-tokens.bat create elastic/kibana kibana-token
+        ```
 
 3. **Start Kibana**:
    - In PowerShell, navigate to the Kibana bin directory:
