@@ -141,8 +141,13 @@ Install the installer from this link: [jdk](https://www.oracle.com/java/technolo
       -f "C:\ELK\logstash-9.1.3\config\logstash.conf"
       ```
 
+   Then run the following to run it as a service: 
+   ```cmd
+   net start Logstash
+   ```
+
    If it doesn't work as a service using `nssm`, then run Logstash in CMD(Amdin):
-     ```powershell
+     ```cmd
      .\logstash.bat -f "C:\ELK\logstash-9.1.3\config\logstash.conf"
      ```
 
@@ -293,6 +298,16 @@ Install the installer from this link: [jdk](https://www.oracle.com/java/technolo
 
 
 
+#### Find Issue
+
+Here is the command which you can use to check whether your service are working or not:
+
+```cmd
+Get-Service logstash
+Get-Service elasticsearch-service-x64
+Get-Service winlogbeat
+Get-Service sysmon64
+```
 
 
 
