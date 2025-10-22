@@ -6,6 +6,10 @@ from google.auth.transport.requests import Request
 import pickle
 import io
 import json
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
@@ -102,9 +106,12 @@ def get_main_folder_id():
     """Get or create the main monitoring outputs folder."""
     service = authenticate()
     
+    # Get folder name from environment variable, with fallback
+    folder_name = os.getenv('GDRIVE_FOLDER_NAME', 'Mitre-Dataset-Monitoring')
+    
     # Check if folder already exists
     results = service.files().list(
-        q="name='Mitre-Dataset-Monitoring' and mimeType='application/vnd.google-apps.folder'",
+        q=f"name='{folder_name}' and mimeType='application/vnd.google-apps.folder'",
         fields="files(id, name)"
     ).execute()
     
@@ -112,7 +119,7 @@ def get_main_folder_id():
     if items:
         return items[0]['id']
     else:
-        return create_folder('Mitre-Dataset-Monitoring')
+        return create_folder(folder_name)
 
 
 if __name__ == '__main__':
