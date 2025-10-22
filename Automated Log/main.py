@@ -29,7 +29,6 @@ SCREEN_RECORDING_SCRIPT = get_env_or_fail("SCREEN_RECORDING_SCRIPT")
 PACKET_CAPTURE_SCRIPT = get_env_or_fail("PACKET_CAPTURE_SCRIPT")
 LOG_EXTRACTION_SCRIPT = get_env_or_fail("LOG_EXTRACTION_SCRIPT")
 BROWSER_LOG_SCRIPT = get_env_or_fail("BROWSER_LOG_SCRIPT")
-NETWORK_INTERFACE = get_env_or_fail("NETWORK_INTERFACE")
 
 processes = []
 stop_event = threading.Event()
@@ -110,7 +109,7 @@ def main():
             run_script(SCREEN_RECORDING_SCRIPT, timestamp_folder_id, timestamp)
 
             print(" -> Starting packet capture...")
-            run_script(PACKET_CAPTURE_SCRIPT, timestamp_folder_id, timestamp, NETWORK_INTERFACE)
+            run_script(PACKET_CAPTURE_SCRIPT, timestamp_folder_id, timestamp)
 
             time.sleep(INTERVAL_MINUTES * 60)
 
