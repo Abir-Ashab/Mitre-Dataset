@@ -1,21 +1,21 @@
 # Core dependencies
-python-dotenv==1.0.0
+python-dotenv>=1.0.0
 
 # Google Drive integration
-google-api-python-client==2.108.0
-google-auth-httplib2==0.2.0
-google-auth-oauthlib==1.1.0
+google-api-python-client>=2.108.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.1.0
 
 # Computer vision and screen capture
-opencv-python==4.8.1.78
-numpy==1.24.3
-pywin32==306
+opencv-python>=4.8.0
+numpy>=1.26.0
+pywin32>=306
 
 # Elasticsearch client
-elasticsearch==8.9.0
+elasticsearch>=8.9.0
 
 # HTTP requests
-requests==2.31.0
+requests>=2.31.0
 
 # Timezone handling
-pytz==2023.3
+pytz>=2023.3
