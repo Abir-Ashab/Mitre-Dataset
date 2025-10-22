@@ -24,6 +24,86 @@ def get_network_interfaces():
         print(f"Error listing interfaces: {e}")
         sys.exit(1)
 
+def is_wifi_interface(interface_line):
+    """Check if an interface is likely a WiFi interface based on name patterns."""
+    # Convert to lowercase for case-insensitive matching
+    interface_lower = interface_line.lower()
+    
+    # Common WiFi interface indicators
+    wifi_indicators = [
+        'wi-fi', 'wifi', 'wireless', 'wlan', 'wlp', 'ww', 'wg',
+        'wireless network adapter', 'wireless lan', 'wireless-ac',
+        'wireless-n', 'wireless-g', 'wireless adapter', 'wi-fi adapter'
+    ]
+    
+    return any(indicator in interface_lower for indicator in wifi_indicators)
+
+def is_ethernet_interface(interface_line):
+    """Check if an interface is likely an Ethernet interface based on name patterns."""
+    # Convert to lowercase for case-insensitive matching
+    interface_lower = interface_line.lower()
+    
+    # Common Ethernet interface indicators
+    ethernet_indicators = [
+        'ethernet', 'eth', 'enp', 'ens', 'eno', 'lan', 'local area connection',
+        'realtek', 'intel ethernet', 'broadcom netxtreme', 'marvell yukon',
+        'family controller', 'gigabit', 'fast ethernet', 'network adapter'
+    ]
+    
+    # Exclude WiFi interfaces that might contain some ethernet keywords
+    if is_wifi_interface(interface_line):
+        return False
+    
+    return any(indicator in interface_lower for indicator in ethernet_indicators)
+
+def get_preferred_interface():
+    """Automatically select the best available network interface (WiFi first, then Ethernet)."""
+    interfaces = get_network_interfaces()
+    
+    wifi_interfaces = []
+    ethernet_interfaces = []
+    
+    print("Analyzing available network interfaces...")
+    for i, interface in enumerate(interfaces, 1):
+        print(f"{i}. {interface}")
+        
+        if is_wifi_interface(interface):
+            wifi_interfaces.append((i, interface))
+            print(f"   → Detected as WiFi interface")
+        elif is_ethernet_interface(interface):
+            ethernet_interfaces.append((i, interface))
+            print(f"   → Detected as Ethernet interface")
+    
+    # Prioritize WiFi interfaces first
+    if wifi_interfaces:
+        selected = wifi_interfaces[0]  # Take the first WiFi interface
+        print(f"\n✓ Selected WiFi interface: {selected[1]}")
+        return str(selected[0])
+    
+    # Fall back to Ethernet interfaces
+    elif ethernet_interfaces:
+        selected = ethernet_interfaces[0]  # Take the first Ethernet interface
+        print(f"\n✓ Selected Ethernet interface: {selected[1]}")
+        return str(selected[0])
+    
+    # If no WiFi or Ethernet found, show all interfaces and let user choose
+    else:
+        print("\n⚠ No WiFi or Ethernet interfaces automatically detected.")
+        print("Available interfaces:")
+        for i, interface in enumerate(interfaces, 1):
+            print(f"{i}. {interface}")
+        
+        try:
+            choice = int(input("Please manually select interface number: "))
+            if 1 <= choice <= len(interfaces):
+                return str(choice)
+            else:
+                print("Invalid interface number")
+                sys.exit(1)
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+            sys.exit(1)
+
 def get_env_or_fail(var):
     value = os.environ.get(var)
     if value is None:
@@ -141,27 +221,15 @@ Solution: Run the main script as Administrator
             print(f"Start-Process python -ArgumentList '{os.path.abspath(__file__)}' -Verb runAs")
             sys.exit(1)
     
-    if len(sys.argv) > 3:
-        folder_id = sys.argv[1]  # Now Google Drive folder ID
+    if len(sys.argv) > 2:
+        folder_id = sys.argv[1]  # Google Drive folder ID
         timestamp = sys.argv[2]
-        interface_num = sys.argv[3]
-        interfaces = get_network_interfaces()
-        # Use the interface number directly instead of parsing device path
+        
+        # Automatically detect and select the best interface
+        interface_num = get_preferred_interface()
         capture_packets(interface_num, folder_id, timestamp)
     else:
-        interfaces = get_network_interfaces()
-        print("Available network interfaces:")
-        for i, iface in enumerate(interfaces, 1):
-            print(f"{i}. {iface}")
-        try:
-            choice = int(input("Select interface number (e.g., 1): "))
-            if 1 <= choice <= len(interfaces):
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                # Use the interface number directly
-                capture_packets(str(choice), "packet_captures", timestamp)
-            else:
-                print("Invalid interface number")
-                sys.exit(1)
-        except ValueError:
-            print("Invalid input. Please enter a number.")
-            sys.exit(1)
+        # Interactive mode - automatically detect and select interface
+        interface_num = get_preferred_interface()
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        capture_packets(interface_num, "packet_captures", timestamp)
