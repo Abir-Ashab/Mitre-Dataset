@@ -1,0 +1,218 @@
+"""Main script for labeling logs with MITRE ATT&CK techniques."""
+import os
+import sys
+import json
+import shutil
+import time
+from dotenv import load_dotenv
+
+# Add parent directory to path to import gdrive_helper from Log Cleaner
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Log Cleaner'))
+from gdrive_helper import (
+    get_folder_id, get_session_folders, get_files_in_folder,
+    download_file, upload_file_from_content, create_folder,
+    get_processed_sessions
+)
+from mitre_detector import create_story_based_labels
+
+load_dotenv()
+
+TEMP_DOWNLOAD_DIR = "temp_text_logs"
+TEMP_OUTPUT_DIR = "temp_labeled_logs"
+
+
+def get_env_or_fail(var):
+    """Get environment variable or exit if not set."""
+    value = os.environ.get(var)
+    if value is None:
+        print(f"Environment variable '{var}' is required but not set.")
+        sys.exit(1)
+    return value
+
+
+def download_text_log(session_folder, text_logs_folder_id):
+    """Download text log from a session folder."""
+    print(f"\n=== Downloading text log from: {session_folder['name']} ===")
+    
+    session_dir = os.path.join(TEMP_DOWNLOAD_DIR, session_folder['name'])
+    os.makedirs(session_dir, exist_ok=True)
+    
+    # Get files in the session folder
+    files = get_files_in_folder(session_folder['id'])
+    
+    text_log_path = None
+    for file in files:
+        file_name = file['name']
+        if file_name.endswith('.json') and 'text_log' in file_name:
+            print(f"Downloading: {file_name}")
+            file_path = os.path.join(session_dir, file_name)
+            download_file(file['id'], file_path)
+            text_log_path = file_path
+            break
+    
+    return text_log_path, session_dir
+
+
+def label_logs(text_log_path, session_name):
+    """Label all events in a text log file using story-based approach."""
+    print("\n=== Starting Story-Based Log Labeling ===")
+    
+    try:
+        with open(text_log_path, 'r', encoding='utf-8') as f:
+            events = json.load(f)
+        
+        print(f"Total events: {len(events)}")
+        print(f"Creating 20 minute-by-minute narrative summaries...")
+        
+        # Create story-based labels (20 summaries)
+        stories = create_story_based_labels(events, session_name)
+        
+        print(f"\nStory generation complete!")
+        print(f"Created {len(stories)} narrative summaries")
+        
+        return stories
+    
+    except Exception as e:
+        print(f"Error labeling logs: {e}")
+        return []
+
+
+def save_labeled_logs_locally(stories, session_name):
+    """Save story-based labels to local directory."""
+    output_dir = os.path.join(TEMP_OUTPUT_DIR, session_name)
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Save story summaries
+    output_file = os.path.join(output_dir, f"story_labels_{session_name}.json")
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(stories, f, indent=2)
+    
+    print(f"\nSaved locally:")
+    print(f"  {output_file}")
+    
+    return output_dir
+
+
+def upload_labeled_logs(stories, session_name):
+    """Upload labeled logs to Google Drive."""
+    print("\n=== Uploading to Google Drive ===")
+    
+    # Get or create the Labeled_Logs folder
+    labeled_logs_folder_name = os.getenv("GDRIVE_LABELED_LOGS_FOLDER", "Labeled_Logs")
+    labeled_logs_folder_id = get_folder_id(labeled_logs_folder_name)
+    print(f"Labeled Logs folder ID: {labeled_logs_folder_id}")
+    
+    # Create folder for this session
+    session_folder_id = create_folder(session_name, labeled_logs_folder_id)
+    print(f"Created session folder: {session_name} (ID: {session_folder_id})")
+    
+    # Upload story-based labels
+    stories_file_name = f"story_labels_{session_name}.json"
+    stories_json = json.dumps(stories, indent=2)
+    upload_file_from_content(stories_json, session_folder_id, stories_file_name, mime_type='application/json')
+    print(f"Uploaded: {stories_file_name}")
+
+
+def cleanup_temp_files(temp_dir):
+    """Delete temporary files."""
+    if os.path.exists(temp_dir):
+        print(f"\n=== Cleaning up temporary files ===")
+        shutil.rmtree(temp_dir)
+        print(f"Deleted: {temp_dir}")
+
+
+def main():
+    """Main function to label logs with MITRE ATT&CK techniques."""
+    print("=" * 60)
+    print("Log Labeler - MITRE ATT&CK Technique Detection")
+    print("=" * 60)
+    
+    # Get configuration
+    num_sessions = int(os.getenv("NUM_SESSIONS_TO_LABEL", "5"))
+    print(f"\nProcessing up to {num_sessions} unlabeled sessions")
+    
+    # Get Text_Logs folder
+    text_logs_folder_name = get_env_or_fail("GDRIVE_TEXT_LOGS_FOLDER")
+    text_logs_folder_id = get_folder_id(text_logs_folder_name)
+    print(f"Text Logs folder ID: {text_logs_folder_id}")
+    
+    # Get Labeled_Logs folder
+    labeled_logs_folder_name = os.getenv("GDRIVE_LABELED_LOGS_FOLDER", "Labeled_Logs")
+    labeled_logs_folder_id = get_folder_id(labeled_logs_folder_name)
+    
+    # Get already labeled sessions
+    labeled_sessions = get_processed_sessions(labeled_logs_folder_id)
+    print(f"Already labeled: {len(labeled_sessions)} sessions")
+    
+    # Get all text log sessions
+    all_text_sessions = get_session_folders(text_logs_folder_id)
+    
+    # Filter out already labeled sessions
+    unlabeled_folders = [
+        folder for folder in all_text_sessions 
+        if folder['name'] not in labeled_sessions
+    ]
+    
+    print(f"Found {len(unlabeled_folders)} unlabeled session folders")
+    
+    # Limit to num_sessions
+    session_folders = unlabeled_folders[:num_sessions]
+    
+    if not session_folders:
+        print("\nNo unlabeled sessions found. All caught up!")
+        return
+    
+    print(f"Processing {len(session_folders)} sessions (oldest first)")
+    
+    # Process each session
+    for idx, session_folder in enumerate(session_folders, 1):
+        print(f"\n{'=' * 60}")
+        print(f"Processing Session {idx}/{len(session_folders)}: {session_folder['name']}")
+        print(f"{'=' * 60}")
+        
+        text_log_path = None
+        session_dir = None
+        
+        try:
+            # Download text log
+            text_log_path, session_dir = download_text_log(session_folder, text_logs_folder_id)
+            
+            if not text_log_path:
+                print(f"No text log found for session {session_folder['name']}")
+                continue
+            
+            # Label the logs (story-based)
+            stories = label_logs(text_log_path, session_folder['name'])
+            
+            if not stories:
+                print(f"No stories to upload for session {session_folder['name']}")
+                continue
+            
+            # Save locally
+            save_labeled_logs_locally(stories, session_folder['name'])
+            
+            # Upload to Google Drive
+            upload_labeled_logs(stories, session_folder['name'])
+            
+            # Cleanup temp files for this session
+            if session_dir:
+                cleanup_temp_files(session_dir)
+            
+        except Exception as e:
+            print(f"\nError processing session {session_folder['name']}: {e}")
+            if session_dir:
+                cleanup_temp_files(session_dir)
+            continue
+    
+    # Final cleanup
+    for temp_dir in [TEMP_DOWNLOAD_DIR, TEMP_OUTPUT_DIR]:
+        if os.path.exists(temp_dir):
+            cleanup_temp_files(temp_dir)
+    
+    print("\n" + "=" * 60)
+    print("Labeling Complete!")
+    print("=" * 60)
+
+
+if __name__ == "__main__":
+    main()
