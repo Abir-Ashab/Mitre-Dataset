@@ -62,9 +62,19 @@ def download_session_logs(session_folder):
     return downloaded_files, session_dir
 
 
-def merge_and_clean_logs(pcap_path, browser_path, sys_path):
+def merge_and_clean_logs(pcap_path, browser_path, sys_path, session_name):
     """Parse, merge, and clean all log files."""
     print("\n=== Starting Log Processing ===")
+    
+    # Parse session timestamp from folder name (format: YYYYMMDD_HHMMSS)
+    from datetime import datetime, timedelta
+    try:
+        session_dt = datetime.strptime(session_name, '%Y%m%d_%H%M%S')
+        session_end = session_dt + timedelta(minutes=20)
+        print(f"Session window: {session_dt.isoformat()} to {session_end.isoformat()}")
+    except ValueError:
+        print(f"Warning: Could not parse session timestamp from {session_name}")
+        return []
     
     all_events = []
     
@@ -84,11 +94,24 @@ def merge_and_clean_logs(pcap_path, browser_path, sys_path):
     
     all_events = remove_duplicates(all_events)
     all_events = standardize_timestamps(all_events)
-    all_events.sort(key=lambda x: x.get('timestamp') or '')
     
-    print(f"Total events after cleaning: {len(all_events)}")
+    # Filter events to 20-minute window
+    filtered_events = []
+    for event in all_events:
+        try:
+            ts = event.get('timestamp')
+            if ts:
+                event_dt = datetime.fromisoformat(ts.rstrip('Z'))
+                if session_dt <= event_dt < session_end:
+                    filtered_events.append(event)
+        except (ValueError, TypeError):
+            continue
     
-    return all_events
+    filtered_events.sort(key=lambda x: x.get('timestamp') or '')
+    
+    print(f"Events in 20-minute window: {len(filtered_events)}")
+    
+    return filtered_events
 
 
 def upload_cleaned_logs(cleaned_events, session_name):
@@ -180,7 +203,8 @@ def main():
             cleaned_events = merge_and_clean_logs(
                 downloaded_files['pcap'],
                 downloaded_files['browser'],
-                downloaded_files['system']
+                downloaded_files['system'],
+                session_folder['name']
             )
             
             if not cleaned_events:
