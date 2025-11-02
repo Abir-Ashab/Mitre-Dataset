@@ -180,3 +180,24 @@ pip install -r requirements.txt
 - ✅ Perfect for this use case
 
 If you exceed the free tier, the system will automatically fall back to pattern-based detection.
+
+```bash
+main.py                                mitre_detector.py
+   |                                          |
+   |--[1] Download logs from Drive           |
+   |                                          |
+   |--[2] Call create_story_based_labels()-->|
+   |                                          |
+   |                              [3] Group by minute
+   |                                          |
+   |                         [4] For each minute:
+   |                               - Summarize events
+   |                               - Call Gemini AI
+   |                               - Get label + MITRE
+   |                                          |
+   |<--[5] Return story objects---------------|
+   |                                          |
+   |--[6] Save locally + Upload to Drive     |
+   |                                          |
+   |--[7] Cleanup temp files                 |
+```
