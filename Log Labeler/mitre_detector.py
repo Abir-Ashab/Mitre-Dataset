@@ -1,4 +1,4 @@
-"""MITRE ATT&CK detection using Gemini AI - Story-based approach."""
+"""MITRE ATT&CK detection using Gemini AI analyzing full system logs."""
 import os
 import json
 import time
@@ -152,18 +152,17 @@ Impact:
 
 
 def create_story_based_labels(events: List[Dict], session_timestamp: str) -> List[Dict]:
-    print(f"\n=== Creating Story-Based Labels ===")
+    print(f"\n=== Analyzing Log Events ===")
     print(f"Total events: {len(events)}")
     print(f"Session type: {LOG_TYPE}")
-    print(f"Creating narrative summaries per minute...")
+    print(f"Processing logs by minute...")
     
-    # Group events by minute
     events_by_minute = group_events_by_minute(events)
     
     print(f"Found {len(events_by_minute)} time windows")
     
     session_counters = {"normal": 0, "suspicious": 0}
-    stories = []
+    analysis_results = []
     minute_keys = sorted(events_by_minute.keys())
     total_minutes = len(minute_keys)
     
@@ -171,83 +170,125 @@ def create_story_based_labels(events: List[Dict], session_timestamp: str) -> Lis
         print(f"  Processing minute {i}/{total_minutes}...")
         minute_events = events_by_minute[minute_key]
         
-        story = create_minute_story(minute_events, minute_key, session_counters)
-        stories.append(story)
+        result = analyze_minute_events(minute_events, minute_key, session_counters)
+        analysis_results.append(result)
         
         if i < total_minutes and GEMINI_API_KEY:
             time.sleep(5)
     
-    print(f"✓ Created {len(stories)} story summaries")
-    return stories
+    print(f"✓ Completed analysis of {len(analysis_results)} time windows")
+    return analysis_results
 
 
 def group_events_by_minute(events: List[Dict]) -> Dict[str, List[Dict]]:
     grouped = {}
+    start_time = None
+    
+    # First, find the start time
+    for event in events:
+        if not isinstance(event, dict):
+            print(f"Warning: Non-dictionary event found of type {type(event)}")
+            continue
+            
+        try:
+            ts_value = event.get('timestamp')
+            if ts_value and isinstance(ts_value, str):
+                ts_str = ts_value.replace('Z', '+00:00')
+                dt = datetime.fromisoformat(ts_str)
+                if not start_time or dt < start_time:
+                    start_time = dt
+        except Exception as e:
+            print(f"Warning: Error parsing timestamp: {str(e)}")
+            continue
+    
+    if not start_time:
+        return grouped
+    
+    # Now group events, but only within 20 minutes of start time
+    end_time = start_time.replace(minute=start_time.minute + 20)
     
     for event in events:
         try:
             ts_value = event.get('timestamp')
-            
-            if isinstance(ts_value, (int, float)):
-                dt = datetime.fromtimestamp(float(ts_value))
-            elif isinstance(ts_value, str):
-                ts_str = ts_value.replace('Z', '+00:00')
-                dt = datetime.fromisoformat(ts_str)
-            else:
+            if not ts_value or not isinstance(ts_value, str):
                 continue
+
+            ts_str = ts_value.replace('Z', '+00:00')
+            dt = datetime.fromisoformat(ts_str)
             
+            # Skip events outside our 20-minute window
+            if dt < start_time or dt >= end_time:
+                continue
+                
             minute_key = dt.strftime('%Y-%m-%d %H:%M')
-            
             if minute_key not in grouped:
                 grouped[minute_key] = []
             grouped[minute_key].append(event)
-        except Exception:
+            
+        except Exception as e:
+            print(f"Error parsing timestamp '{ts_value}': {str(e)}")
             continue
     
     return grouped
 
 
-def create_minute_story(events: List[Dict], minute_key: str, session_counters: Dict[str, int]) -> Dict:
+def analyze_minute_events(events: List[Dict], minute_key: str, session_counters: Dict[str, int]) -> Dict:
+    
+    # Convert any list items to dictionaries with proper format
+    sanitized_events = []
+    for event in events:
+        if isinstance(event, dict):
+            sanitized_events.append(event)
+        elif isinstance(event, list) and len(event) > 0:
+            # Try to convert list to proper event dictionary
+            try:
+                event_dict = {
+                    "event_type": "unknown",
+                    "timestamp": minute_key,
+                    "message": f"Raw data: {str(event)}"
+                }
+                # If list has key-value pairs, try to extract them
+                if len(event) >= 2 and isinstance(event[0], str):
+                    event_dict["event_type"] = event[0]
+                sanitized_events.append(event_dict)
+            except Exception as e:
+                print(f"Warning: Could not convert list event: {str(e)}")
+                continue
+        else:
+            print(f"Warning: Skipping invalid event type: {type(event)}")
+            continue
+
     if not GEMINI_API_KEY or GEMINI_API_KEY == 'your_gemini_api_key_here':
-        return create_fallback_story(events, minute_key, session_counters)
+        return create_fallback_analysis(sanitized_events, minute_key, session_counters)
     
     try:
-        event_summary = summarize_events(events)
+        event_logs = format_full_logs(sanitized_events)
         
-        prompt = f"""You are a cybersecurity analyst creating a narrative log summary.
+        prompt = f"""You are a cybersecurity analyst analyzing detailed system logs.
 
-Analyze these log events and determine if the activity is truly suspicious or normal.
+Analyze these log events and determine if the activity is truly suspicious or normal. Keep every detail of the logs, and do NOT omit any log types. 
 
 Time Window: {minute_key}
 Number of Events: {len(events)}
 Log File Label: {LOG_TYPE} (but contains BOTH normal and suspicious activities - analyze honestly!)
 
-Event Summary (all 3 log types):
-{event_summary}
+Event logs (all 3 log types):
+{event_logs}
 
-{MITRE_REFERENCE if LOG_TYPE == 'attack' else ''}
+{MITRE_REFERENCE if LOG_TYPE == 'suspicious' else ''}
 
-CRITICAL: Do NOT force-label everything as suspicious just because the file is labeled "{LOG_TYPE}".
-Most activities will be NORMAL. Only mark "suspicious" for clear attack indicators:
-- Malicious executables (mimikatz, ransomware, keyloggers)  
-- PowerShell with encoded commands, suspicious scripts
-- Credential dumping, privilege escalation
-- Data exfiltration to unusual external IPs
-- C2 communication patterns
-- Suspicious registry mods, file encryption
-
-Mark as NORMAL for routine work:
+CRITICAL: Do NOT force-label everything as suspicious just because the file is labeled suspicious. Also, when the {LOG_TYPE} is suspicious, it will must contain suspicious activities to be labeled as such. But most activities will be NORMAL. Only mark "suspicious" for clear attack indicators .Mark as NORMAL for routine work:
 - Regular browsing (github, news, work sites)
 - Standard processes (chrome, slack, vscode, system services)
 - Normal network (DNS, HTTPS to known sites)
 - Expected file operations
 
 Create a narrative description that:
-1. COMBINES all three log types (network, system, browser) into ONE coherent story
+1. COMBINES all three log types (network, system, browser) into ONE coherent story. You can make several json object for a specific minute if needed. In a specific minute, there could be both normal and suspicious activities. So you must cover both in 2 different json object.
 2. Honestly assesses the activity - do NOT force suspicious labels
-3. Mark "suspicious" ONLY if you see clear attack indicators (malicious processes, encoded commands, unusual exfiltration, C2 traffic)
+3. Mark "suspicious" ONLY if you see clear attack indicators (malicious processes, encoded commands, unusual exfiltration, C2 traffic etc many more mitre techniques from the reference)
 4. Mark "normal" for routine activities (regular browsing, standard processes like chrome/slack, normal network traffic)
-5. Be specific but concise (2-4 sentences)
+5. Be specific but concise 
 
 IMPORTANT: This "{LOG_TYPE}" log contains BOTH normal and suspicious activities. Analyze honestly and perfectly.
 
@@ -261,126 +302,171 @@ Respond in JSON format:
         model = genai.GenerativeModel('gemini-2.0-flash')
         response = model.generate_content(prompt)
         response_text = response.text.strip()
-        if '```json' in response_text:
-            response_text = response_text.split('```json')[1].split('```')[0].strip()
-        elif '```' in response_text:
-            response_text = response_text.split('```')[1].split('```')[0].strip()
         
-        result = json.loads(response_text)
+        # More robust response parsing
+        try:
+            # First try parsing the whole response as JSON
+            json_data = json.loads(response_text)
+            
+            # Handle both single dict and list of dicts
+            results = []
+            if isinstance(json_data, list):
+                # Process all valid JSON objects from the list
+                for item in json_data:
+                    if isinstance(item, dict) and ('label' in item or 'text' in item):
+                        results.append(item)
+            else:
+                if isinstance(json_data, dict) and ('label' in json_data or 'text' in json_data):
+                    results.append(json_data)
+                    
+            if not results:
+                return create_fallback_analysis(events, minute_key, session_counters)
+                
+        except json.JSONDecodeError:
+            # If that fails, try to extract JSON from markdown blocks
+            try:
+                # Try to find JSON block
+                if '```json' in response_text:
+                    json_text = response_text.split('```json')[1].split('```')[0].strip()
+                elif '```' in response_text:
+                    json_text = response_text.split('```')[1].split('```')[0].strip()
+                else:
+                    # Look for JSON-like content between curly braces
+                    start = response_text.find('{')
+                    end = response_text.rfind('}') + 1
+                    if start >= 0 and end > start:
+                        json_text = response_text[start:end]
+                    else:
+                        raise ValueError("No JSON-like content found")
+                
+                parsed = json.loads(json_text)
+                if isinstance(parsed, list):
+                    results = [item for item in parsed if isinstance(item, dict) and ('label' in item or 'text' in item)]
+                elif isinstance(parsed, dict) and ('label' in parsed or 'text' in parsed):
+                    results = [parsed]
+                else:
+                    results = []
+                    
+            except Exception as e:
+                print(f"    Failed to parse Gemini response as JSON: {e}")
+                return create_fallback_analysis(events, minute_key, session_counters)
         
-        if LOG_TYPE.lower() == 'normal':
-            label = 'normal'
-        else:
-            label = result.get('label', 'normal')
-            if label not in ['normal', 'suspicious']:
-                label = 'suspicious' if result.get('mitre') else 'normal'
+        if not results:
+            print(f"    No valid analysis results found")
+            return create_fallback_analysis(events, minute_key, session_counters)
+            
+        # Process all valid results
+        responses = []
+        for result in results:
+            if LOG_TYPE.lower() == 'normal':
+                label = 'normal'
+            else:
+                label = result.get('label', 'normal')
+                if label not in ['normal', 'suspicious']:
+                    label = 'suspicious' if result.get('mitre') else 'normal'
+            
+            session_counters[label] += 1
+            responses.append({
+                "timestamp": minute_key,
+                "session": f"{label}{session_counters[label]}",
+                "label": label,
+                "mitre": result.get('mitre', '') if label == 'suspicious' else '',
+                "text": result.get('text', 'Activity recorded')
+            })
         
-        session_counters[label] += 1
-        return {
+        # Return all responses for this minute
+        return responses[0] if len(responses) == 1 else {
             "timestamp": minute_key,
-            "session": f"{label}{session_counters[label]}",
-            "label": label,
-            "mitre": result.get('mitre', '') if label == 'suspicious' else '',
-            "text": result.get('text', 'Activity recorded')
+            "session": "combined",
+            "label": "suspicious" if any(r["label"] == "suspicious" for r in responses) else "normal",
+            "mitre": "; ".join(filter(None, (r["mitre"] for r in responses))),
+            "text": " | ".join(r["text"] for r in responses)
         }
         
     except Exception as e:
         print(f"    Error with Gemini: {e}, using fallback...")
-        return create_fallback_story(events, minute_key, session_counters)
+        return create_fallback_analysis(events, minute_key, session_counters)
 
 
-def summarize_events(events: List[Dict]) -> str:
-    summary_parts = []
+def format_full_logs(events: List[Dict]) -> str:
+    seen = set()
+    deduped_events = []
     
-    network_count = sum(1 for e in events if e.get('event_type') == 'network')
-    system_count = sum(1 for e in events if e.get('event_type') == 'system')
-    browser_count = sum(1 for e in events if e.get('event_type') == 'browser')
+    def safe_get(obj, key, default=None):
+        """Safely get a value from either a dict or list."""
+        if isinstance(obj, dict):
+            return obj.get(key, default)
+        return default
     
-    summary_parts.append(f"Total: {len(events)} events ({network_count} network, {system_count} system, {browser_count} browser)\n")
+    for event in events:
+        if not isinstance(event, dict):
+            print(f"Warning: Skipping non-dictionary event: {type(event)}")
+            continue
+            
+        event_key = (
+            safe_get(event, 'event_type'),
+            safe_get(event, 'timestamp'),
+            safe_get(event, 'process_name') or safe_get(event, 'process') or safe_get(event, 'ProcessName'),
+            safe_get(event, 'url'),
+            safe_get(event, 'dst_ip'),
+            safe_get(event, 'src_ip'),
+            safe_get(event, 'protocol'),
+            str(safe_get(event, 'message'))[:200] if safe_get(event, 'message') else None
+        )
+        if event_key not in seen:
+            seen.add(event_key)
+            deduped_events.append(event)
+
+    formatted_logs = []
+    
+    network_count = sum(1 for e in deduped_events if safe_get(e, 'event_type') == 'network')
+    system_count = sum(1 for e in deduped_events if safe_get(e, 'event_type') == 'system')
+    browser_count = sum(1 for e in deduped_events if safe_get(e, 'event_type') == 'browser')
+    formatted_logs.append(f"Total: {len(deduped_events)} unique events ({network_count} network, {system_count} system, {browser_count} browser)\n")
+
     if network_count:
-        network_events = [e for e in events if e.get('event_type') == 'network'][:10]
-        protocols = [str(e.get('protocol')) for e in network_events if e.get('protocol')]
-        destinations = [str(e.get('dst_ip')) for e in network_events if e.get('dst_ip')]
-        sources = [str(e.get('src_ip')) for e in network_events if e.get('src_ip')]
-        
-        protocols_str = ', '.join(sorted(set(protocols))[:5]) if protocols else 'various'
-        unique_dests = list(dict.fromkeys(destinations))[:5]
-        unique_sources = list(dict.fromkeys(sources))[:3]
-        
-        summary_parts.append(f"NETWORK: {network_count} packets")
-        summary_parts.append(f"  - Protocols: {protocols_str}")
-        summary_parts.append(f"  - Source IPs: {', '.join(unique_sources)}")
-        summary_parts.append(f"  - Destination IPs: {', '.join(unique_dests)}")
-    
+        formatted_logs.append("NETWORK EVENTS:")
+        for event in [e for e in deduped_events if safe_get(e, 'event_type') == 'network']:
+            log_entry = []
+            if safe_get(event, 'protocol'): log_entry.append(f"Protocol: {safe_get(event, 'protocol')}")
+            if safe_get(event, 'src_ip'): log_entry.append(f"Src: {safe_get(event, 'src_ip')}")
+            if safe_get(event, 'dst_ip'): log_entry.append(f"Dst: {safe_get(event, 'dst_ip')}")
+            if safe_get(event, 'src_port'): log_entry.append(f"SrcPort: {safe_get(event, 'src_port')}")
+            if safe_get(event, 'dst_port'): log_entry.append(f"DstPort: {safe_get(event, 'dst_port')}")
+            formatted_logs.append("  " + " | ".join(log_entry))
+
     if system_count:
-        system_events = [e for e in events if e.get('event_type') == 'system'][:15]
-        processes = []
-        activities = []
-        
-        for e in system_events:
-            proc = e.get('process_name') or e.get('process') or e.get('ProcessName')
-            
-            if not proc and e.get('message'):
-                msg = str(e.get('message', ''))
-                for line in msg.split('\n'):
-                    if line.strip().startswith('Image:'):
-                        image_path = line.split('Image:')[1].strip()
-                        proc = image_path.split('\\')[-1]
-                        break
-            
-            if proc and str(proc).strip():
-                processes.append(str(proc)[:50])
-            
-            if e.get('message'):
-                msg = str(e.get('message', ''))
-                if 'File creation' in msg:
-                    activities.append('File creation')
-                elif 'Process Create' in msg:
-                    activities.append('Process creation')
-                elif 'Network connection' in msg:
-                    activities.append('Network connection')
-                elif 'Registry' in msg:
-                    activities.append('Registry modification')
-        
-        unique_procs = list(dict.fromkeys(processes))[:7]
-        unique_activities = list(dict.fromkeys(activities))[:4]
-        
-        summary_parts.append(f"\nSYSTEM: {system_count} events")
-        if unique_procs:
-            summary_parts.append(f"  - Processes: {', '.join(unique_procs)}")
-        if unique_activities:
-            summary_parts.append(f"  - Activities: {', '.join(unique_activities)}")
-        if not unique_procs and not unique_activities:
-            summary_parts.append(f"  - Various system activities")
-    
+        formatted_logs.append("\nSYSTEM EVENTS:")
+        for event in [e for e in deduped_events if safe_get(e, 'event_type') == 'system']:
+            log_entry = []
+            proc = safe_get(event, 'process_name') or safe_get(event, 'process') or safe_get(event, 'ProcessName')
+            if proc: log_entry.append(f"Process: {proc}")
+            msg = safe_get(event, 'message')
+            if msg: 
+                msg = str(msg)
+                msg = ' | '.join(line.strip() for line in msg.split('\n') if line.strip())
+                log_entry.append(msg)
+            formatted_logs.append("  " + " | ".join(log_entry))
+
     if browser_count:
-        browser_events = [e for e in events if e.get('event_type') == 'browser'][:10]
-        urls = []
-        titles = []
-        for e in browser_events:
-            if e.get('url'):
-                url_str = str(e.get('url'))
-                urls.append(url_str[:70])
-            
-            if e.get('title'):
-                title_str = str(e.get('title'))
-                titles.append(title_str[:60])
-        
-        summary_parts.append(f"\nBROWSER: {browser_count} page views")
-        if urls:
-            summary_parts.append(f"  - URLs: {', '.join(urls[:4])}")
-        if titles:
-            summary_parts.append(f"  - Titles: {', '.join(titles[:3])}")
-        if not urls and not titles:
-            summary_parts.append(f"  - Various browser activities")
-    
-    return '\n'.join(summary_parts) if summary_parts else "Mixed activity across network, system, and browser"
+        formatted_logs.append("\nBROWSER EVENTS:")
+        for event in [e for e in deduped_events if safe_get(e, 'event_type') == 'browser']:
+            log_entry = []
+            if safe_get(event, 'url'): log_entry.append(f"URL: {safe_get(event, 'url')}")
+            if safe_get(event, 'title'): log_entry.append(f"Title: {safe_get(event, 'title')}")
+            if safe_get(event, 'type'): log_entry.append(f"Action: {safe_get(event, 'type')}")
+            formatted_logs.append("  " + " | ".join(log_entry))
+
+    return '\n'.join(formatted_logs)
 
 
-def create_fallback_story(events: List[Dict], minute_key: str, session_counters: Dict[str, int]) -> Dict:
+def create_fallback_analysis(events: List[Dict], minute_key: str, session_counters: Dict[str, int]) -> Dict:
     event_types = {}
     for e in events:
-        et = e.get('event_type', 'unknown')
+        if not isinstance(e, dict):
+            et = 'unknown'
+        else:
+            et = e.get('event_type', 'unknown')
         event_types[et] = event_types.get(et, 0) + 1
     
     parts = []

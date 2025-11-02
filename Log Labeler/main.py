@@ -55,9 +55,18 @@ def label_logs(text_log_path, session_name):
     
     try:
         with open(text_log_path, 'r', encoding='utf-8') as f:
-            events = json.load(f)
+            raw_events = json.load(f)
         
-        print(f"Total events: {len(events)}")
+        # Ensure all events are dictionaries with required fields
+        events = []
+        for event in raw_events:
+            if isinstance(event, dict):
+                events.append(event)
+            else:
+                print(f"Warning: Skipping non-dictionary event of type {type(event)}")
+                continue
+        
+        print(f"Total valid events: {len(events)} (from {len(raw_events)} total)")
         print(f"Creating minute-by-minute narrative summaries...")
         
         stories = create_story_based_labels(events, session_name)
