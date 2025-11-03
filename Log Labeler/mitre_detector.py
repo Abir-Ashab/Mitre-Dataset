@@ -3,7 +3,7 @@ import os
 import json
 import time
 from typing import Dict, List
-from datetime import datetime
+from datetime import datetime, timedelta
 import google.generativeai as genai
 from dotenv import load_dotenv
 
@@ -151,36 +151,46 @@ Impact:
 """
 
 
-def create_story_based_labels(events: List[Dict], session_timestamp: str) -> List[Dict]:
+def create_story_based_labels(events: List[Dict], session_timestamp: str, window_size_seconds: int = 60) -> List[Dict]:
     print(f"\n=== Analyzing Log Events ===")
     print(f"Total events: {len(events)}")
     print(f"Session type: {LOG_TYPE}")
-    print(f"Processing logs by minute...")
+    print(f"Processing logs in {window_size_seconds}-second windows...")
     
-    events_by_minute = group_events_by_minute(events)
+    events_by_window = group_events_by_time_window(events, window_size_seconds)
     
-    print(f"Found {len(events_by_minute)} time windows")
+    print(f"Found {len(events_by_window)} time windows")
     
     session_counters = {"normal": 0, "suspicious": 0}
     analysis_results = []
-    minute_keys = sorted(events_by_minute.keys())
-    total_minutes = len(minute_keys)
+    window_keys = sorted(events_by_window.keys())
+    total_windows = len(window_keys)
     
-    for i, minute_key in enumerate(minute_keys, 1):
-        print(f"  Processing minute {i}/{total_minutes}...")
-        minute_events = events_by_minute[minute_key]
+    for i, window_key in enumerate(window_keys, 1):
+        print(f"  Processing window {i}/{total_windows} ({window_key})...")
+        window_events = events_by_window[window_key]
         
-        result = analyze_minute_events(minute_events, minute_key, session_counters)
+        result = analyze_minute_events(window_events, window_key, session_counters)
         analysis_results.append(result)
         
-        if i < total_minutes and GEMINI_API_KEY:
+        if i < total_windows and GEMINI_API_KEY:
             time.sleep(5)
     
     print(f"✓ Completed analysis of {len(analysis_results)} time windows")
     return analysis_results
 
 
-def group_events_by_minute(events: List[Dict]) -> Dict[str, List[Dict]]:
+def group_events_by_time_window(events: List[Dict], window_size_seconds: int = 60) -> Dict[str, List[Dict]]:
+    """
+    Group events into time windows of specified size.
+    
+    Args:
+        events: List of event dictionaries
+        window_size_seconds: Size of each time window in seconds (default: 60 seconds)
+    
+    Returns:
+        Dictionary mapping time window start times to lists of events
+    """
     grouped = {}
     start_time = None
     
@@ -204,7 +214,8 @@ def group_events_by_minute(events: List[Dict]) -> Dict[str, List[Dict]]:
     if not start_time:
         return grouped
     
-    # Now group events, but only within 20 minutes of start time
+    # Calculate session duration (20 minutes in seconds)
+    session_duration = 20 * 60
     end_time = start_time.replace(minute=start_time.minute + 20)
     
     for event in events:
@@ -216,14 +227,22 @@ def group_events_by_minute(events: List[Dict]) -> Dict[str, List[Dict]]:
             ts_str = ts_value.replace('Z', '+00:00')
             dt = datetime.fromisoformat(ts_str)
             
-            # Skip events outside our 20-minute window
+            # Skip events outside our session window
             if dt < start_time or dt >= end_time:
                 continue
-                
-            minute_key = dt.strftime('%Y-%m-%d %H:%M')
-            if minute_key not in grouped:
-                grouped[minute_key] = []
-            grouped[minute_key].append(event)
+            
+            # Calculate which time window this event belongs to
+            seconds_from_start = (dt - start_time).total_seconds()
+            window_index = int(seconds_from_start / window_size_seconds)
+            window_start = start_time + timedelta(seconds=window_index * window_size_seconds)
+            window_end = window_start + timedelta(seconds=window_size_seconds)
+            
+            # Create a descriptive key that includes the time range
+            window_key = f"{window_start.strftime('%Y-%m-%d %H:%M:%S')} - {window_end.strftime('%H:%M:%S')}"
+            
+            if window_key not in grouped:
+                grouped[window_key] = []
+            grouped[window_key].append(event)
             
         except Exception as e:
             print(f"Error parsing timestamp '{ts_value}': {str(e)}")

@@ -67,9 +67,12 @@ def label_logs(text_log_path, session_name):
                 continue
         
         print(f"Total valid events: {len(events)} (from {len(raw_events)} total)")
-        print(f"Creating minute-by-minute narrative summaries...")
         
-        stories = create_story_based_labels(events, session_name)
+        # Get window size from environment or use default
+        window_size = int(os.getenv("WINDOW_SIZE_SECONDS", "60"))
+        print(f"Using {window_size}-second time windows...")
+        
+        stories = create_story_based_labels(events, session_name, window_size_seconds=window_size)
         
         print(f"\nStory generation complete!")
         print(f"Created {len(stories)} narrative summaries")
