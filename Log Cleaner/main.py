@@ -37,13 +37,15 @@ def download_session_logs(session_folder):
     
     files = get_files_in_folder(session_folder['id'])
     
-    downloaded_files = {'pcap': None, 'browser': None, 'system': None}
+    # Use lists to collect multiple files per type
+    downloaded_files = {'pcap': [], 'browser': [], 'system': []}
     
     for file in files:
         file_name = file['name']
+        file_name_lower = file_name.lower()
         
         # Skip video files
-        if file_name.endswith(('.avi', '.mp4', '.mkv')):
+        if file_name_lower.endswith(('.avi', '.mp4', '.mkv')):
             print(f"Skipping video file: {file_name}")
             continue
         
@@ -51,19 +53,46 @@ def download_session_logs(session_folder):
         file_path = os.path.join(session_dir, file_name)
         download_file(file['id'], file_path)
         
-        # Categorize the file
-        if file_name.endswith('.pcap'):
-            downloaded_files['pcap'] = file_path
-        elif 'aw-watcher' in file_name or 'browser' in file_name:
-            downloaded_files['browser'] = file_path
-        elif 'syslog' in file_name:
-            downloaded_files['system'] = file_path
+        # Check most specific patterns first
+        if file_name_lower.endswith('.pcap'):
+            downloaded_files['pcap'].append(file_path)
+            print(f"  -> Categorized as: NETWORK log")
+        elif ('syslog' in file_name_lower or 'system' in file_name_lower or 
+              'sys_' in file_name_lower):
+            # System logs - check before generic .json check
+            downloaded_files['system'].append(file_path)
+            print(f"  -> Categorized as: SYSTEM log")
+        elif ('aw-watcher' in file_name_lower or 'aw_watcher' in file_name_lower or 
+              'browser' in file_name_lower):
+            # Browser activity logs
+            downloaded_files['browser'].append(file_path)
+            print(f"  -> Categorized as: BROWSER log")
+        elif file_name_lower.endswith('.json'):
+            # Generic JSON - try to identify by content or name patterns
+            if 'log' in file_name_lower:
+                # If it has 'log' in name and is JSON, likely system log
+                downloaded_files['system'].append(file_path)
+                print(f"  -> Categorized as: SYSTEM log (JSON)")
+            else:
+                downloaded_files['browser'].append(file_path)
+                print(f"  -> Categorized as: BROWSER log (JSON)")
+        elif file_name_lower.endswith('.log'):
+            downloaded_files['system'].append(file_path)
+            print(f"  -> Categorized as: SYSTEM log")
+        else:
+            print(f"  -> WARNING: Unknown file type, skipped categorization")
+    
+    # Print summary
+    print(f"\nDownload Summary:")
+    print(f"  Network logs (PCAP): {len(downloaded_files['pcap'])} file(s)")
+    print(f"  Browser logs: {len(downloaded_files['browser'])} file(s)")
+    print(f"  System logs: {len(downloaded_files['system'])} file(s)")
     
     return downloaded_files, session_dir
 
 
-def merge_and_clean_logs(pcap_path, browser_path, sys_path, session_name):
-    """Parse, merge, and clean all log files."""
+def merge_and_clean_logs(pcap_paths, browser_paths, sys_paths, session_name):
+    """Parse, merge, and clean all log files. Accepts lists of paths for each type."""
     print("\n=== Starting Log Processing ===")
     
     # Parse session timestamp from folder name (format: YYYYMMDD_HHMMSS)
@@ -78,38 +107,75 @@ def merge_and_clean_logs(pcap_path, browser_path, sys_path, session_name):
     
     all_events = []
     
-    if pcap_path and os.path.exists(pcap_path):
-        print(f"\nProcessing PCAP: {pcap_path}")
-        all_events.extend(parse_pcap_logs(pcap_path))
+    # Process all PCAPs
+    if pcap_paths:
+        for pcap_path in pcap_paths:
+            if pcap_path and os.path.exists(pcap_path):
+                print(f"\nProcessing PCAP: {pcap_path}")
+                all_events.extend(parse_pcap_logs(pcap_path))
     
-    if browser_path and os.path.exists(browser_path):
-        print(f"\nProcessing Browser Log: {browser_path}")
-        all_events.extend(parse_browser_logs(browser_path))
+    # Process all Browser logs
+    if browser_paths:
+        for browser_path in browser_paths:
+            if browser_path and os.path.exists(browser_path):
+                print(f"\nProcessing Browser Log: {browser_path}")
+                all_events.extend(parse_browser_logs(browser_path))
     
-    if sys_path and os.path.exists(sys_path):
-        print(f"\nProcessing System Log: {sys_path}")
-        all_events.extend(parse_system_logs(sys_path))
+    # Process all System logs
+    if sys_paths:
+        for sys_path in sys_paths:
+            if sys_path and os.path.exists(sys_path):
+                print(f"\nProcessing System Log: {sys_path}")
+                all_events.extend(parse_system_logs(sys_path))
     
     print(f"\nTotal events before cleaning: {len(all_events)}")
     
     all_events = remove_duplicates(all_events)
     all_events = standardize_timestamps(all_events)
     
-    # Filter events to 20-minute window
+    # Analyze actual timestamp range in the logs
+    valid_timestamps = []
+    for event in all_events:
+        ts = event.get('timestamp')
+        if ts:
+            try:
+                event_dt = datetime.fromisoformat(ts.replace('Z', '+00:00'))
+                valid_timestamps.append(event_dt.replace(tzinfo=None))
+            except:
+                continue
+    
+    if valid_timestamps:
+        min_ts = min(valid_timestamps)
+        max_ts = max(valid_timestamps)
+        print(f"\nActual log timestamp range:")
+        print(f"  Earliest: {min_ts.isoformat()}")
+        print(f"  Latest:   {max_ts.isoformat()}")
+        print(f"  Duration: {(max_ts - min_ts).total_seconds() / 60:.1f} minutes")
+        
+        # Use actual log range instead of session name
+        print(f"\nUsing actual log range instead of session folder timestamp")
+        session_dt = min_ts
+        session_end = max_ts
+    
+    # Filter events to time window
     filtered_events = []
     for event in all_events:
         try:
             ts = event.get('timestamp')
             if ts:
-                event_dt = datetime.fromisoformat(ts.rstrip('Z'))
-                if session_dt <= event_dt < session_end:
+                # Parse timestamp (format: 2025-09-12T10:59:00.000Z)
+                event_dt = datetime.fromisoformat(ts.replace('Z', '+00:00'))
+                # Convert to naive datetime for comparison
+                event_dt_naive = event_dt.replace(tzinfo=None)
+                if session_dt <= event_dt_naive <= session_end:
                     filtered_events.append(event)
-        except (ValueError, TypeError):
+        except (ValueError, TypeError) as e:
+            # Skip events with invalid timestamps
             continue
     
     filtered_events.sort(key=lambda x: x.get('timestamp') or '')
     
-    print(f"Events in 20-minute window: {len(filtered_events)}")
+    print(f"Events in time window: {len(filtered_events)}")
     
     return filtered_events
 
