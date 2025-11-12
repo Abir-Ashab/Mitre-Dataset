@@ -15,7 +15,7 @@ def anonymize_id(value):
 
 def parse_browser_logs(browser_path):
     """Parse ActivityWatch browser JSON log."""
-    from datetime import datetime
+    from datetime import datetime, timezone
     events = []
     try:
         with open(browser_path, 'r', encoding='utf-8') as f:
@@ -36,18 +36,19 @@ def parse_browser_logs(browser_path):
                         else:
                             ts_str = raw_timestamp
                         dt = datetime.fromisoformat(ts_str)
-                        timestamp = dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+                        # Convert to UTC and format consistently
+                        dt_utc = dt.astimezone(timezone.utc)
+                        timestamp = dt_utc.isoformat(timespec='milliseconds').replace('+00:00', 'Z')
                     # Try parsing as Unix timestamp
                     elif isinstance(raw_timestamp, (int, float)):
-                        dt = datetime.fromtimestamp(float(raw_timestamp))
-                        timestamp = dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+                        dt = datetime.fromtimestamp(float(raw_timestamp), tz=timezone.utc)
+                        timestamp = dt.isoformat(timespec='milliseconds').replace('+00:00', 'Z')
                 except Exception as e:
                     print(f"Browser log timestamp error: {str(e)} - Value: {raw_timestamp}")
                     timestamp = None
             
             event = {
                 'timestamp': timestamp,
-                'original_timestamp': str(raw_timestamp) if raw_timestamp else None,
                 'event_type': 'browser',
                 'url': entry.get('data', {}).get('url'),
                 'title': entry.get('data', {}).get('title'),
@@ -56,23 +57,27 @@ def parse_browser_logs(browser_path):
             events.append(event)
         print(f"Parsed {len(events)} browser log events")
     except Exception as e:
-        print(f"Error parsing browser log: {e}")
+        print(f"Error parsing browser log (skipping): {e}")
     return events
 
 
 def parse_system_logs(sys_path):
     """Parse Kibana system JSON log (JSONL format)."""
-    from datetime import datetime
+    from datetime import datetime, timezone
     events = []
+    parsed_lines = 0
+    skipped_lines = 0
+    
     try:
         with open(sys_path, 'r', encoding='utf-8') as f:
             lines = f.readlines()
         
-        for line in lines:
+        for line_num, line in enumerate(lines, 1):
             if not line.strip():
                 continue
             try:
                 log = json.loads(line)
+                parsed_lines += 1
                 raw_timestamp = log.get('@timestamp')
                 timestamp = None
                 
@@ -87,14 +92,15 @@ def parse_system_logs(sys_path):
                             else:
                                 ts_str = raw_timestamp
                             dt = datetime.fromisoformat(ts_str)
-                            timestamp = dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+                            # Convert to UTC and format consistently
+                            dt_utc = dt.astimezone(timezone.utc)
+                            timestamp = dt_utc.isoformat(timespec='milliseconds').replace('+00:00', 'Z')
                     except Exception as e:
-                        print(f"System log timestamp error: {str(e)} - Value: {raw_timestamp}")
+                        print(f"System log timestamp error on line {line_num}: {str(e)}")
                         timestamp = None
                 
                 event = {
                     'timestamp': timestamp,
-                    'original_timestamp': str(raw_timestamp) if raw_timestamp else None,
                     'event_type': 'system',
                     'process_name': log.get('process', {}).get('name'),
                     'command_line': log.get('process', {}).get('command_line'),
@@ -108,11 +114,22 @@ def parse_system_logs(sys_path):
                     event['agent_id'] = anonymize_id(log['agent']['id'])
                     
                 events.append(event)
-            except json.JSONDecodeError:
+            except json.JSONDecodeError as e:
+                skipped_lines += 1
+                if skipped_lines <= 3:  # Only show first 3 errors
+                    print(f"Skipping invalid JSON on line {line_num}: {str(e)[:100]}")
                 continue
-        print(f"Parsed {len(events)} system log events")
+            except Exception as e:
+                skipped_lines += 1
+                if skipped_lines <= 3:
+                    print(f"Error processing line {line_num}: {str(e)[:100]}")
+                continue
+        
+        print(f"Parsed {len(events)} system log events from {parsed_lines} lines")
+        if skipped_lines > 0:
+            print(f"Skipped {skipped_lines} invalid/malformed lines")
     except Exception as e:
-        print(f"Error parsing system log: {e}")
+        print(f"Error parsing system log (skipping): {e}")
     return events
 
 
@@ -175,16 +192,16 @@ def parse_pcap_logs(pcap_path):
             
             if raw_timestamp:
                 try:
-                    # Network logs use Unix timestamps
-                    dt = datetime.fromtimestamp(float(raw_timestamp))
-                    timestamp = dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+                    # Network logs use Unix timestamps - convert to UTC
+                    from datetime import timezone
+                    dt = datetime.fromtimestamp(float(raw_timestamp), tz=timezone.utc)
+                    timestamp = dt.isoformat(timespec='milliseconds').replace('+00:00', 'Z')
                 except Exception as e:
                     print(f"Network log timestamp error: {str(e)} - Value: {raw_timestamp}")
                     timestamp = None
             
             event = {
                 'timestamp': timestamp,
-                'original_timestamp': str(raw_timestamp) if raw_timestamp else None,
                 'event_type': 'network',
                 'src_ip': layers.get('ip.src', [None])[0],
                 'dst_ip': layers.get('ip.dst', [None])[0],
@@ -259,65 +276,58 @@ def remove_duplicates(events):
 
 
 def standardize_timestamps(events):
-    """Convert all timestamps to ISO format with timezone (YYYY-MM-DDTHH:mm:ss.sssZ)."""
-    from datetime import datetime
-    import time
+    """Verify all timestamps are in ISO format with timezone (YYYY-MM-DDTHH:mm:ss.sssZ)."""
+    from datetime import datetime, timezone
     
     problematic_events = []
-    standardized_count = 0
+    valid_count = 0
     
     for event in events:
         timestamp = event.get('timestamp')
         if not timestamp:
             # Keep events without timestamp but mark them
-            event['timestamp'] = None
             event['timestamp_error'] = 'No timestamp provided'
             problematic_events.append(event)
             continue
             
+        # Verify timestamp is in correct format
         try:
-            # Handle Unix timestamps (network logs)
-            if isinstance(timestamp, (int, float)):
-                dt = datetime.fromtimestamp(float(timestamp))
-            # Handle string timestamps (system/browser logs)
-            elif isinstance(timestamp, str):
-                # Try multiple formats
-                if 'Z' in timestamp:
-                    ts_str = timestamp.replace('Z', '+00:00')
-                elif '+' not in timestamp and '-' not in timestamp[10:]:
-                    # No timezone specified, assume UTC
-                    ts_str = timestamp + '+00:00'
-                else:
-                    ts_str = timestamp
-                
-                try:
-                    dt = datetime.fromisoformat(ts_str)
-                except ValueError:
-                    # Try parsing as Unix timestamp in string form
-                    dt = datetime.fromtimestamp(float(ts_str))
+            if isinstance(timestamp, str) and timestamp.endswith('Z'):
+                # Try to parse it to verify it's valid
+                dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+                valid_count += 1
             else:
-                event['timestamp_error'] = f'Unknown timestamp type: {type(timestamp)}'
-                problematic_events.append(event)
-                continue
-                
-            # Convert to ISO format with 'Z' timezone
-            event['timestamp'] = dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-            standardized_count += 1
-            
-            # Store original timestamp for verification
-            event['original_timestamp'] = str(timestamp)
-            
+                # If not in expected format, try to convert it
+                if isinstance(timestamp, (int, float)):
+                    dt = datetime.fromtimestamp(float(timestamp), tz=timezone.utc)
+                    event['timestamp'] = dt.isoformat(timespec='milliseconds').replace('+00:00', 'Z')
+                    valid_count += 1
+                elif isinstance(timestamp, str):
+                    # Try parsing as ISO format
+                    if 'Z' in timestamp:
+                        ts_str = timestamp.replace('Z', '+00:00')
+                    elif '+' not in timestamp and '-' not in timestamp[10:]:
+                        ts_str = timestamp + '+00:00'
+                    else:
+                        ts_str = timestamp
+                    dt = datetime.fromisoformat(ts_str)
+                    dt_utc = dt.astimezone(timezone.utc)
+                    event['timestamp'] = dt_utc.isoformat(timespec='milliseconds').replace('+00:00', 'Z')
+                    valid_count += 1
+                else:
+                    event['timestamp_error'] = f'Unknown timestamp type: {type(timestamp)}'
+                    problematic_events.append(event)
+                    
         except Exception as e:
             event['timestamp_error'] = f'Failed to parse: {str(e)}'
-            event['original_timestamp'] = str(timestamp)
             problematic_events.append(event)
     
     print(f"\nTimestamp Standardization Results:")
-    print(f"- Successfully standardized: {standardized_count} timestamps")
+    print(f"- Valid timestamps: {valid_count}")
     if problematic_events:
         print(f"- Events with timestamp issues: {len(problematic_events)}")
         print("\nSample problematic timestamps:")
         for evt in problematic_events[:3]:  # Show first 3 examples
-            print(f"  - Original: {evt.get('original_timestamp')} | Error: {evt.get('timestamp_error')}")
+            print(f"  - Value: {evt.get('timestamp')} | Error: {evt.get('timestamp_error')}")
     
     return events
