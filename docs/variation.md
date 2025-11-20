@@ -1,6 +1,6 @@
 # **MITRE ATT&CK Mapping for Your Attack Steps**
 
-## **1. Initial Access**
+## **1. Initial Access (By downloading payload)**
 
 **Techniques involved:**
 
