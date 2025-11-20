@@ -74,17 +74,24 @@ def get_processed_sessions(text_logs_folder_id):
     """Get list of already processed session names from Text_Logs folder."""
     service = authenticate()
     
-    query = f"'{text_logs_folder_id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false"
-    results = service.files().list(
-        q=query,
-        spaces='drive',
-        fields='files(name)'
-    ).execute()
+    all_folders = []
+    page_token = None
     
-    folders = results.get('files', [])
+    while True:
+        results = service.files().list(
+            q=f"'{text_logs_folder_id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false",
+            spaces='drive',
+            fields='files(name), nextPageToken',
+            pageToken=page_token
+        ).execute()
+        
+        all_folders.extend(results.get('files', []))
+        page_token = results.get('nextPageToken')
+        if not page_token:
+            break
     
     # Return folder names directly (they match session names)
-    processed = set(folder['name'] for folder in folders)
+    processed = set(folder['name'] for folder in all_folders)
     
     return processed
 
@@ -93,16 +100,24 @@ def get_session_folders(parent_folder_id, limit=5):
     """Get the oldest N session folders from Google Drive."""
     service = authenticate()
     
-    query = f"'{parent_folder_id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false"
-    results = service.files().list(
-        q=query, 
-        spaces='drive', 
-        fields='files(id, name, createdTime)',
-        orderBy='createdTime asc',  # Changed from 'desc' to 'asc' for oldest first
-        pageSize=1000  # Get more to filter out processed ones
-    ).execute()
+    all_folders = []
+    page_token = None
     
-    return results.get('files', [])
+    while True:
+        results = service.files().list(
+            q=f"'{parent_folder_id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false",
+            spaces='drive',
+            fields='files(id, name, createdTime), nextPageToken',
+            orderBy='createdTime asc',
+            pageToken=page_token
+        ).execute()
+        
+        all_folders.extend(results.get('files', []))
+        page_token = results.get('nextPageToken')
+        if not page_token:
+            break
+    
+    return all_folders
 
 
 def get_files_in_folder(folder_id):
