@@ -158,7 +158,7 @@ def upload_labeled_logs(labeled_data, session_name):
     session_folder_id = create_folder(session_name, labeled_logs_folder_id)
     print(f"Created session folder: {session_name} (ID: {session_folder_id})")
     
-    stories_file_name = f"story_labels_{session_name}.json"
+    stories_file_name = f"annotated_data_{session_name}.json"
     stories_json = json.dumps(labeled_data, indent=2)
     upload_file_from_content(stories_json, session_folder_id, stories_file_name, mime_type='application/json')
     print(f"Uploaded: {stories_file_name}")
