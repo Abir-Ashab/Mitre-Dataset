@@ -2,8 +2,6 @@
 import json
 import os
 import hashlib
-import subprocess
-import tempfile
 
 
 def anonymize_id(value):
@@ -47,13 +45,16 @@ def parse_browser_logs(browser_path):
                     print(f"Browser log timestamp error: {str(e)} - Value: {raw_timestamp}")
                     timestamp = None
             
+            # Preserve all data from the entry
             event = {
                 'timestamp': timestamp,
-                'event_type': 'browser',
-                'url': entry.get('data', {}).get('url'),
-                'title': entry.get('data', {}).get('title'),
-                'duration': entry.get('duration')
+                'event_type': 'browser'
             }
+            # Add all fields from the entry, excluding timestamp if already processed
+            for key, value in entry.items():
+                if key != 'timestamp':
+                    event[key] = value
+            
             events.append(event)
         print(f"Parsed {len(events)} browser log events")
     except Exception as e:
@@ -99,15 +100,17 @@ def parse_system_logs(sys_path):
                         print(f"System log timestamp error on line {line_num}: {str(e)}")
                         timestamp = None
                 
+                # Preserve all data from the log
                 event = {
                     'timestamp': timestamp,
-                    'event_type': 'system',
-                    'process_name': log.get('process', {}).get('name'),
-                    'command_line': log.get('process', {}).get('command_line'),
-                    'log_level': log.get('log', {}).get('level'),
-                    'message': log.get('message')
+                    'event_type': 'system'
                 }
-                # Anonymize sensitive fields
+                # Add all fields from the log, excluding @timestamp if already processed
+                for key, value in log.items():
+                    if key != '@timestamp':
+                        event[key] = value
+                
+                # Anonymize sensitive fields if present
                 if log.get('host', {}).get('name'):
                     event['host_id'] = anonymize_id(log['host']['name'])
                 if log.get('agent', {}).get('id'):
@@ -134,115 +137,61 @@ def parse_system_logs(sys_path):
 
 
 def parse_pcap_logs(pcap_path):
-    """Parse PCAP file using tshark command (much faster than pyshark)."""
-    from datetime import datetime
+    """Parse PCAP file using Scapy to preserve all packet data without loss."""
+    try:
+        import scapy.all as scapy
+    except ImportError:
+        print("Error: Scapy not installed. Install with: pip install scapy")
+        return []
+    
+    from datetime import datetime, timezone
     events = []
-    temp_json_path = None
     
     try:
-        print("Converting PCAP to JSON using tshark...")
+        print("Reading PCAP file with Scapy...")
+        packets = scapy.rdpcap(pcap_path)
         
-        # Create temporary JSON file
-        temp_json = tempfile.NamedTemporaryFile(mode='w+', suffix='.json', delete=False)
-        temp_json_path = temp_json.name
-        temp_json.close()
-        
-        # Use tshark to convert PCAP to JSON
-        tshark_cmd = [
-            'tshark',
-            '-r', pcap_path,
-            '-T', 'json',
-            '-e', 'frame.time_epoch',
-            '-e', 'ip.src',
-            '-e', 'ip.dst',
-            '-e', 'frame.protocols',
-            '-e', 'tcp.srcport',
-            '-e', 'tcp.dstport',
-            '-e', 'udp.srcport',
-            '-e', 'udp.dstport',
-            '-e', 'frame.len'
-        ]
-        
-        # Run tshark and save output to temp file
-        with open(temp_json_path, 'w') as f:
-            result = subprocess.run(
-                tshark_cmd,
-                stdout=f,
-                stderr=subprocess.PIPE,
-                text=True,
-                timeout=300  # 5 minutes timeout
-            )
-        
-        if result.returncode != 0:
-            print(f"tshark error: {result.stderr}")
-            return events
-        
-        print("Parsing JSON output...")
-        
-        # Read and parse the JSON
-        with open(temp_json_path, 'r') as f:
-            packets = json.load(f)
-        
-        # Convert to our event format
-        for packet in packets:
-            layers = packet.get('_source', {}).get('layers', {})
-            
-            raw_timestamp = layers.get('frame.time_epoch', [None])[0]
+        for i, pkt in enumerate(packets):
+            raw_timestamp = float(pkt.time) if hasattr(pkt, 'time') else None
             timestamp = None
             
             if raw_timestamp:
                 try:
-                    # Network logs use Unix timestamps - convert to UTC
-                    from datetime import timezone
-                    dt = datetime.fromtimestamp(float(raw_timestamp), tz=timezone.utc)
+                    dt = datetime.fromtimestamp(raw_timestamp, tz=timezone.utc)
                     timestamp = dt.isoformat(timespec='milliseconds').replace('+00:00', 'Z')
                 except Exception as e:
-                    print(f"Network log timestamp error: {str(e)} - Value: {raw_timestamp}")
+                    print(f"Network log timestamp error for packet {i+1}: {str(e)}")
                     timestamp = None
             
+            # Preserve all packet data
             event = {
                 'timestamp': timestamp,
                 'event_type': 'network',
-                'src_ip': layers.get('ip.src', [None])[0],
-                'dst_ip': layers.get('ip.dst', [None])[0],
-                'protocol': layers.get('frame.protocols', [None])[0],
-                'src_port': layers.get('tcp.srcport', layers.get('udp.srcport', [None]))[0],
-                'dst_port': layers.get('tcp.dstport', layers.get('udp.dstport', [None]))[0],
-                'length': layers.get('frame.len', [None])[0]
+                'packet_number': i + 1,
+                'length': len(pkt),
+                'summary': pkt.summary(),
+                'raw_hex': bytes(pkt).hex(),
+                'layers': {}
             }
             
-            # Convert port numbers to integers if present
-            if event['src_port']:
-                try:
-                    event['src_port'] = int(event['src_port'])
-                except:
-                    pass
-            if event['dst_port']:
-                try:
-                    event['dst_port'] = int(event['dst_port'])
-                except:
-                    pass
-            if event['length']:
-                try:
-                    event['length'] = int(event['length'])
-                except:
-                    pass
+            # Extract information from each layer
+            for layer in pkt.layers():
+                layer_name = layer.__name__
+                layer_data = {}
+                if hasattr(pkt[layer], 'fields'):
+                    for field_name, field_value in pkt[layer].fields.items():
+                        if hasattr(field_value, '__str__'):
+                            layer_data[field_name] = str(field_value)
+                        else:
+                            layer_data[field_name] = field_value
+                event['layers'][layer_name] = layer_data
             
             events.append(event)
         
         print(f"Parsed {len(events)} network packets")
         
-    except FileNotFoundError:
-        print("Error: tshark not found. Please install Wireshark (includes tshark)")
-        print("Download from: https://www.wireshark.org/download.html")
-    except subprocess.TimeoutExpired:
-        print("Error: tshark processing timed out (file too large)")
     except Exception as e:
-        print(f"Error parsing PCAP with tshark: {e}")
-    finally:
-        # Clean up temp file
-        if temp_json_path and os.path.exists(temp_json_path):
-            os.unlink(temp_json_path)
+        print(f"Error parsing PCAP with Scapy: {e}")
     
     return events
 

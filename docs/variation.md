@@ -76,7 +76,7 @@
 
 * **Ransomware (compression before encryption):**
   ✔ **T1486 – Data Encrypted for Impact**
-  ✔ **T1560.001 – Archive via Utility (7zip)**
+  ✔ **T1560.001, "T1486" – Archive via Utility (7zip)**
 
 ---
 
