@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import shutil
+from datetime import datetime
 from dotenv import load_dotenv
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Log Cleaner'))
@@ -12,8 +13,6 @@ from gdrive_helper import (
     download_file, upload_file_from_content, create_folder,
     get_processed_sessions
 )
-
-from mitre_detector import create_story_based_labels
 
 load_dotenv()
 
@@ -51,7 +50,7 @@ def download_text_log(session_folder, text_logs_folder_id):
 
 
 def label_logs(text_log_path, session_name):
-    print("\n=== Starting Story-Based Log Labeling ===")
+    print("\n=== Starting Simple Log Labeling ===")
     
     try:
         with open(text_log_path, 'r', encoding='utf-8') as f:
@@ -68,29 +67,80 @@ def label_logs(text_log_path, session_name):
         
         print(f"Total valid events: {len(events)} (from {len(raw_events)} total)")
         
-        # Get window size from environment or use default
-        window_size = int(os.getenv("WINDOW_SIZE_SECONDS", "60"))
-        print(f"Using {window_size}-second time windows...")
+        # Parse session_name to extract session_id and host_id
+        # Use session_name as session_id, extract host_id from first event
+        session_id = session_name
+        host_id = None
         
-        stories = create_story_based_labels(events, session_name, window_size_seconds=window_size)
+        # Get host_id from the first event that has it
+        for event in events:
+            if 'host_id' in event and event['host_id']:
+                host_id = event['host_id']
+                break
         
-        print(f"\nStory generation complete!")
-        print(f"Created {len(stories)} narrative summaries")
+        if not host_id and events:
+            # Fallback to agent_id if host_id not found
+            host_id = events[0].get('agent_id', 'unknown')
         
-        return stories
+        # Process events into logs format
+        logs = []
+        for event in events:
+            log_entry = {
+                "timestamp": event.get("timestamp", ""),
+                "event_type": event.get("event_type", "unknown"),
+                "label": "normal",
+                "mitre_techniques": []
+            }
+            
+            # Add relevant fields based on event_type
+            if event.get("event_type") == "browser" and "url" in event:
+                log_entry["url"] = event["url"]
+            elif event.get("event_type") == "system" and "message" in event:
+                log_entry["message"] = event["message"]
+            elif event.get("event_type") == "network":
+                if "src_ip" in event:
+                    log_entry["src_ip"] = event["src_ip"]
+                if "dst_ip" in event:
+                    log_entry["dst_ip"] = event["dst_ip"]
+            
+            logs.append(log_entry)
+        
+        # Sort logs by timestamp
+        def parse_timestamp(log):
+            ts = log.get("timestamp", "")
+            if ts:
+                try:
+                    return datetime.fromisoformat(ts.replace('Z', '+00:00'))
+                except ValueError:
+                    return datetime.min
+            return datetime.min
+        
+        logs.sort(key=parse_timestamp)
+        
+        # Create the final structure
+        labeled_data = {
+            "session_id": session_id,
+            "host_id": host_id,
+            "overall_label": "normal",
+            "logs": logs
+        }
+        
+        print(f"Created labeled data with {len(logs)} log entries")
+        
+        return labeled_data  # Return single object
     
     except Exception as e:
         print(f"Error labeling logs: {e}")
-        return []
+        return None
 
 
-def save_labeled_logs_locally(stories, session_name):
+def save_labeled_logs_locally(labeled_data, session_name):
     output_dir = os.path.join(TEMP_OUTPUT_DIR, session_name)
     os.makedirs(output_dir, exist_ok=True)
     
-    output_file = os.path.join(output_dir, f"story_labels_{session_name}.json")
+    output_file = os.path.join(output_dir, f"annotation_{session_name}.json")
     with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(stories, f, indent=2)
+        json.dump(labeled_data, f, indent=2)
     
     print(f"\nSaved locally:")
     print(f"  {output_file}")
@@ -98,7 +148,7 @@ def save_labeled_logs_locally(stories, session_name):
     return output_dir
 
 
-def upload_labeled_logs(stories, session_name):
+def upload_labeled_logs(labeled_data, session_name):
     print("\n=== Uploading to Google Drive ===")
     
     labeled_logs_folder_name = os.getenv("GDRIVE_LABELED_LOGS_FOLDER", "Labeled_Logs")
@@ -108,8 +158,8 @@ def upload_labeled_logs(stories, session_name):
     session_folder_id = create_folder(session_name, labeled_logs_folder_id)
     print(f"Created session folder: {session_name} (ID: {session_folder_id})")
     
-    stories_file_name = f"story_labels_{session_name}.json"
-    stories_json = json.dumps(stories, indent=2)
+    stories_file_name = f"annotated_data_{session_name}.json"
+    stories_json = json.dumps(labeled_data, indent=2)
     upload_file_from_content(stories_json, session_folder_id, stories_file_name, mime_type='application/json')
     print(f"Uploaded: {stories_file_name}")
 
@@ -171,14 +221,14 @@ def main():
                 print(f"No text log found for session {session_folder['name']}")
                 continue
             
-            stories = label_logs(text_log_path, session_folder['name'])
+            labeled_data = label_logs(text_log_path, session_folder['name'])
             
-            if not stories:
-                print(f"No stories to upload for session {session_folder['name']}")
+            if not labeled_data:
+                print(f"No labeled data for session {session_folder['name']}")
                 continue
             
-            save_labeled_logs_locally(stories, session_folder['name'])
-            upload_labeled_logs(stories, session_folder['name'])
+            save_labeled_logs_locally(labeled_data, session_folder['name'])
+            upload_labeled_logs(labeled_data, session_folder['name'])
             
             if session_dir:
                 cleanup_temp_files(session_dir)

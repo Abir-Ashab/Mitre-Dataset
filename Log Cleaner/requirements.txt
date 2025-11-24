@@ -3,3 +3,4 @@ google-auth-oauthlib==1.2.0
 google-auth-httplib2==0.2.0
 python-dotenv==1.0.0
 pyshark==0.6
+scapy>=2.5.0
