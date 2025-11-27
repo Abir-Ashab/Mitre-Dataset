@@ -2,59 +2,51 @@ const express = require("express");
 const router = express.Router();
 const Scenario = require("../models/Scenario");
 
-// GET all scenarios
+const sendSuccess = (res, data, message = null, count = null, status = 200) => {
+  const response = { success: true, data };
+  if (message) response.message = message;
+  if (count !== null) response.count = count;
+  res.status(status).json(response);
+};
+
+const sendError = (res, status, error) => {
+  res.status(status).json({ success: false, error });
+};
+
+const findScenarioById = async (id) => {
+  return await Scenario.findOne({ scenarioId: id });
+};
+
 router.get("/", async (req, res) => {
   try {
     const scenarios = await Scenario.find().sort({ createdAt: -1 });
-    res.json({
-      success: true,
-      count: scenarios.length,
-      data: scenarios,
-    });
+    sendSuccess(res, scenarios, null, scenarios.length);
   } catch (error) {
     console.error("Error fetching scenarios:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to fetch scenarios",
-    });
+    sendError(res, 500, "Failed to fetch scenarios");
   }
 });
 
-// GET a specific scenario by ID
 router.get("/:id", async (req, res) => {
   try {
-    const scenario = await Scenario.findOne({ scenarioId: req.params.id });
+    const scenario = await findScenarioById(req.params.id);
     if (!scenario) {
-      return res.status(404).json({
-        success: false,
-        error: "Scenario not found",
-      });
+      return sendError(res, 404, "Scenario not found");
     }
-    res.json({
-      success: true,
-      data: scenario,
-    });
+    sendSuccess(res, scenario);
   } catch (error) {
     console.error("Error fetching scenario:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to fetch scenario",
-    });
+    sendError(res, 500, "Failed to fetch scenario");
   }
 });
 
-// POST create a new scenario
 router.post("/", async (req, res) => {
   try {
     const { scenarioId, title, description, attackTechniques } = req.body;
 
-    // Check if scenario already exists
-    const existingScenario = await Scenario.findOne({ scenarioId });
+    const existingScenario = await findScenarioById(scenarioId);
     if (existingScenario) {
-      return res.status(409).json({
-        success: false,
-        error: "Scenario with this ID already exists",
-      });
+      return sendError(res, 409, "Scenario with this ID already exists");
     }
 
     const scenario = new Scenario({
@@ -66,79 +58,49 @@ router.post("/", async (req, res) => {
 
     await scenario.save();
 
-    res.status(201).json({
-      success: true,
-      message: "Scenario created successfully",
-      data: scenario,
-    });
+    sendSuccess(res, scenario, "Scenario created successfully", null, 201);
   } catch (error) {
     console.error("Error creating scenario:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to create scenario",
-    });
+    sendError(res, 500, "Failed to create scenario");
   }
 });
 
-// PUT mark scenario as completed
 router.put("/:id/complete", async (req, res) => {
   try {
-    const scenario = await Scenario.findOne({ scenarioId: req.params.id });
+    const scenario = await findScenarioById(req.params.id);
     if (!scenario) {
-      return res.status(404).json({
-        success: false,
-        error: "Scenario not found",
-      });
+      return sendError(res, 404, "Scenario not found");
     }
 
     scenario.completed = true;
     scenario.completedAt = new Date();
     await scenario.save();
 
-    res.json({
-      success: true,
-      message: "Scenario marked as completed",
-      data: scenario,
-    });
+    sendSuccess(res, scenario, "Scenario marked as completed");
   } catch (error) {
     console.error("Error completing scenario:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to mark scenario as completed",
-    });
+    sendError(res, 500, "Failed to mark scenario as completed");
   }
 });
 
-// PUT mark scenario as incomplete
 router.put("/:id/incomplete", async (req, res) => {
   try {
-    const scenario = await Scenario.findOne({ scenarioId: req.params.id });
+    const scenario = await findScenarioById(req.params.id);
     if (!scenario) {
-      return res.status(404).json({
-        success: false,
-        error: "Scenario not found",
-      });
+      return sendError(res, 404, "Scenario not found");
     }
 
     scenario.completed = false;
     scenario.completedAt = null;
     await scenario.save();
 
-    res.json({
-      success: true,
-      message: "Scenario marked as incomplete",
-      data: scenario,
-    });
+    sendSuccess(res, scenario, "Scenario marked as incomplete");
   } catch (error) {
     console.error("Error marking scenario as incomplete:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to mark scenario as incomplete",
-    });
+    sendError(res, 500, "Failed to mark scenario as incomplete");
   }
 });
 
-// PUT update scenario
 router.put("/:id", async (req, res) => {
   try {
     const { title, description, attackTechniques } = req.body;
@@ -155,89 +117,53 @@ router.put("/:id", async (req, res) => {
     );
 
     if (!scenario) {
-      return res.status(404).json({
-        success: false,
-        error: "Scenario not found",
-      });
+      return sendError(res, 404, "Scenario not found");
     }
 
-    res.json({
-      success: true,
-      message: "Scenario updated successfully",
-      data: scenario,
-    });
+    sendSuccess(res, scenario, "Scenario updated successfully");
   } catch (error) {
     console.error("Error updating scenario:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to update scenario",
-    });
+    sendError(res, 500, "Failed to update scenario");
   }
 });
 
-// DELETE a scenario
 router.delete("/:id", async (req, res) => {
   try {
     const scenario = await Scenario.findOneAndDelete({
       scenarioId: req.params.id,
     });
     if (!scenario) {
-      return res.status(404).json({
-        success: false,
-        error: "Scenario not found",
-      });
+      return sendError(res, 404, "Scenario not found");
     }
 
-    res.json({
-      success: true,
-      message: "Scenario deleted successfully",
-    });
+    sendSuccess(res, null, "Scenario deleted successfully");
   } catch (error) {
     console.error("Error deleting scenario:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to delete scenario",
-    });
+    sendError(res, 500, "Failed to delete scenario");
   }
 });
 
-// GET completed scenarios
 router.get("/status/completed", async (req, res) => {
   try {
     const scenarios = await Scenario.find({ completed: true }).sort({
       completedAt: -1,
     });
-    res.json({
-      success: true,
-      count: scenarios.length,
-      data: scenarios,
-    });
+    sendSuccess(res, scenarios, null, scenarios.length);
   } catch (error) {
     console.error("Error fetching completed scenarios:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to fetch completed scenarios",
-    });
+    sendError(res, 500, "Failed to fetch completed scenarios");
   }
 });
 
-// GET incomplete scenarios
 router.get("/status/incomplete", async (req, res) => {
   try {
     const scenarios = await Scenario.find({ completed: false }).sort({
       createdAt: -1,
     });
-    res.json({
-      success: true,
-      count: scenarios.length,
-      data: scenarios,
-    });
+    sendSuccess(res, scenarios, null, scenarios.length);
   } catch (error) {
     console.error("Error fetching incomplete scenarios:", error);
-    res.status(500).json({
-      success: false,
-      error: "Failed to fetch incomplete scenarios",
-    });
+    sendError(res, 500, "Failed to fetch incomplete scenarios");
   }
 });
 

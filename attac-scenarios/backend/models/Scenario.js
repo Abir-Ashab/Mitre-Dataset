@@ -41,7 +41,6 @@ const scenarioSchema = new mongoose.Schema({
   },
 });
 
-// Update the updatedAt field before saving
 scenarioSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   if (this.completed && !this.completedAt) {

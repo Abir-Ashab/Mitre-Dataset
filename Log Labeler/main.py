@@ -85,24 +85,9 @@ def label_logs(text_log_path, session_name):
         # Process events into logs format
         logs = []
         for event in events:
-            log_entry = {
-                "timestamp": event.get("timestamp", ""),
-                "event_type": event.get("event_type", "unknown"),
-                "label": "normal",
-                "mitre_techniques": []
-            }
-            
-            # Add relevant fields based on event_type
-            if event.get("event_type") == "browser" and "url" in event:
-                log_entry["url"] = event["url"]
-            elif event.get("event_type") == "system" and "message" in event:
-                log_entry["message"] = event["message"]
-            elif event.get("event_type") == "network":
-                if "src_ip" in event:
-                    log_entry["src_ip"] = event["src_ip"]
-                if "dst_ip" in event:
-                    log_entry["dst_ip"] = event["dst_ip"]
-            
+            log_entry = event.copy()
+            log_entry["label"] = "normal"
+            log_entry["mitre_techniques"] = []
             logs.append(log_entry)
         
         # Sort logs by timestamp
