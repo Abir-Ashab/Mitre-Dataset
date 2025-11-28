@@ -117,8 +117,11 @@ def create_local_structure(service, items, base_folder_id, local_base_path):
             if parent_id in folder_paths:
                 parent_path = folder_paths[parent_id]
                 file_path = os.path.join(parent_path, item['name'])
-                print(f"Downloading: {item['name']}")
-                download_file(service, item['id'], file_path)
+                if not os.path.exists(file_path):
+                    print(f"Downloading: {item['name']}")
+                    download_file(service, item['id'], file_path)
+                else:
+                    print(f"Skipping: {item['name']} (already exists)")
 
 
 def main():
