@@ -23,7 +23,7 @@ if 'logs' in new_data:
         if 'layers' in item and 'IP' in item['layers']:
             ip_layer = item['layers']['IP']
             if 'src' in ip_layer and 'dst' in ip_layer:
-                if ip_layer['src'] == "10.43.0.105" and ip_layer['dst'] == "150.171.27.10":
+                if ip_layer['src'] == "10.43.0.105" and ip_layer['dst'] == "150.171.27.12":
                     item['label'] = "suspicious"
                     item['mitre_techniques'] = ["T1105"]
 
