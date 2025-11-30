@@ -8,7 +8,10 @@
   ✔ **T1566.001 – Spearphishing Attachment**
   ✔ **T1566.002 – Spearphishing Link**
 
-* **Malicious files (ZIP/RAR/PDF with embedded payloads):**
+* **Downloading Payload (via browser, MEGA, GitHub, HTTPS, etc.):**
+  ✔ **T1105 – Ingress Tool Transfer** (If the downloaded content is malware, scripts, or tools)
+
+* **Malicious files (ZIP/RAR/PDF with embedded payloads) Execution:**
   ✔ **T1204.002 – User Execution: Malicious File**
 
 * **GitHub-based payload delivery (clone/download repo or file):**
@@ -16,7 +19,10 @@
 
 * **USB Drop Attack:**
   ✔ **T1091 – Replication Through Removable Media**
-  ✔ **T1204.002 – User Execution: Malicious File**
+
+* **Payload access stopped**
+  ✔ **T1562.001 – Impair Defenses (If a process is killed intentionally by the attacker)**
+  ✔ **T1489 – Service Stop (If a system service is stopped)**
 
 ---
 
