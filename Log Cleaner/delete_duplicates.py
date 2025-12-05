@@ -74,14 +74,30 @@ def get_all_files_recursive(folder_id):
     return all_files
 
 
+def has_json_files(folder_id):
+    """Check if a folder contains any JSON files."""
+    service = authenticate()
+    
+    query = f"'{folder_id}' in parents and trashed=false and mimeType='application/json'"
+    results = service.files().list(
+        q=query,
+        spaces='drive',
+        fields='files(id)',
+        pageSize=1
+    ).execute()
+    
+    files = results.get('files', [])
+    return len(files) > 0
+
+
 def main():
-    """Main function to delete duplicate folders."""
+    """Main function to delete duplicate folders and empty folders."""
     if len(sys.argv) > 1:
         folder_name = sys.argv[1]
     else:
         folder_name = os.getenv("GDRIVE_CLEANED_LOGS_FOLDER", "Text_Logs")
     
-    print(f"Starting duplicate folder cleanup in folder: {folder_name}")
+    print(f"Starting folder cleanup in folder: {folder_name}")
     
     # Get the folder
     folder_id = get_folder_id(folder_name)
@@ -101,6 +117,7 @@ def main():
         name_groups[folder['name']].append(folder)
     
     total_deleted = 0
+    empty_deleted = 0
     
     # For each group with duplicates
     for name, folder_list in name_groups.items():
@@ -118,7 +135,21 @@ def main():
                 delete_file(dup['id'])
                 total_deleted += 1
     
-    print(f"\nCleanup complete. Deleted {total_deleted} duplicate folders.")
+    # Check for empty folders (folders without JSON files)
+    print("\nChecking for empty folders...")
+    for folder in folders_only:
+        if not has_json_files(folder['id']):
+            # Check if this folder wasn't already deleted as a duplicate
+            if not any(folder['id'] == dup['id'] for folder_list in name_groups.values() 
+                      if len(folder_list) > 1 for dup in folder_list[1:]):
+                print(f"Empty folder found: {folder['name']} (ID: {folder['id']})")
+                delete_file(folder['id'])
+                empty_deleted += 1
+    
+    print(f"\nCleanup complete.")
+    print(f"  Deleted {total_deleted} duplicate folders")
+    print(f"  Deleted {empty_deleted} empty folders")
+    print(f"  Total deleted: {total_deleted + empty_deleted}")
 
 
 if __name__ == "__main__":

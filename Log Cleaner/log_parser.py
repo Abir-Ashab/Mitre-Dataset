@@ -170,7 +170,7 @@ def parse_pcap_logs(pcap_path):
                 'packet_number': i + 1,
                 'length': len(pkt),
                 'summary': pkt.summary(),
-                'raw_hex': bytes(pkt).hex(),
+                'raw_hex': "",
                 'layers': {}
             }
             
