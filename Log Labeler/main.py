@@ -49,6 +49,114 @@ def download_text_log(session_folder, text_logs_folder_id):
     return text_log_path, session_dir
 
 
+def filter_system_log(event):
+    """Remove unnecessary fields from system logs while preserving structure."""
+    filtered = {
+        'timestamp': event.get('timestamp'),
+        'event_type': event.get('event_type')
+    }
+    
+    # Keep only essential winlog fields
+    if 'winlog' in event:
+        filtered['winlog'] = {
+            'event_id': event['winlog'].get('event_id'),
+            'task': event['winlog'].get('task')
+        }
+        
+        # Keep only essential event_data fields
+        if 'event_data' in event['winlog']:
+            essential_fields = [
+                'Image', 'ProcessId', 'ProcessGuid', 'User', 'CommandLine',
+                'ParentImage', 'SourceIp', 'SourcePort', 'DestinationIp',
+                'DestinationPort', 'Protocol', 'TargetFilename', 'TargetObject'
+            ]
+            filtered['winlog']['event_data'] = {}
+            for field in essential_fields:
+                if field in event['winlog']['event_data']:
+                    filtered['winlog']['event_data'][field] = event['winlog']['event_data'][field]
+    
+    # Keep anonymized IDs
+    if 'host_id' in event:
+        filtered['host_id'] = event['host_id']
+    if 'agent_id' in event:
+        filtered['agent_id'] = event['agent_id']
+    
+    return filtered
+
+
+def filter_network_log(event):
+    """Remove unnecessary fields from network logs while preserving structure."""
+    filtered = {
+        'timestamp': event.get('timestamp'),
+        'event_type': event.get('event_type'),
+        'length': event.get('length'),
+        'summary': event.get('summary'),
+        'layers': {}
+    }
+    
+    # Keep only essential IP layer fields
+    if 'layers' in event and 'IP' in event['layers']:
+        filtered['layers']['IP'] = {
+            'src': event['layers']['IP'].get('src'),
+            'dst': event['layers']['IP'].get('dst'),
+            'proto': event['layers']['IP'].get('proto'),
+            'ttl': event['layers']['IP'].get('ttl')
+        }
+    
+    # Keep only essential TCP layer fields
+    if 'layers' in event and 'TCP' in event['layers']:
+        filtered['layers']['TCP'] = {
+            'sport': event['layers']['TCP'].get('sport'),
+            'dport': event['layers']['TCP'].get('dport'),
+            'flags': event['layers']['TCP'].get('flags'),
+            'seq': event['layers']['TCP'].get('seq'),
+            'ack': event['layers']['TCP'].get('ack')
+        }
+    
+    # Keep only essential UDP layer fields
+    if 'layers' in event and 'UDP' in event['layers']:
+        filtered['layers']['UDP'] = {
+            'sport': event['layers']['UDP'].get('sport'),
+            'dport': event['layers']['UDP'].get('dport')
+        }
+    
+    return filtered
+
+
+def filter_browser_log(event):
+    """Remove unnecessary fields from browser logs while preserving structure."""
+    filtered = {
+        'timestamp': event.get('timestamp'),
+        'event_type': event.get('event_type'),
+        'duration': event.get('duration')
+    }
+    
+    # Keep only essential data fields
+    if 'data' in event:
+        filtered['data'] = {
+            'url': event['data'].get('url'),
+            'title': event['data'].get('title'),
+            'incognito': event['data'].get('incognito')
+        }
+    
+    return filtered
+
+
+def filter_log_entry(event):
+    """Filter log entry based on event type, removing unnecessary fields."""
+    event_type = event.get('event_type')
+    
+    if event_type == 'system':
+        return filter_system_log(event)
+    elif event_type == 'network':
+        return filter_network_log(event)
+    elif event_type == 'browser':
+        return filter_browser_log(event)
+    else:
+        # Unknown type, return as-is
+        return event
+
+
 def label_logs(text_log_path, session_name):
     print("\n=== Starting Simple Log Labeling ===")
     
@@ -82,13 +190,38 @@ def label_logs(text_log_path, session_name):
             # Fallback to agent_id if host_id not found
             host_id = events[0].get('agent_id', 'unknown')
         
-        # Process events into logs format
+        # Process events into logs format with field filtering
         logs = []
+        removed_system_fields = 0
+        removed_network_fields = 0
+        removed_browser_fields = 0
+        
         for event in events:
-            log_entry = event.copy()
-            log_entry["label"] = "normal"
-            log_entry["mitre_techniques"] = []
-            logs.append(log_entry)
+            # Filter unnecessary fields based on event type
+            filtered_event = filter_log_entry(event)
+            
+            # Count removed fields for statistics
+            original_size = len(json.dumps(event))
+            filtered_size = len(json.dumps(filtered_event))
+            if filtered_size < original_size:
+                event_type = event.get('event_type')
+                if event_type == 'system':
+                    removed_system_fields += 1
+                elif event_type == 'network':
+                    removed_network_fields += 1
+                elif event_type == 'browser':
+                    removed_browser_fields += 1
+            
+            # Add labels
+            filtered_event["label"] = "normal"
+            filtered_event["mitre_techniques"] = []
+            logs.append(filtered_event)
+        
+        # Print statistics
+        print(f"Field filtering statistics:")
+        print(f"  - System logs filtered: {removed_system_fields}")
+        print(f"  - Network logs filtered: {removed_network_fields}")
+        print(f"  - Browser logs filtered: {removed_browser_fields}")
         
         # Sort logs by timestamp
         def parse_timestamp(log):
