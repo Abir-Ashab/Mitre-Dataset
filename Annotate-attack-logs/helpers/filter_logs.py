@@ -10,117 +10,150 @@ from datetime import datetime
 
 def filter_system_log(event):
     """Remove unnecessary fields from system logs while preserving structure and labels."""
-    filtered = {
-        'timestamp': event.get('timestamp'),
-        'event_type': event.get('event_type')
-    }
+    import copy
+    filtered = copy.deepcopy(event)
     
-    # Keep only essential winlog fields
-    if 'winlog' in event:
-        filtered['winlog'] = {
-            'event_id': event['winlog'].get('event_id'),
-            'task': event['winlog'].get('task')
-        }
-        
-        # Keep only essential event_data fields
-        if 'event_data' in event['winlog']:
-            essential_fields = [
-                'Image', 'ProcessId', 'ProcessGuid', 'User', 'CommandLine',
-                'ParentImage', 'SourceIp', 'SourcePort', 'DestinationIp',
-                'DestinationPort', 'Protocol', 'TargetFilename', 'TargetObject'
-            ]
-            filtered['winlog']['event_data'] = {}
-            for field in essential_fields:
-                if field in event['winlog']['event_data']:
-                    filtered['winlog']['event_data'][field] = event['winlog']['event_data'][field]
+    # Remove unnecessary fields from winlog.event_data (metadata, not behavior traces)
+    if 'winlog' in filtered and 'event_data' in filtered['winlog']:
+        unnecessary_fields = [
+            'UtcTime',  # Duplicates root timestamp
+            'RuleName',  # Sysmon rule metadata
+            'Hashes',  # Too detailed for initial filtering
+            'IntegrityLevel',  # Windows metadata
+            'TerminalSessionId',  # Windows session metadata
+            'ParentProcessGuid', 'ParentProcessId',  # Redundant with ParentImage
+            'ParentCommandLine',  # Often too verbose
+            'CurrentDirectory',  # Low signal
+            'SourceHostname', 'DestinationHostname',  # Redundant with IPs
+            'SourceIsIpv6', 'DestinationIsIpv6',  # Can be inferred from IP
+            'SourcePortName', 'DestinationPortName',  # Redundant with port number
+            'Initiated'  # Usually always true
+        ]
+        for field in unnecessary_fields:
+            filtered['winlog']['event_data'].pop(field, None)
     
-    # Keep anonymized IDs
-    if 'host_id' in event:
-        filtered['host_id'] = event['host_id']
-    if 'agent_id' in event:
-        filtered['agent_id'] = event['agent_id']
+    # Remove unnecessary top-level fields from winlog (infrastructure metadata)
+    if 'winlog' in filtered:
+        unnecessary_winlog_fields = [
+            'api', 'computer_name', 'opcode', 'process', 'provider_guid',
+            'provider_name', 'record_id', 'version', 'channel', 'keywords',
+            'task',  # Verbose description, duplicates event_id
+            'user'  # Contains SID and domain, redundant with event_data.User
+        ]
+        for field in unnecessary_winlog_fields:
+            filtered['winlog'].pop(field, None)
     
-    # Keep labels and MITRE techniques
-    if 'label' in event:
-        filtered['label'] = event['label']
-    if 'mitre_techniques' in event:
-        filtered['mitre_techniques'] = event['mitre_techniques']
+    # Remove top-level infrastructure fields (not behavior traces)
+    unnecessary_top_fields = [
+        '@timestamp',  # Use 'timestamp' instead
+        '@version',  # Logstash version
+        'message',  # Duplicates event_data in string format
+        'log',  # Log metadata
+        'ecs',  # ECS schema version
+        'host',  # Use host_id instead
+        'agent',  # Use agent_id instead
+        'tags',  # Logstash processing tags
+        'event'  # Contains duplicates like event.original, event.created
+    ]
+    for field in unnecessary_top_fields:
+        filtered.pop(field, None)
     
     return filtered
 
 
 def filter_network_log(event):
     """Remove unnecessary fields from network logs while preserving structure and labels."""
-    filtered = {
-        'timestamp': event.get('timestamp'),
-        'event_type': event.get('event_type'),
-        'length': event.get('length'),
-        'summary': event.get('summary'),
-        'layers': {}
-    }
+    import copy
+    filtered = copy.deepcopy(event)
     
-    # Keep only essential IP layer fields
-    if 'layers' in event and 'IP' in event['layers']:
-        filtered['layers']['IP'] = {
-            'src': event['layers']['IP'].get('src'),
-            'dst': event['layers']['IP'].get('dst'),
-            'proto': event['layers']['IP'].get('proto'),
-            'ttl': event['layers']['IP'].get('ttl')
-        }
+    # Remove infrastructure/metadata fields (not behavior traces)
+    unnecessary_top_fields = [
+        'packet_number',  # Sequential numbering, not temporal
+        'raw_hex'  # Full packet bytes, too large for ML
+    ]
+    for field in unnecessary_top_fields:
+        filtered.pop(field, None)
     
-    # Keep only essential TCP layer fields
-    if 'layers' in event and 'TCP' in event['layers']:
-        filtered['layers']['TCP'] = {
-            'sport': event['layers']['TCP'].get('sport'),
-            'dport': event['layers']['TCP'].get('dport'),
-            'flags': event['layers']['TCP'].get('flags'),
-            'seq': event['layers']['TCP'].get('seq'),
-            'ack': event['layers']['TCP'].get('ack')
-        }
+    # Remove entire Ethernet layer (MAC addresses, not behavior)
+    if 'layers' in filtered:
+        filtered['layers'].pop('Ether', None)
     
-    # Keep only essential UDP layer fields
-    if 'layers' in event and 'UDP' in event['layers']:
-        filtered['layers']['UDP'] = {
-            'sport': event['layers']['UDP'].get('sport'),
-            'dport': event['layers']['UDP'].get('dport')
-        }
+    # Remove unnecessary fields from IP layer (infrastructure details)
+    if 'layers' in filtered and 'IP' in filtered['layers']:
+        unnecessary_ip_fields = [
+            'version',  # Always 4 (IPv4)
+            'ihl',  # IP header length
+            'tos',  # Type of service, rarely used
+            'len',  # Duplicates root 'length'
+            'id',  # IP identification for fragmentation
+            'flags',  # IP flags (DF), rarely relevant
+            'frag',  # Fragment offset
+            'chksum',  # Error detection only
+            'options'  # Usually empty
+        ]
+        for field in unnecessary_ip_fields:
+            filtered['layers']['IP'].pop(field, None)
     
-    # Keep labels and MITRE techniques
-    if 'label' in event:
-        filtered['label'] = event['label']
-    if 'mitre_techniques' in event:
-        filtered['mitre_techniques'] = event['mitre_techniques']
+    # Remove unnecessary fields from TCP layer (infrastructure details)
+    if 'layers' in filtered and 'TCP' in filtered['layers']:
+        unnecessary_tcp_fields = [
+            'dataofs',  # TCP data offset/header size
+            'reserved',  # Reserved bits, always 0
+            'window',  # Flow control, not attack indicator
+            'chksum',  # Error detection only
+            'urgptr',  # Urgent pointer, rarely used
+            'options'  # Usually empty
+        ]
+        for field in unnecessary_tcp_fields:
+            filtered['layers']['TCP'].pop(field, None)
+    
+    # Remove unnecessary fields from UDP layer (infrastructure details)
+    if 'layers' in filtered and 'UDP' in filtered['layers']:
+        unnecessary_udp_fields = [
+            'len',  # Duplicates packet length
+            'chksum'  # Error detection only
+        ]
+        for field in unnecessary_udp_fields:
+            filtered['layers']['UDP'].pop(field, None)
+    
+    # Remove raw payload data (not needed for behavioral analysis)
+    if 'layers' in filtered:
+        filtered['layers'].pop('Raw', None)
+        filtered['layers'].pop('Padding', None)
     
     return filtered
 
 
 def filter_browser_log(event):
     """Remove unnecessary fields from browser logs while preserving structure and labels."""
-    filtered = {
-        'timestamp': event.get('timestamp'),
-        'event_type': event.get('event_type'),
-        'duration': event.get('duration')
-    }
+    import copy
+    filtered = copy.deepcopy(event)
     
-    # Keep only essential data fields
-    if 'data' in event:
-        filtered['data'] = {
-            'url': event['data'].get('url'),
-            'title': event['data'].get('title'),
-            'incognito': event['data'].get('incognito')
-        }
+    # Remove infrastructure/metadata fields (not behavior traces)
+    unnecessary_top_fields = [
+        'id'  # ActivityWatch internal event ID, not temporal
+    ]
+    for field in unnecessary_top_fields:
+        filtered.pop(field, None)
     
-    # Keep labels and MITRE techniques
-    if 'label' in event:
-        filtered['label'] = event['label']
-    if 'mitre_techniques' in event:
-        filtered['mitre_techniques'] = event['mitre_techniques']
+    # Remove unnecessary fields from browser data (not security relevant)
+    if 'data' in filtered:
+        unnecessary_data_fields = [
+            'audible',  # Whether page made sound, not security relevant
+            'tabId', 'windowId', 'frameId',  # Browser internal IDs
+            'transitionType', 'transitionQualifiers',  # Navigation metadata
+            'referrer',  # Can be useful but often redundant
+            'tabCount'  # Weak signal
+        ]
+        for field in unnecessary_data_fields:
+            filtered['data'].pop(field, None)
     
     return filtered
 
 
 def filter_log_entry(event):
     """Filter log entry based on event type, removing unnecessary fields."""
+    import copy
     event_type = event.get('event_type')
     
     if event_type == 'system':
@@ -130,16 +163,8 @@ def filter_log_entry(event):
     elif event_type == 'browser':
         return filter_browser_log(event)
     else:
-        # Unknown type, keep timestamp, event_type, labels
-        filtered = {
-            'timestamp': event.get('timestamp'),
-            'event_type': event.get('event_type')
-        }
-        if 'label' in event:
-            filtered['label'] = event['label']
-        if 'mitre_techniques' in event:
-            filtered['mitre_techniques'] = event['mitre_techniques']
-        return filtered
+        # Unknown type, return as-is (just deep copy)
+        return copy.deepcopy(event)
 
 
 def filter_json_file(input_path, output_path):
