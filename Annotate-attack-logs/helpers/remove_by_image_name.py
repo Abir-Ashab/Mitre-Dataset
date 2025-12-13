@@ -13,11 +13,15 @@ with open(filename, 'r') as f:
     data = json.load(f)
 
 # Assuming data is a list of log objects
-# Filter out logs where Image matches
+# Filter out logs where Image matches Chrome or VS Code
 filtered_logs = []
+chrome_path = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+vscode_path = "C:\\Users\\Niloy\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+
 for item in data:
     if 'winlog' in item and 'event_data' in item['winlog'] and 'Image' in item['winlog']['event_data']:
-        if item['winlog']['event_data']['Image'] != "C:\\Program Files\\Wireshark\\extcap\\etwdump.exe":
+        image = item['winlog']['event_data']['Image']
+        if image != chrome_path and image != vscode_path:
             filtered_logs.append(item)
     else:
         filtered_logs.append(item)  # Keep if no Image field
