@@ -1,7 +1,7 @@
-1) For cloning github with payload:
+1) For cloning github with payload/downloading payload from any:
 ```js
       "label": "suspicious",
-      "mitre_techniques": ["T1105", "T1036", "T1027"]
+      "mitre_techniques": ["T1566.001", "T1105", "T1036", "T1027"]
 ```
 2) For executing malicious payload (app.exe) through npm run:
 ```js
@@ -46,4 +46,16 @@ if process stopped (event_id: 5) then apply:
 ```js
       "label": "suspicious",
       "mitre_techniques": ["T1485"]
+```
+
+9) If a process created a new .bat file in Temp.:
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1105"]
+```
+
+10) For executing via cmd a bat file:
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1059.003"]
 ```
