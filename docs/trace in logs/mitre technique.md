@@ -22,9 +22,16 @@ if process stopped (event_id: 5) then apply:
 ```
 
 4) for deleting something via 7zip:
+(event_id : 23)
 ```js
       "label": "suspicious",
       "mitre_techniques": ["T1491", "T1070.004"]
+```
+
+(event_id : 26)
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1070"]
 ```
 
 5) for uploading warning file/photo via 7zip:
@@ -58,4 +65,10 @@ if process stopped (event_id: 5) then apply:
 ```js
       "label": "suspicious",
       "mitre_techniques": ["T1059.003"]
+```
+
+11) For c2 connection:
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1571", "T1071.001", "T1090", "T1572"]
 ```

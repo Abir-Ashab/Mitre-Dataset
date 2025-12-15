@@ -32,12 +32,12 @@ if 'logs' in new_data:
                 length_value = int(item['length']) if isinstance(item['length'], str) else item['length']
                 
                 # Check the conditions: src, dst, and length > 500
-                if (ip_layer['src'] == "20.205.243.166" and 
-                    ip_layer['dst'] == "10.43.0.105" and 
+                if (ip_layer['src'] == "31.216.145.5" and 
+                    ip_layer['dst'] == "10.100.200.151" and 
                     length_value > 500):
                     
                     item['label'] = "suspicious"
-                    item['mitre_techniques'] = ["T1105"]
+                    item['mitre_techniques'] = ["T1566.001", "T1105", "T1036", "T1027"]
                     count += 1
                     
                     print(f"Marked as suspicious: timestamp={item.get('timestamp', 'N/A')}, "
