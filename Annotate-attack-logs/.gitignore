@@ -14,5 +14,4 @@ __pycache__/
 # Logs
 *.log
 Pseudo-Annotated-Logs/
-Pseudo-Annotated-Logs-Filtered/
-
+Annotated-Logs/

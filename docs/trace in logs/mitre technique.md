@@ -72,3 +72,27 @@ if process stopped (event_id: 5) then apply:
       "label": "suspicious",
       "mitre_techniques": ["T1571", "T1071.001", "T1090", "T1572"]
 ```
+
+12) Replication through removable media (pen-drive)
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1091"]
+```
+
+13) For adding logon autostart using registry:
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1547.001", "T1059.003", "T1112"]
+```
+
+14) Deleting malicious file by RAT after execution: (Event-id: 23)
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1070.004", "T1562.001", "T1027"]
+```
+
+15) Keylogging/capturing/writing activity to the victim device (RAT default)
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1056.001", "T1119", "T1074.001"]
+```
