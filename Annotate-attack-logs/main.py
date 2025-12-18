@@ -95,25 +95,38 @@ def download_file(service, file_id, local_path):
         f.write(fh.getvalue())
 
 
-def create_local_structure(service, items, base_folder_id, local_base_path):
+def create_local_structure(service, items, base_folder_id, local_base_path, skip_folders=None):
     """Create local directory structure and download files."""
+    if skip_folders is None:
+        skip_folders = set()
+    
     # Create a mapping of folder ID to local path
     folder_paths = {base_folder_id: local_base_path}
+    skipped_folder_ids = set()
     
-    # First pass: create all directories
+    # First pass: create all directories (skip existing ones)
     for item in items:
         if item['mimeType'] == 'application/vnd.google-apps.folder':
             parent_id = item.get('parents', [None])[0]
-            if parent_id in folder_paths:
+            if parent_id in folder_paths and parent_id not in skipped_folder_ids:
                 parent_path = folder_paths[parent_id]
                 folder_path = os.path.join(parent_path, item['name'])
-                os.makedirs(folder_path, exist_ok=True)
-                folder_paths[item['id']] = folder_path
+                
+                # Check if this is a top-level folder in Annotated-Logs that should be skipped
+                if parent_id == base_folder_id and item['name'] in skip_folders:
+                    print(f"Skipping folder: {item['name']} (already exists locally)")
+                    skipped_folder_ids.add(item['id'])
+                else:
+                    os.makedirs(folder_path, exist_ok=True)
+                    folder_paths[item['id']] = folder_path
     
-    # Second pass: download files
+    # Second pass: download files (skip files in skipped folders)
     for item in items:
         if item['mimeType'] != 'application/vnd.google-apps.folder':
             parent_id = item.get('parents', [None])[0]
+            # Skip if parent folder was skipped
+            if parent_id in skipped_folder_ids:
+                continue
             if parent_id in folder_paths:
                 parent_path = folder_paths[parent_id]
                 file_path = os.path.join(parent_path, item['name'])
@@ -151,13 +164,27 @@ def main():
     local_base_path = source_folder_name
     os.makedirs(local_base_path, exist_ok=True)
     
+    # Get list of existing folders to skip from both Annotated-Logs and Pseudo-Annotated-Logs
+    skip_folders = set()
+    annotated_logs_path = os.path.join(os.getcwd(), "Annotated-Logs")
+    pseudo_annotated_logs_path = os.path.join(os.getcwd(), "Pseudo-Annotated-Logs")
+    
+    for path in [annotated_logs_path, pseudo_annotated_logs_path]:
+        if os.path.exists(path):
+            existing_folders = {name for name in os.listdir(path) 
+                               if os.path.isdir(os.path.join(path, name))}
+            skip_folders.update(existing_folders)
+    
+    if skip_folders:
+        print(f"\nFound {len(skip_folders)} existing folders to skip: {', '.join(sorted(skip_folders))}")
+    
     # Get all items in the source folder
-    print("Scanning folder structure...")
+    print("\nScanning folder structure...")
     all_items = get_all_items_in_folder(service, source_folder_id)
     print(f"Found {len(all_items)} items total")
     
     # Create local structure and download files
-    create_local_structure(service, all_items, source_folder_id, local_base_path)
+    create_local_structure(service, all_items, source_folder_id, local_base_path, skip_folders)
     
     print(f"\nDownload complete! Files stored in: {local_base_path}")
 
