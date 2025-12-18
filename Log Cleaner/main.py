@@ -44,9 +44,9 @@ def download_session_logs(session_folder):
         file_name = file['name']
         file_name_lower = file_name.lower()
         
-        # Skip video files
-        if file_name_lower.endswith(('.avi', '.mp4', '.mkv')):
-            print(f"Skipping video file: {file_name}")
+        # Skip files
+        if file_name_lower.endswith(('.avi', '.mp4', '.mkv', '.csv')):
+            print(f"Skipping file: {file_name}")
             continue
         
         print(f"Downloading: {file_name}")
@@ -54,7 +54,7 @@ def download_session_logs(session_folder):
         download_file(file['id'], file_path)
         
         # Check most specific patterns first
-        if file_name_lower.endswith('.pcap'):
+        if file_name_lower.endswith(('.pcap', '.pcapng')):
             downloaded_files['pcap'].append(file_path)
             print(f"  -> Categorized as: NETWORK log")
         elif ('syslog' in file_name_lower or 'system' in file_name_lower or 
