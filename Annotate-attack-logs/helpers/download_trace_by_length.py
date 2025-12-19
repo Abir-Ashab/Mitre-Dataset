@@ -32,8 +32,8 @@ if 'logs' in new_data:
                 length_value = int(item['length']) if isinstance(item['length'], str) else item['length']
                 
                 # Check the conditions: src, dst, and length > 500
-                if (ip_layer['src'] == "31.216.145.5" and 
-                    ip_layer['dst'] == "10.100.200.151" and 
+                if (ip_layer['src'] == "149.154.167.99" and # payload host site(tg/mega) ip
+                    ip_layer['dst'] == "192.168.31.219" and # local ip
                     length_value > 500):
                     
                     item['label'] = "suspicious"
@@ -55,4 +55,4 @@ print(f"\nProcessing complete!")
 print(f"Total entries marked as suspicious: {count}")
 print(f"Updated file saved as: {new_filename}")
 
-# python .\detect_large_packets.py E:\Hacking\Mitre-Dataset\Annotate-attack-logs\Pseudo-Annotated-Logs\20251025_142600\annotated_data_20251025_142600.json
+# python .\download_trace_by_length.py "E:\Hacking\Mitre-Dataset\Annotate-attack-logs\Pseudo-Annotated-Logs\20250629_200301\annotated_data_20250629_200301_updated.json"

@@ -199,6 +199,18 @@ Use together to confirm RAT wiping traces.
 
 ---
 
+# **🟥 4688 (Security) = **
+
+A new process has been created
+
+---
+
+# **🟥 4689 (Security) = **
+
+A new process has been ended
+
+---
+
 # 🔥 **Updated Top Event IDs for Detecting RATS**
 
 | Source           | Event ID | Why It Matters                 |

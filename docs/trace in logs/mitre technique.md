@@ -15,6 +15,18 @@ if process stopped (event_id: 5) then apply:
       "mitre_techniques": ["T1489"]
 ```
 
+if process stopped (event_id: 11) then apply:
+```js
+      "label": "suspicious",
+      "mitre_techniques": [ "T1105", "T1036.007"]
+```
+
+if process stopped (event_id: 4688 (security, not sysmon)) then apply:
+```js
+      "label": "suspicious",
+      "mitre_techniques": [ "T1204.002"]
+```
+
 3) For 7zip execution, locked and upload:
 ```js
       "label": "suspicious",
