@@ -30,10 +30,29 @@ from typing import List, Dict, Any
 FILTER_RULES: List[Dict[str, Any]] = [
     {
         "event_id": "3",
-        "image": r"C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe",
+        "image": r"C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
         "label": "suspicious",
-        "mitre_techniques": ["T1071"],
+        "mitre_techniques": ["T1071"]
+    }, 
+    {
+        "event_id": "11",
+        "image": r"C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+        "label": "suspicious",
+        "mitre_techniques": [ "T1105", "T1036.007"]
+    }, 
+    {
+        "event_id": "5",
+        "image": r"C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+        "label": "suspicious",
+        "mitre_techniques": ["T1489"]
     }
+    # The following label should be manually put
+    # {
+    #     "event_id": "13",
+    #     "Details": r"C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+    #     "label": "suspicious",
+    #     "mitre_techniques": ["T1112"]
+    # }
 ]
 
 

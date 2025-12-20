@@ -107,11 +107,32 @@ For network connection by dns query(event_ id: 22):
 ```
 
 6) for webpass viewer (credential harvesting):
+
+For execution (event_id: 1)
 ```js
       "label": "suspicious",
       "mitre_techniques": [
         "T1555.003",
-        "T1555.004"
+        "T1555.004",
+        "T1059.003",  
+        "T1106"
+      ]
+```
+
+For stopping process (event_id: 5)
+```js
+      "label": "suspicious",
+      "mitre_techniques": [
+        "T1555.003"
+      ]
+```
+
+For accessing registry for browser credential storage (event_id: 13)
+```js
+      "label": "suspicious",
+      "mitre_techniques": [
+        "T1555.003", 
+        "T1012"
       ]
 ```
 
