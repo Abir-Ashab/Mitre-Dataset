@@ -21,6 +21,19 @@ if process create (event_id: 11) then apply:
       "mitre_techniques": [ "T1105", "T1036.007"]
 ```
 
+Alternate Data Streams begins (event_id: 15) then apply:
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1564.004"]
+```
+
+
+Modify Registry (event_id: 13) then apply:
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1112"]
+```
+
 if process create (event_id: 4688 (security, not sysmon)) then apply:
 ```js
       "label": "suspicious",
