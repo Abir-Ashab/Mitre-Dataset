@@ -9,13 +9,15 @@ from datetime import datetime
 
 
 def is_youtube_ip(ip_address):
-    """Check if an IP address belongs to YouTube."""
+    """Check if an IP address belongs to YouTube/Google."""
     if not ip_address:
         return False
     
     # YouTube/Google IP ranges (based on actual traffic analysis)
     youtube_prefixes = [
-        '74.125.',      # YouTube CDN (major - 16.5% + 7.3% of traffic)
+        '74.125.',      # YouTube CDN (classic range)
+        '142.250.',     # Google/YouTube (newer range) - 0.8% + 0.6% + 0.3% of traffic
+        '142.251.',     # Google/YouTube (newer range) - 0.8% + 0.5% + 0.5% + 0.4% + 0.3% of traffic
     ]
     
     return any(ip_address.startswith(prefix) for prefix in youtube_prefixes)

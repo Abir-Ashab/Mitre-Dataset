@@ -7,9 +7,24 @@ if len(sys.argv) != 2:
 
 filename = sys.argv[1]
 
-# Load the JSON data
-with open(filename, 'r') as f:
-    data = json.load(f)
+# Load the JSON data with robust encoding handling
+def load_json_file(path):
+    # Try UTF-8 first, then fallback to cp1252, using 'replace' to avoid decode errors
+    encodings = [('utf-8', 'strict'), ('utf-8', 'replace'), ('cp1252', 'replace')]
+    for enc, errors in encodings:
+        try:
+            with open(path, 'r', encoding=enc, errors=errors) as f:
+                return json.load(f)
+        except UnicodeDecodeError:
+            # try next encoding
+            continue
+        except json.JSONDecodeError as e:
+            print(f"Error parsing JSON: {e}")
+            sys.exit(1)
+    print(f"Failed to read file with supported encodings: {path}")
+    sys.exit(1)
+
+data = load_json_file(filename)
 
 # Set to store unique event IDs
 unique_event_ids = set()
