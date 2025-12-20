@@ -3,7 +3,7 @@
       "label": "suspicious",
       "mitre_techniques": ["T1566.001", "T1105", "T1036", "T1027"]
 ```
-2) For executing malicious payload (app.exe) through npm run:
+2) For executing malicious payload (app.exe) through npm run (event_id: 1):
 ```js
       "label": "suspicious",
       "mitre_techniques": ["T1204.002", "T1199", "T1036"]
@@ -15,16 +15,57 @@ if process stopped (event_id: 5) then apply:
       "mitre_techniques": ["T1489"]
 ```
 
-if process stopped (event_id: 11) then apply:
+if process create (event_id: 11) then apply:
 ```js
       "label": "suspicious",
       "mitre_techniques": [ "T1105", "T1036.007"]
 ```
 
-if process stopped (event_id: 4688 (security, not sysmon)) then apply:
+if process create (event_id: 4688 (security, not sysmon)) then apply:
 ```js
       "label": "suspicious",
-      "mitre_techniques": [ "T1204.002"]
+      "mitre_techniques": [
+        "T1204.002",
+        "T1036.007", 
+        "T1566.001" 
+      ]
+```
+
+if process stopped (event_id: 4689 (security, not sysmon)) then apply:
+```js
+      "label": "suspicious",
+      "mitre_techniques": [
+        "T1027.002"
+      ]
+```
+if special privilege given (event_id: 4672 (security, not sysmon)) then apply:
+```js
+      "label": "suspicious",
+      "mitre_techniques": [
+         "T1134.001",
+         "T1055",
+         "T1003.001"
+      ]
+```
+
+if special privilege given (event_id: 4703 (security, not sysmon)) then apply:
+```js
+      "label": "suspicious",
+      "mitre_techniques": [
+         "T1134.001"
+      ]
+```
+
+For network connection (event_ id: 3):
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1071"]
+```
+
+For network connection by dns query(event_ id: 22):
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1071.004"]
 ```
 
 3) For 7zip execution, locked and upload:

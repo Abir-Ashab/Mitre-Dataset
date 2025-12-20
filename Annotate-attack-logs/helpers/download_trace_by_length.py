@@ -32,7 +32,8 @@ if 'logs' in new_data:
                 length_value = int(item['length']) if isinstance(item['length'], str) else item['length']
                 
                 # Check the conditions: src, dst, and length > 500
-                if (ip_layer['src'] == "149.154.167.99" and # payload host site(tg/mega) ip
+                # if (ip_layer['src'] == "149.154.167.99" and # payload host site(tg) ip
+                if (ip_layer['src'] == "31.216.145.5" and   # payload host site(tg/mega) ip
                     ip_layer['dst'] == "192.168.31.219" and # local ip
                     length_value > 500):
                     
