@@ -197,7 +197,7 @@ The first log where I was downloading rclone in the victim os (event_id: 1)
       "mitre_techniques": ["T1105", "T1567.002", "T1059.001", "T1562.001", "T1071.001"]
 ```
 
-The 2nd log where I was sending relavent file to cloud server via rclone (event_id: 
+The 2nd log where I was sending relavent file to cloud server via rclone (event_id: 1)
 
 ```js
       "label": "suspicious",

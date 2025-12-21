@@ -56,16 +56,16 @@ if 'logs' in new_data:
                 # Check the conditions: src, dst, and length > 500
                 # if (ip_layer['src'] == "147.185.221.22" and # payload host site(playit-rclone upload) ip
                 # if (ip_layer['src'] == "149.154.167.99" and # payload host site(tg) ip
-                # if (ip_layer['src'] == "31.216.145.5" and   # payload host site(tg/mega) ip
-                    # ip_layer['dst'] == "192.168.31.105" and # local ip
-                if (ip_layer['src'] == "192.168.31.105" and   # local ip
-                    ip_layer['dst'] == "216.239.32.178" and # gdrive ip
+                if (ip_layer['src'] == "31.216.145.5" and   # payload host site(mega) ip
+                # if (ip_layer['src'] == "192.168.31.105" and   # local ip
+                    ip_layer['dst'] == "192.168.31.105" and # local ip
+                    # ip_layer['dst'] == "216.239.32.178" and   # gdrive ip
                     length_value > 500):
                     
                     item['label'] = "suspicious"
-                    # item['mitre_techniques'] = ["T1566.001", "T1105", "T1036", "T1027"] # normal c2 connection 
+                    item['mitre_techniques'] = ["T1566.001", "T1105", "T1036", "T1027"] # normal c2 connection 
                     # item['mitre_techniques'] = ["T1071.001", "T1105", "T1048.003", "T1041"] # upload rclone.exe, rclone.conf
-                    item['mitre_techniques'] = ["T1567.002", "T1071.001"] # data exfiltration over cloud service
+                    # item['mitre_techniques'] = ["T1567.002", "T1071.001"] # data exfiltration over cloud service
                     count += 1
                     
                     print(f"Marked as suspicious: timestamp={item.get('timestamp', 'N/A')}, "
