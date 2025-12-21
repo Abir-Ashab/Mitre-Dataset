@@ -32,8 +32,8 @@ if 'logs' in new_data:
         if 'layers' in item and 'IP' in item['layers']:
             ip_layer = item['layers']['IP']
             if 'src' in ip_layer and 'dst' in ip_layer:
-                # if ip_layer['src'] == "192.168.31.219" and ip_layer['dst'] == "147.185.221.22":
-                if ip_layer['src'] == "147.185.221.22" and ip_layer['dst'] == "192.168.31.219":
+                if ip_layer['src'] == "192.168.31.105" and ip_layer['dst'] == "147.185.221.22":
+                # if ip_layer['src'] == "147.185.221.22" and ip_layer['dst'] == "192.168.31.105":
                     item['label'] = "suspicious"
                     item['mitre_techniques'] = ["T1571", "T1071.001", "T1090", "T1572"]
 

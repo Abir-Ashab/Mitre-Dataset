@@ -45,6 +45,12 @@ FILTER_RULES: List[Dict[str, Any]] = [
         "image": r"C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
         "label": "suspicious",
         "mitre_techniques": ["T1489"]
+    },
+    {
+        "event_id": "2",
+        "image": r"C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+        "label": "suspicious",
+        "mitre_techniques": ["T1070.006"]
     }
     # The following label should be manually put
     # {

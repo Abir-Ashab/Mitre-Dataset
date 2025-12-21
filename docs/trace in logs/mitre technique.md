@@ -8,6 +8,11 @@
       "label": "suspicious",
       "mitre_techniques": ["T1204.002", "T1199", "T1036"]
 ```
+For executing "LocalfUWrSTPxgW.exe" as parentImage(event_id: 1)
+```js
+      "label": "suspicious",
+      "mitre_techniques": [ "T1059.001", "T1562.001", "T1074.001", "T1222.001", "T1106" ]
+```
 
 if process stopped (event_id: 5) then apply:
 ```js
@@ -182,4 +187,31 @@ For accessing registry for browser credential storage (event_id: 13)
 ```js
       "label": "suspicious",
       "mitre_techniques": ["T1056.001", "T1119", "T1074.001"]
+```
+
+16) Exfiltration using rclone:
+
+The first log where I was downloading rclone in the victim os (event_id: 1)
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1105", "T1567.002", "T1059.001", "T1562.001", "T1071.001"]
+```
+
+The 2nd log where I was sending relavent file to cloud server via rclone (event_id: 
+
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1567.002", "T1059.001", "T1027"]
+```
+
+Network log for uploading rcloen.exe, rclone.conf:
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1071.001", "T1105", "T1048.003", "T1041"]
+```
+
+Network log for uploading from victim to gdrive:
+```js
+      "label": "suspicious",
+      "mitre_techniques": ["T1567.002", "T1071.001"]
 ```

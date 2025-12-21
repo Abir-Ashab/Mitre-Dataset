@@ -7,9 +7,31 @@ if len(sys.argv) != 2:
 
 filename = sys.argv[1]
 
-# Load the JSON data
-with open(filename, 'r') as f:
-    data = json.load(f)
+# Load the JSON data by trying several encodings and a safe fallback
+
+def load_json_file(path):
+    encodings = ('utf-8', 'utf-8-sig', 'latin-1', 'cp1252')
+    for enc in encodings:
+        try:
+            with open(path, 'r', encoding=enc) as f:
+                return json.load(f)
+        except UnicodeDecodeError:
+            # try the next encoding
+            continue
+        except json.JSONDecodeError as e:
+            print(f"Failed to parse JSON (encoding={enc}): {e}")
+            sys.exit(1)
+    # Last resort: replace undecodable bytes and attempt to load
+    try:
+        with open(path, 'r', encoding='utf-8', errors='replace') as f:
+            print("Warning: some invalid bytes were replaced when decoding the file.")
+            return json.load(f)
+    except Exception as e:
+        print(f"Could not read or parse the file with tried encodings: {e}")
+        sys.exit(1)
+
+
+data = load_json_file(filename)
 
 # Set to store unique dst IPs
 unique_dst_ips = set()
