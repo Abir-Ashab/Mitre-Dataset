@@ -1,0 +1,15 @@
+# Output directories
+final_training_data/
+merged_balanced_chunks.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
