@@ -33,8 +33,10 @@ SUSPICIOUS_CHUNKS_FILE = TRAINING_DIR / 'suspicious_chunks.json'
 NORMAL_CHUNKS_FILE = TRAINING_DIR / 'normal_chunks.json'
 
 # Processing parameters
-CHUNK_SIZE = 20  # Number of logs per chunk
-MIN_CHUNK_SIZE = 10  # Minimum logs to form a chunk (for last chunk in session)
+CHUNK_SIZE = 7   # Number of logs per chunk (optimized for token efficiency & better learning)
+                 # 7 logs ≈ 2,200 tokens (vs 20 logs ≈ 6,315 tokens)
+                 # Creates 3x more training examples while staying within token limits
+MIN_CHUNK_SIZE = 5  # Minimum logs to form a chunk (for last chunk in session)
 
 # MITRE techniques mapping
 MITRE_MAPPING_FILE = BASE_DIR / 'mitre_techniques.json'
