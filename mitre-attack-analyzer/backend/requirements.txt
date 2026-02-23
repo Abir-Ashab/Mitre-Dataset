@@ -1,0 +1,27 @@
+# FastAPI and Server
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-multipart>=0.0.20
+
+# ML and Model
+torch>=2.5.0
+transformers>=4.46.0
+peft>=0.13.0
+accelerate>=1.2.0
+
+# Database
+motor>=3.6.0  # Async MongoDB driver
+pymongo>=4.10.0
+beanie>=1.27.0  # ODM for MongoDB
+
+# Utilities
+python-dotenv>=1.0.0
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+
+# CORS and Security
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Logging and Monitoring
+loguru>=0.7.3
