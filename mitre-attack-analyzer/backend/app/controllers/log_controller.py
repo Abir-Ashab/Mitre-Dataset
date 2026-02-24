@@ -65,7 +65,7 @@ class HealthResponse(BaseModel):
 class StatsResponse(BaseModel):
     """Statistics response."""
     total_analyses: int
-    status_counts: dict
+    by_status: dict  # Changed from status_counts to match frontend
     recent_analyses: List[dict]
 
 
@@ -208,23 +208,40 @@ async def get_recent_analyses(limit: int = 50):
 @router.get("/stats", response_model=StatsResponse)
 async def get_statistics():
     """Get analysis statistics."""
-    status_counts = await log_repository.count_by_status()
-    recent = await log_repository.find_recent(10)
-    
-    total = sum(status_counts.values())
-    
-    return StatsResponse(
-        total_analyses=total,
-        status_counts=status_counts,
-        recent_analyses=[
-            {
-                "id": str(a.id),
-                "status": a.status.value,
-                "analyzed_at": a.analyzed_at.isoformat()
-            }
-            for a in recent
-        ]
-    )
+    try:
+        status_counts = await log_repository.count_by_status()
+        recent = await log_repository.find_recent(10)
+        
+        total = sum(status_counts.values()) if status_counts else 0
+        
+        # Transform status_counts to by_status with lowercase keys
+        by_status = {
+            "normal": status_counts.get("Normal", 0),
+            "suspicious": status_counts.get("Suspicious", 0),
+            "unknown": status_counts.get("Unknown", 0),
+            "error": status_counts.get("Error", 0),
+        }
+        
+        return StatsResponse(
+            total_analyses=total,
+            by_status=by_status,
+            recent_analyses=[
+                {
+                    "id": str(a.id),
+                    "status": a.status.value,
+                    "analyzed_at": a.analyzed_at.isoformat()
+                }
+                for a in recent
+            ]
+        )
+    except Exception as e:
+        logger.error(f"Error getting statistics: {str(e)}")
+        # Return empty stats instead of crashing
+        return StatsResponse(
+            total_analyses=0,
+            by_status={"normal": 0, "suspicious": 0, "unknown": 0, "error": 0},
+            recent_analyses=[]
+        )
 
 
 @router.get("/health", response_model=HealthResponse)

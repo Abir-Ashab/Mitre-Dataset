@@ -5,8 +5,8 @@ Handles all MongoDB interactions for log analyses.
 from typing import List, Optional
 from datetime import datetime, timedelta
 from beanie import PydanticObjectId
+from loguru import logger
 from app.models.log_model import LogAnalysis, LogStatus
-
 
 class LogRepository:
     """Repository for log analysis data access."""
@@ -88,17 +88,17 @@ class LogRepository:
         Returns:
             Dictionary with status counts
         """
-        pipeline = [
-            {
-                "$group": {
-                    "_id": "$status",
-                    "count": {"$sum": 1}
-                }
-            }
-        ]
-        
-        results = await LogAnalysis.aggregate(pipeline).to_list()
-        return {item["_id"]: item["count"] for item in results}
+        try:
+            # Count each status separately using simple queries
+            counts = {}
+            for status in LogStatus:
+                count = await LogAnalysis.find(LogAnalysis.status == status).count()
+                counts[status.value] = count
+            return counts
+        except Exception as e:
+            # If counting fails, return empty dict
+            logger.error(f"Error in count_by_status: {str(e)}")
+            return {}
     
     async def delete_by_id(self, analysis_id: str) -> bool:
         """

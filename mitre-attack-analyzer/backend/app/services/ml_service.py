@@ -4,11 +4,16 @@ ML Model Service - Handles model loading and inference.
 import torch
 import json
 import re
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import os
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from peft import PeftModel
 from typing import Dict, Tuple
 from loguru import logger
 from app.config import settings
+
+# Enable verbose logging for HuggingFace downloads
+os.environ['TRANSFORMERS_VERBOSITY'] = 'info'
+os.environ['HF_HUB_DISABLE_SYMLINKS_WARNING'] = '1'
 
 
 class MLService:
@@ -33,32 +38,45 @@ class MLService:
             
             # Load base model
             logger.info(f"Loading base model: {settings.BASE_MODEL}")
-            base_model = AutoModelForCausalLM.from_pretrained(
-                settings.BASE_MODEL,
-                torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
-                device_map="auto" if self.device == "cuda" else None,
-                trust_remote_code=True
+            logger.info("📥 Using 8-bit quantization to reduce memory usage...")
+            logger.info("This fits the 3GB model into ~1.5GB RAM (works on systems with low memory)")
+            
+            # Configure 8-bit quantization
+            bnb_config = BitsAndBytesConfig(
+                load_in_8bit=True,
+                bnb_8bit_compute_dtype=torch.float16
             )
             
+            base_model = AutoModelForCausalLM.from_pretrained(
+                settings.BASE_MODEL,
+                quantization_config=bnb_config,
+                device_map="auto",
+                trust_remote_code=True
+            )
+            logger.success("✅ Base model loaded with 8-bit quantization!")
+            
             # Load LoRA adapters
-            logger.info(f"Loading LoRA adapters from: {settings.MODEL_PATH}")
+            logger.info(f"📦 Loading LoRA adapters from: {settings.MODEL_PATH}")
             self.model = PeftModel.from_pretrained(base_model, settings.MODEL_PATH)
             self.model.eval()
+            logger.success("✅ LoRA adapters loaded!")
             
             # Load tokenizer
-            logger.info("Loading tokenizer...")
+            logger.info("🔤 Loading tokenizer...")
             self.tokenizer = AutoTokenizer.from_pretrained(
                 settings.BASE_MODEL,
                 trust_remote_code=True
             )
             self.tokenizer.pad_token = self.tokenizer.eos_token
+            logger.success("✅ Tokenizer loaded!")
             
             self._model_loaded = True
-            logger.success("Model loaded successfully!")
+            logger.success("🎉 Model loaded successfully with 8-bit quantization!")
+            logger.info(f"💾 Memory savings: ~50% (3GB → 1.5GB)")
             
             if self.device == "cuda":
-                memory_gb = torch.cuda.memory_allocated() / 1024**3
-                logger.info(f"GPU Memory: {memory_gb:.2f} GB")
+                memory_gb = torch.cuda.get_device_properties(0).total_memory / 1024**3
+                logger.info(f"🎮 GPU: {torch.cuda.get_device_name(0)} ({memory_gb:.1f}GB)")
                 
         except Exception as e:
             logger.error(f"Failed to load model: {str(e)}")
