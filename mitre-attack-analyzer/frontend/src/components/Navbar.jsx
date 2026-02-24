@@ -1,5 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, FileText, FolderOpen, Award } from "lucide-react";
+import {
+  LayoutDashboard,
+  FileText,
+  FolderOpen,
+  Shield,
+  Award,
+} from "lucide-react";
 
 const navigation = [
   {
@@ -17,6 +23,11 @@ const navigation = [
     name: "Session Manager",
     path: "/sessions",
     icon: FolderOpen,
+  },
+  {
+    name: "Bulk Analyzer",
+    path: "/bulk-analyzer",
+    icon: Shield,
   },
   {
     name: "Test Results",

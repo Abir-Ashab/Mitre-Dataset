@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import DatasetOverviewPage from "./pages/DatasetOverviewPage";
 import SingleAnalysisPage from "./pages/SingleAnalysisPage";
 import SessionsPage from "./pages/SessionsPage";
+import BulkAnalyzerPage from "./pages/BulkAnalyzerPage";
 import TestResultsPage from "./pages/TestResultsPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
@@ -26,6 +27,7 @@ function App() {
               <Route path="/analyze" element={<SingleAnalysisPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
               <Route path="/sessions/:sessionId" element={<SessionsPage />} />
+              <Route path="/bulk-analyzer" element={<BulkAnalyzerPage />} />
               <Route path="/test-results" element={<TestResultsPage />} />
             </Routes>
           </main>

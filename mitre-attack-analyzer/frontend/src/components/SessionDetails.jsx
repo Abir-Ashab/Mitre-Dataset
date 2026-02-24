@@ -9,7 +9,6 @@ import {
   ChevronRight,
   AlertTriangle,
   X,
-  Shield,
 } from "lucide-react";
 import { chunkCache } from "../services/chunkCache";
 import { sessionService } from "../services/api";
