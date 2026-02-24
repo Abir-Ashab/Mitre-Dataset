@@ -1,14 +1,10 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  NavLink,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
+import Navbar from "./components/Navbar";
+import DatasetOverviewPage from "./pages/DatasetOverviewPage";
 import SingleAnalysisPage from "./pages/SingleAnalysisPage";
 import SessionsPage from "./pages/SessionsPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import { FileText, FolderOpen } from "lucide-react";
 
 function App() {
   return (
@@ -18,42 +14,15 @@ function App() {
           <Header />
 
           <main className="container mx-auto px-4 py-8 max-w-7xl">
-            {/* Route Navigation */}
+            {/* Navigation */}
             <div className="mb-6">
-              <nav className="bg-white dark:bg-gray-800 rounded-lg p-1 inline-flex shadow-sm border border-gray-200 dark:border-gray-700">
-                <NavLink
-                  to="/"
-                  end
-                  className={({ isActive }) =>
-                    `px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
-                      isActive
-                        ? "bg-primary-600 text-white"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    }`
-                  }
-                >
-                  <FileText className="w-4 h-4" />
-                  Single Chunk Analysis
-                </NavLink>
-                <NavLink
-                  to="/sessions"
-                  className={({ isActive }) =>
-                    `px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
-                      isActive
-                        ? "bg-primary-600 text-white"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    }`
-                  }
-                >
-                  <FolderOpen className="w-4 h-4" />
-                  Session Management
-                </NavLink>
-              </nav>
+              <Navbar />
             </div>
 
             {/* Routes */}
             <Routes>
-              <Route path="/" element={<SingleAnalysisPage />} />
+              <Route path="/" element={<DatasetOverviewPage />} />
+              <Route path="/analyze" element={<SingleAnalysisPage />} />
               <Route path="/sessions" element={<SessionsPage />} />
               <Route path="/sessions/:sessionId" element={<SessionsPage />} />
             </Routes>
