@@ -6,9 +6,10 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
-import { sessionService } from "../services/api";
+import { chunkCache } from "../services/chunkCache";
+import { chunkSessionLogs, generateSessionId } from "../utils/chunking";
 
-export default function SessionUpload() {
+export default function SessionUpload({ onUploadComplete }) {
   const [file, setFile] = useState(null);
   const [sessionName, setSessionName] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -45,28 +46,42 @@ export default function SessionUpload() {
       // Read file content
       const fileContent = await file.text();
 
-      // Generate session ID from filename or timestamp
-      const sessionId =
-        file.name.replace(".json", "") || `session_${Date.now()}`;
+      // Generate session ID from filename
+      const sessionId = generateSessionId(file.name);
 
-      // Upload to backend
-      const response = await sessionService.uploadSession(
-        fileContent,
-        sessionId,
-        sessionName || file.name,
-      );
+      // Parse and chunk logs locally
+      const { chunks, total_logs, total_chunks } =
+        chunkSessionLogs(fileContent);
 
-      setResult(response);
+      // Store chunks in IndexedDB
+      await chunkCache.storeSession(sessionId, chunks, {
+        session_name: sessionName || file.name,
+        filename: file.name,
+        file_size: file.size,
+        upload_time: new Date().toISOString(),
+      });
+
+      setResult({
+        session_id: sessionId,
+        session_name: sessionName || file.name,
+        total_logs,
+        total_chunks,
+        message: "Session cached locally and ready for analysis",
+      });
+
       setFile(null);
       setSessionName("");
 
       // Reset file input
       document.getElementById("file-input").value = "";
+
+      // Notify parent component
+      if (onUploadComplete) {
+        onUploadComplete();
+      }
     } catch (err) {
       console.error("Upload error:", err);
-      setError(
-        err.response?.data?.detail || err.message || "Failed to upload session",
-      );
+      setError(err.message || "Failed to process session");
     } finally {
       setUploading(false);
     }
@@ -231,10 +246,10 @@ export default function SessionUpload() {
       {/* Info Box */}
       <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
         <p className="text-xs text-blue-900 dark:text-blue-300">
-          <strong>How it works:</strong> Upload a full session log file (JSON
-          array of logs). The system will automatically chunk it into 7-log
-          segments for efficient analysis. Each chunk can then be analyzed
-          individually.
+          <strong>Fast Local Storage:</strong> Sessions are chunked and stored
+          locally in your browser using IndexedDB. This provides instant access
+          without database overhead. Only analysis results are sent to the
+          server.
         </p>
       </div>
     </div>

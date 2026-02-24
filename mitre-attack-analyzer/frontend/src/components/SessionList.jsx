@@ -7,7 +7,7 @@ import {
   RefreshCw,
   ChevronLeft,
 } from "lucide-react";
-import { sessionService } from "../services/api";
+import { chunkCache } from "../services/chunkCache";
 
 export default function SessionList({ onSelectSession }) {
   const [sessions, setSessions] = useState([]);
@@ -27,10 +27,14 @@ export default function SessionList({ onSelectSession }) {
   const fetchSessions = async () => {
     try {
       setLoading(true);
+      const allSessions = await chunkCache.getAllSessions();
+
+      // Apply pagination
       const skip = (page - 1) * ITEMS_PER_PAGE;
-      const data = await sessionService.getAllSessions(skip, ITEMS_PER_PAGE);
-      setSessions(data.sessions || []);
-      setTotal(data.total || 0);
+      const paginatedSessions = allSessions.slice(skip, skip + ITEMS_PER_PAGE);
+
+      setSessions(paginatedSessions);
+      setTotal(allSessions.length);
       setError(null);
     } catch (err) {
       setError("Failed to load sessions");
@@ -49,7 +53,7 @@ export default function SessionList({ onSelectSession }) {
 
     try {
       setDeleting(sessionId);
-      await sessionService.deleteSession(sessionId);
+      await chunkCache.deleteSession(sessionId);
       // Reload current page after deletion
       await fetchSessions();
     } catch (err) {
@@ -115,7 +119,7 @@ export default function SessionList({ onSelectSession }) {
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
-                    {session.session_name || session.session_id}
+                    {session.metadata?.session_name || session.session_id}
                   </h4>
                   <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
                     {session.session_id}
@@ -123,14 +127,6 @@ export default function SessionList({ onSelectSession }) {
                 </div>
                 <div className="flex items-center gap-4 mt-1 text-xs text-gray-600 dark:text-gray-400">
                   <span>{session.total_chunks} chunks</span>
-                  <span className="flex items-center gap-1">
-                    <span className="text-green-600 dark:text-green-400 font-medium">
-                      {session.analyzed_chunks}
-                    </span>
-                    <span>/</span>
-                    <span>{session.total_chunks}</span>
-                    <span>analyzed</span>
-                  </span>
                   {session.created_at && (
                     <span className="text-gray-500 dark:text-gray-500">
                       {new Date(session.created_at).toLocaleString()}

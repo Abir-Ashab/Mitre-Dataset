@@ -8,10 +8,11 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { sessionService, logService } from "../services/api";
+import { chunkCache } from "../services/chunkCache";
+import { logService } from "../services/api";
 
 export default function SessionDetails({ sessionId, onBack }) {
-  const [session, setSession] = useState(null);
+  const [chunks, setChunks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(null);
   const [error, setError] = useState(null);
@@ -29,13 +30,13 @@ export default function SessionDetails({ sessionId, onBack }) {
     try {
       setLoading(true);
       const skip = (page - 1) * CHUNKS_PER_PAGE;
-      const data = await sessionService.getSessionDetails(
+      const data = await chunkCache.getSessionChunks(
         sessionId,
         skip,
         CHUNKS_PER_PAGE,
       );
-      setSession(data);
-      setTotalChunks(data.total_chunks || 0);
+      setChunks(data.chunks || []);
+      setTotalChunks(data.total || 0);
       setError(null);
     } catch (err) {
       setError("Failed to load session details");
@@ -49,22 +50,16 @@ export default function SessionDetails({ sessionId, onBack }) {
     try {
       setAnalyzing(chunkIndex);
 
-      // Get chunk data
-      const chunkData = await sessionService.getChunkData(
-        sessionId,
-        chunkIndex,
-      );
+      // Get chunk data from IndexedDB
+      const chunkData = await chunkCache.getChunk(sessionId, chunkIndex);
 
-      // Analyze the chunk
+      // Analyze the chunk (this sends to backend and stores result in DB)
       const result = await logService.analyzeLog(
-        chunkData.logs_json,
+        JSON.stringify(chunkData.logs_json),
         sessionId,
       );
 
       console.log("Analysis result:", result);
-
-      // Refresh session to update analyzed status
-      await fetchSessionDetails();
 
       alert(`Chunk ${chunkIndex} analyzed: ${result.status}`);
     } catch (err) {
@@ -95,11 +90,6 @@ export default function SessionDetails({ sessionId, onBack }) {
     );
   }
 
-  if (!session) return null;
-
-  const progress =
-    totalChunks > 0 ? (session.analyzed_chunks / totalChunks) * 100 : 0;
-
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -110,29 +100,11 @@ export default function SessionDetails({ sessionId, onBack }) {
         </button>
 
         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-          {session.session_name || session.session_id}
+          {chunks[0]?.metadata?.session_name || sessionId}
         </h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 font-mono mb-4">
-          {session.session_id}
+          {sessionId}
         </p>
-
-        {/* Progress Bar */}
-        <div className="mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Analysis Progress
-            </span>
-            <span className="text-sm font-semibold text-primary-600 dark:text-primary-400">
-              {session.analyzed_chunks} / {totalChunks} ({progress.toFixed(0)}%)
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-            <div
-              className="bg-primary-600 dark:bg-primary-500 h-2.5 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4">
@@ -146,10 +118,10 @@ export default function SessionDetails({ sessionId, onBack }) {
           </div>
           <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
             <p className="text-xs text-green-700 dark:text-green-400 mb-1">
-              Analyzed
+              On This Page
             </p>
             <p className="text-2xl font-bold text-green-900 dark:text-green-300">
-              {session.analyzed_chunks}
+              {chunks.length}
             </p>
           </div>
         </div>
@@ -159,13 +131,13 @@ export default function SessionDetails({ sessionId, onBack }) {
       <div className="card">
         <h4 className="text-md font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <Layers className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-          Chunks
+          Chunks (Page {page} of {totalPages})
         </h4>
 
         <div className="space-y-2">
-          {session.chunks.map((chunk) => (
+          {chunks.map((chunk) => (
             <div
-              key={chunk.chunk_id}
+              key={chunk.id}
               className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700"
             >
               <div className="flex-1">
@@ -173,35 +145,33 @@ export default function SessionDetails({ sessionId, onBack }) {
                   <span className="text-sm font-semibold text-gray-900 dark:text-white">
                     Chunk {chunk.chunk_index}
                   </span>
-                  {chunk.is_analyzed && (
-                    <CheckCircle className="w-4 h-4 text-green-500 dark:text-green-400" />
-                  )}
                 </div>
                 <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
-                  <span>{chunk.chunk_size} logs</span>
-                  {chunk.start_time && chunk.start_time !== "unknown" && (
-                    <span className="text-gray-500 dark:text-gray-500">
-                      {new Date(chunk.start_time).toLocaleTimeString()}
-                    </span>
-                  )}
+                  <span>
+                    {chunk.logs_json?.length ||
+                      chunk.metadata?.number_of_events ||
+                      0}{" "}
+                    logs
+                  </span>
+                  {chunk.metadata?.start_time &&
+                    chunk.metadata.start_time !== "unknown" && (
+                      <span className="text-gray-500 dark:text-gray-500">
+                        {new Date(
+                          chunk.metadata.start_time,
+                        ).toLocaleTimeString()}
+                      </span>
+                    )}
                 </div>
               </div>
               <button
                 onClick={() => handleAnalyzeChunk(chunk.chunk_index)}
                 disabled={analyzing === chunk.chunk_index}
-                className={`btn text-xs py-2 px-3 ${
-                  chunk.is_analyzed ? "btn-secondary" : "btn-primary"
-                }`}
+                className="btn btn-primary text-xs py-2 px-3"
               >
                 {analyzing === chunk.chunk_index ? (
                   <>
                     <Loader2 className="w-3 h-3 animate-spin" />
                     Analyzing...
-                  </>
-                ) : chunk.is_analyzed ? (
-                  <>
-                    <PlayCircle className="w-3 h-3" />
-                    Re-analyze
                   </>
                 ) : (
                   <>
