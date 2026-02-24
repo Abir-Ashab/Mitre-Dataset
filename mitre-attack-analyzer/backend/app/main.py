@@ -13,6 +13,7 @@ import sys
 
 from app.config import settings
 from app.models.log_model import LogAnalysis
+from app.models.session_chunk_model import SessionChunk
 from app.controllers.log_controller import router as log_router
 from app.services.ml_service import ml_service
 
@@ -41,7 +42,7 @@ async def lifespan(app: FastAPI):
         client = AsyncIOMotorClient(settings.MONGODB_URL)
         await init_beanie(
             database=client[settings.MONGODB_DB_NAME],
-            document_models=[LogAnalysis]
+            document_models=[LogAnalysis, SessionChunk]
         )
         logger.success("✅ MongoDB connected successfully")
         

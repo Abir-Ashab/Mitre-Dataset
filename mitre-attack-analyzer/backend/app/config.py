@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     MAX_INPUT_CHARS: int = 6000
     MAX_LENGTH_TOKENS: int = 4096
     MAX_NEW_TOKENS: int = 256
-    TEMPERATURE: float = 0.7
+    TEMPERATURE: float = 0.3  # Lower temperature for more deterministic classification
     TOP_P: float = 0.9
     
     @property

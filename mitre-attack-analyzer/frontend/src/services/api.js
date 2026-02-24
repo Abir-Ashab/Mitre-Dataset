@@ -46,4 +46,42 @@ export const logService = {
   },
 };
 
+// Session Service - for uploading full session logs
+export const sessionService = {
+  async uploadSession(logContent, sessionId, sessionName = null) {
+    const response = await api.post("/api/logs/sessions/upload", {
+      log_content: logContent,
+      session_id: sessionId,
+      session_name: sessionName,
+    });
+    return response.data;
+  },
+
+  async getAllSessions(skip = 0, limit = 20) {
+    const response = await api.get("/api/logs/sessions", {
+      params: { skip, limit },
+    });
+    return response.data;
+  },
+
+  async getSessionDetails(sessionId, skip = 0, limit = 50) {
+    const response = await api.get(`/api/logs/sessions/${sessionId}`, {
+      params: { skip, limit },
+    });
+    return response.data;
+  },
+
+  async getChunkData(sessionId, chunkIndex) {
+    const response = await api.get(
+      `/api/logs/sessions/${sessionId}/chunks/${chunkIndex}`,
+    );
+    return response.data;
+  },
+
+  async deleteSession(sessionId) {
+    const response = await api.delete(`/api/logs/sessions/${sessionId}`);
+    return response.data;
+  },
+};
+
 export default api;

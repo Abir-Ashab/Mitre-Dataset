@@ -8,8 +8,11 @@ from datetime import datetime
 import time
 
 from app.services.ml_service import ml_service
+from app.services.chunking_service import chunking_service
 from app.repositories.log_repository import log_repository
+from app.repositories.session_chunk_repository import session_chunk_repository
 from app.models.log_model import LogAnalysis, LogStatus
+from app.models.session_chunk_model import SessionChunk
 from loguru import logger
 
 
@@ -252,3 +255,242 @@ async def health_check():
         model_loaded=ml_service.is_loaded(),
         timestamp=datetime.utcnow()
     )
+
+
+# ============================================================================
+# SESSION UPLOAD & CHUNKING ENDPOINTS
+# ============================================================================
+
+class UploadSessionRequest(BaseModel):
+    """Request model for uploading full session logs."""
+    log_content: str = Field(..., description="Full session log content (JSON array)")
+    session_id: str = Field(..., description="Unique session identifier")
+    session_name: Optional[str] = Field(None, description="Optional session name/description")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "log_content": '[{"EventID": 4688, ...}, {"EventID": 4689, ...}]',
+                "session_id": "session_20260224_103000",
+                "session_name": "Credential Harvesting Attack"
+            }
+        }
+
+
+class UploadSessionResponse(BaseModel):
+    """Response model for session upload."""
+    session_id: str
+    session_name: Optional[str]
+    total_logs: int
+    total_chunks: int
+    chunk_ids: List[str]
+    created_at: datetime
+    message: str
+
+
+class SessionSummaryResponse(BaseModel):
+    """Response model for session summary."""
+    session_id: str
+    session_name: Optional[str]
+    total_chunks: int
+    analyzed_chunks: int
+    chunks: List[dict]
+    skip: int = 0
+    limit: int = 50
+
+
+@router.post("/sessions/upload", response_model=UploadSessionResponse, status_code=status.HTTP_201_CREATED)
+async def upload_session_logs(request: UploadSessionRequest):
+    """
+    Upload full session log file and automatically chunk it.
+    
+    - **log_content**: Complete session logs as JSON array
+    - **session_id**: Unique identifier for this session
+    - **session_name**: Optional descriptive name
+    
+    The logs will be automatically chunked into 7-log segments and saved to the database.
+    """
+    try:
+        # Chunk the session logs
+        chunks_data = chunking_service.chunk_session_logs(
+            request.log_content,
+            request.session_id
+        )
+        
+        logger.info(f"Created {len(chunks_data)} chunks for session {request.session_id}")
+        
+        # Create SessionChunk documents
+        chunks_to_save = []
+        for chunk_data in chunks_data:
+            chunk = SessionChunk(
+                session_id=request.session_id,
+                session_name=request.session_name,
+                chunk_index=chunk_data["metadata"]["chunk_index"],
+                total_chunks=chunk_data["metadata"]["total_chunks"],
+                chunk_size=chunk_data["metadata"]["chunk_size"],
+                logs_json=chunk_data["logs_json"],
+                logs_metadata=chunk_data["metadata"],
+                start_time=chunk_data["metadata"]["start_time"],
+                end_time=chunk_data["metadata"]["end_time"]
+            )
+            chunks_to_save.append(chunk)
+        
+        # Save all chunks to database
+        saved_chunks = await session_chunk_repository.create_many_chunks(chunks_to_save)
+        
+        # Calculate total logs
+        total_logs = sum(c.chunk_size for c in saved_chunks)
+        
+        logger.success(f"Saved {len(saved_chunks)} chunks for session {request.session_id}")
+        
+        return UploadSessionResponse(
+            session_id=request.session_id,
+            session_name=request.session_name,
+            total_logs=total_logs,
+            total_chunks=len(saved_chunks),
+            chunk_ids=[str(c.id) for c in saved_chunks],
+            created_at=datetime.utcnow(),
+            message=f"Successfully chunked {total_logs} logs into {len(saved_chunks)} chunks"
+        )
+        
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Error uploading session: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to process session: {str(e)}"
+        )
+
+
+@router.get("/sessions", response_model=dict)
+async def get_all_sessions(skip: int = 0, limit: int = 20):
+    """Get paginated list of all uploaded sessions with summary information."""
+    try:
+        sessions, total = await session_chunk_repository.get_all_sessions(skip, limit)
+        return {
+            "sessions": sessions,
+            "total": total,
+            "skip": skip,
+            "limit": limit
+        }
+    except Exception as e:
+        logger.error(f"Error fetching sessions: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch sessions: {str(e)}"
+        )
+
+
+@router.get("/sessions/{session_id}", response_model=SessionSummaryResponse)
+async def get_session_details(session_id: str, skip: int = 0, limit: int = 50):
+    """Get detailed information about a specific session and its chunks (paginated)."""
+    try:
+        chunks, total = await session_chunk_repository.find_by_session(session_id, skip, limit)
+        
+        if total == 0:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Session '{session_id}' not found"
+            )
+        
+        analyzed_count = sum(1 for c in chunks if c.is_analyzed)
+        
+        chunk_list = [
+            {
+                "chunk_id": str(c.id),
+                "chunk_index": c.chunk_index,
+                "chunk_size": c.chunk_size,
+                "is_analyzed": c.is_analyzed,
+                "analysis_id": c.analysis_id,
+                "start_time": c.start_time,
+                "end_time": c.end_time
+            }
+            for c in chunks
+        ]
+        
+        return SessionSummaryResponse(
+            session_id=session_id,
+            session_name=chunks[0].session_name if chunks else None,
+            total_chunks=total,
+            analyzed_chunks=analyzed_count,
+            chunks=chunk_list,
+            skip=skip,
+            limit=limit
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching session details: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch session details: {str(e)}"
+        )
+
+
+@router.get("/sessions/{session_id}/chunks/{chunk_index}", response_model=dict)
+async def get_chunk_data(session_id: str, chunk_index: int):
+    """Get the log data for a specific chunk."""
+    try:
+        chunks = await session_chunk_repository.find_by_session(session_id)
+        
+        # Find the specific chunk
+        chunk = next((c for c in chunks if c.chunk_index == chunk_index), None)
+        
+        if not chunk:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Chunk {chunk_index} not found in session '{session_id}'"
+            )
+        
+        return {
+            "chunk_id": str(chunk.id),
+            "session_id": chunk.session_id,
+            "chunk_index": chunk.chunk_index,
+            "chunk_size": chunk.chunk_size,
+            "logs_json": chunk.logs_json,
+            "is_analyzed": chunk.is_analyzed,
+            "analysis_id": chunk.analysis_id,
+            "metadata": chunk.logs_metadata
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching chunk data: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch chunk data: {str(e)}"
+        )
+
+
+@router.delete("/sessions/{session_id}")
+async def delete_session(session_id: str):
+    """Delete a session and all its chunks."""
+    try:
+        deleted_count = await session_chunk_repository.delete_session(session_id)
+        
+        if deleted_count == 0:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Session '{session_id}' not found"
+            )
+        
+        return {
+            "message": f"Deleted session '{session_id}' and {deleted_count} chunks",
+            "deleted_chunks": deleted_count
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting session: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete session: {str(e)}"
+        )
+
