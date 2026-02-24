@@ -119,30 +119,44 @@ class SessionChunkRepository:
     
     async def update_chunk_analysis(
         self, 
-        chunk_id: str, 
-        analysis_id: str
-    ) -> bool:
+        session_id: str,
+        chunk_index: int,
+        analysis_id: str,
+        analysis_status: str,
+        analysis_result: dict
+    ) -> Optional[SessionChunk]:
         """
-        Mark chunk as analyzed and link to analysis
+        Mark chunk as analyzed and save analysis results
         
         Args:
-            chunk_id: Chunk document ID
+            session_id: Session identifier
+            chunk_index: Chunk index
             analysis_id: LogAnalysis document ID
+            analysis_status: Analysis status (Normal/Suspicious/Unknown)
+            analysis_result: Full analysis result dictionary
             
         Returns:
-            True if updated, False otherwise
+            Updated SessionChunk if found, None otherwise
         """
         try:
-            chunk = await self.find_chunk_by_id(chunk_id)
+            chunk = await SessionChunk.find_one(
+                SessionChunk.session_id == session_id,
+                SessionChunk.chunk_index == chunk_index
+            )
             if chunk:
                 chunk.is_analyzed = True
                 chunk.analysis_id = analysis_id
+                chunk.analysis_status = analysis_status
+                chunk.analysis_result = analysis_result
                 chunk.analyzed_at = datetime.utcnow()
                 await chunk.save()
-                return True
-            return False
-        except Exception:
-            return False
+                logger.info(f"Updated chunk {chunk_index} analysis: {analysis_status}")
+                return chunk
+            logger.warning(f"Chunk not found: session={session_id}, index={chunk_index}")
+            return None
+        except Exception as e:
+            logger.error(f"Error updating chunk analysis: {str(e)}")
+            return None
     
     async def delete_session(self, session_id: str) -> int:
         """

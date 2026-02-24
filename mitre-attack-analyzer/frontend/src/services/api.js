@@ -82,6 +82,15 @@ export const sessionService = {
     const response = await api.delete(`/api/logs/sessions/${sessionId}`);
     return response.data;
   },
+
+  async analyzeChunk(sessionId, chunkIndex, logContent) {
+    const response = await api.post("/api/logs/chunks/analyze", {
+      session_id: sessionId,
+      chunk_index: chunkIndex,
+      log_content: logContent,
+    });
+    return response.data;
+  },
 };
 
 export default api;

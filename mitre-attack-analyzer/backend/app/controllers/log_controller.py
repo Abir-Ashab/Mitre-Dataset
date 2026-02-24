@@ -258,6 +258,99 @@ async def health_check():
 
 
 # ============================================================================
+# CHUNK ANALYSIS ENDPOINT
+# ============================================================================
+
+class AnalyzeChunkRequest(BaseModel):
+    """Request model for analyzing a specific chunk."""
+    session_id: str = Field(..., description="Session ID")
+    chunk_index: int = Field(..., description="Chunk index to analyze")
+    log_content: str = Field(..., description="Log content from the chunk")
+
+
+@router.post("/chunks/analyze", response_model=AnalyzeLogResponse)
+async def analyze_chunk(request: AnalyzeChunkRequest):
+    """
+    Analyze a specific chunk and update its status in the database.
+    
+    This endpoint analyzes a chunk AND saves the result to both:
+    1. LogAnalysis collection (for history)
+    2. SessionChunk collection (updates the chunk with status)
+    """
+    start_time = time.time()
+    
+    try:
+        # Analyze using ML service
+        status_result, reason, mitre_techniques, raw_output, error = await ml_service.analyze_log(
+            request.log_content
+        )
+        
+        if error:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Analysis failed: {error}"
+            )
+        
+        processing_time_ms = (time.time() - start_time) * 1000
+        
+        # Save to LogAnalysis collection
+        log_analysis = LogAnalysis(
+            log_content=request.log_content,
+            status=LogStatus(status_result),
+            reason=reason,
+            mitre_techniques=mitre_techniques,
+            raw_output=raw_output,
+            processing_time_ms=processing_time_ms,
+            session_id=request.session_id
+        )
+        
+        saved_analysis = await log_repository.create(log_analysis)
+        
+        # Update the SessionChunk with analysis results
+        analysis_result = {
+            "analysis_id": str(saved_analysis.id),
+            "status": status_result,
+            "reason": reason,
+            "mitre_techniques": mitre_techniques,
+            "raw_output": raw_output,
+            "processing_time_ms": processing_time_ms,
+            "analyzed_at": saved_analysis.analyzed_at.isoformat()
+        }
+        
+        updated_chunk = await session_chunk_repository.update_chunk_analysis(
+            session_id=request.session_id,
+            chunk_index=request.chunk_index,
+            analysis_id=str(saved_analysis.id),
+            analysis_status=status_result,
+            analysis_result=analysis_result
+        )
+        
+        if not updated_chunk:
+            logger.warning(f"Chunk not found in DB, but analysis saved: {request.session_id} chunk {request.chunk_index}")
+        
+        logger.info(f"Chunk {request.chunk_index} analyzed: {status_result} ({processing_time_ms:.2f}ms)")
+        
+        return AnalyzeLogResponse(
+            analysis_id=str(saved_analysis.id),
+            status=status_result,
+            reason=reason,
+            mitre_techniques=mitre_techniques,
+            raw_output=raw_output,
+            processing_time_ms=processing_time_ms,
+            analyzed_at=saved_analysis.analyzed_at
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in analyze_chunk endpoint: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Internal server error: {str(e)}"
+        )
+
+
+# ============================================================================
 # SESSION UPLOAD & CHUNKING ENDPOINTS
 # ============================================================================
 
@@ -406,6 +499,9 @@ async def get_session_details(session_id: str, skip: int = 0, limit: int = 50):
                 "chunk_size": c.chunk_size,
                 "is_analyzed": c.is_analyzed,
                 "analysis_id": c.analysis_id,
+                "analysis_status": c.analysis_status,
+                "analysis_result": c.analysis_result,
+                "analyzed_at": c.analyzed_at.isoformat() if c.analyzed_at else None,
                 "start_time": c.start_time,
                 "end_time": c.end_time
             }

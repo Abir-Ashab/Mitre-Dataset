@@ -8,6 +8,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { chunkCache } from "../services/chunkCache";
+import { sessionService } from "../services/api";
 
 export default function SessionList({ onSelectSession }) {
   const [sessions, setSessions] = useState([]);
@@ -27,7 +28,40 @@ export default function SessionList({ onSelectSession }) {
   const fetchSessions = async () => {
     try {
       setLoading(true);
-      const allSessions = await chunkCache.getAllSessions();
+
+      // Fetch from both sources
+      const [indexedDBSessions, mongoDBResponse] = await Promise.all([
+        chunkCache.getAllSessions().catch(() => []), // Old sessions from IndexedDB
+        sessionService.getAllSessions().catch(() => ({ sessions: [] })), // New sessions from MongoDB
+      ]);
+
+      // Merge sessions from both sources, avoiding duplicates
+      const sessionMap = new Map();
+
+      // Add IndexedDB sessions
+      indexedDBSessions.forEach((session) => {
+        sessionMap.set(session.session_id, {
+          ...session,
+          source: "indexeddb",
+        });
+      });
+
+      // Add or update with MongoDB sessions (MongoDB takes precedence)
+      if (mongoDBResponse.sessions) {
+        mongoDBResponse.sessions.forEach((session) => {
+          sessionMap.set(session.session_id, {
+            ...session,
+            source: "mongodb",
+          });
+        });
+      }
+
+      // Convert to array and sort by most recent
+      const allSessions = Array.from(sessionMap.values()).sort(
+        (a, b) =>
+          new Date(b.created_at || b.uploaded_at || 0) -
+          new Date(a.created_at || a.uploaded_at || 0),
+      );
 
       // Apply pagination
       const skip = (page - 1) * ITEMS_PER_PAGE;
@@ -53,7 +87,13 @@ export default function SessionList({ onSelectSession }) {
 
     try {
       setDeleting(sessionId);
-      await chunkCache.deleteSession(sessionId);
+
+      // Delete from both sources (IndexedDB and MongoDB)
+      await Promise.all([
+        chunkCache.deleteSession(sessionId).catch(() => {}), // Old sessions
+        sessionService.deleteSession(sessionId).catch(() => {}), // New sessions
+      ]);
+
       // Reload current page after deletion
       await fetchSessions();
     } catch (err) {
@@ -124,12 +164,19 @@ export default function SessionList({ onSelectSession }) {
                   <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
                     {session.session_id}
                   </span>
+                  {session.source === "indexeddb" && (
+                    <span className="px-2 py-0.5 text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded-full">
+                      Legacy
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-4 mt-1 text-xs text-gray-600 dark:text-gray-400">
                   <span>{session.total_chunks} chunks</span>
-                  {session.created_at && (
+                  {(session.created_at || session.uploaded_at) && (
                     <span className="text-gray-500 dark:text-gray-500">
-                      {new Date(session.created_at).toLocaleString()}
+                      {new Date(
+                        session.created_at || session.uploaded_at,
+                      ).toLocaleString()}
                     </span>
                   )}
                 </div>
