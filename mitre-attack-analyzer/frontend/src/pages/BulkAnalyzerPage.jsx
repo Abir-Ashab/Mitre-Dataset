@@ -27,35 +27,89 @@ export default function BulkAnalyzerPage() {
     fetchSessions();
   }, []);
 
-  const fetchSessions = async () => {
+  const fetchSessions = async (forceRefresh = false) => {
     try {
       setLoading(true);
-      const [indexedDBSessions, mongoDBResponse] = await Promise.all([
-        chunkCache.getAllSessions().catch(() => []),
-        sessionService.getAllSessions().catch(() => ({ sessions: [] })),
-      ]);
+      const startTime = performance.now();
 
-      const sessionMap = new Map();
-      indexedDBSessions.forEach((session) => {
-        sessionMap.set(session.session_id, {
-          ...session,
-          source: "indexeddb",
-        });
-      });
+      // Try to load from cache first (unless force refresh)
+      if (!forceRefresh) {
+        try {
+          const cached = localStorage.getItem("bulk_sessions_cache");
+          const cacheTimestamp = localStorage.getItem(
+            "bulk_sessions_cache_timestamp",
+          );
 
-      if (mongoDBResponse.sessions) {
-        mongoDBResponse.sessions.forEach((session) => {
-          sessionMap.set(session.session_id, {
-            ...session,
-            source: "mongodb",
-          });
-        });
+          if (cached && cacheTimestamp) {
+            const cacheAge = Date.now() - parseInt(cacheTimestamp);
+            const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+            // Use cache if less than 5 minutes old
+            if (cacheAge < CACHE_DURATION) {
+              const cachedData = JSON.parse(cached);
+              console.log(
+                `[Bulk Analyzer] ✅ Loaded from cache (${(cacheAge / 1000).toFixed(0)}s old, ${cachedData.length} sessions)`,
+              );
+              setSessions(cachedData);
+              setLoading(false);
+              return;
+            } else {
+              console.log(
+                `[Bulk Analyzer] Cache expired (${(cacheAge / 1000).toFixed(0)}s old), fetching fresh data...`,
+              );
+            }
+          }
+        } catch (cacheError) {
+          console.log("[Bulk Analyzer] Cache miss or error, fetching from DB");
+        }
+      } else {
+        console.log(
+          "[Bulk Analyzer] Force refresh requested, clearing cache...",
+        );
+        localStorage.removeItem("bulk_sessions_cache");
+        localStorage.removeItem("bulk_sessions_cache_timestamp");
       }
 
-      const allSessions = Array.from(sessionMap.values()).sort(
-        (a, b) =>
-          new Date(b.created_at || b.uploaded_at || 0) -
-          new Date(a.created_at || a.uploaded_at || 0),
+      // Fetch from MongoDB
+      console.log("[Bulk Analyzer] Fetching from MongoDB...");
+      const mongoStart = performance.now();
+      const mongoDBResponse = await sessionService.getAllSessions(0, 100);
+      const mongoTime = performance.now() - mongoStart;
+      console.log(
+        `[Bulk Analyzer] ✅ MongoDB fetch completed in ${mongoTime.toFixed(2)}ms`,
+      );
+
+      const allSessions = (mongoDBResponse.sessions || [])
+        .map((s) => ({
+          ...s,
+          source: "mongodb",
+        }))
+        .sort(
+          (a, b) =>
+            new Date(b.created_at || b.uploaded_at || 0) -
+            new Date(a.created_at || a.uploaded_at || 0),
+        );
+
+      // Store in cache
+      try {
+        localStorage.setItem(
+          "bulk_sessions_cache",
+          JSON.stringify(allSessions),
+        );
+        localStorage.setItem(
+          "bulk_sessions_cache_timestamp",
+          Date.now().toString(),
+        );
+        console.log(
+          `[Bulk Analyzer] ✅ Cached ${allSessions.length} sessions in localStorage`,
+        );
+      } catch (storageError) {
+        console.warn("[Bulk Analyzer] Failed to cache sessions:", storageError);
+      }
+
+      const totalTime = performance.now() - startTime;
+      console.log(
+        `[Bulk Analyzer] ✅ Total time: ${totalTime.toFixed(2)}ms (${allSessions.length} sessions loaded)`,
       );
 
       setSessions(allSessions);
@@ -74,12 +128,12 @@ export default function BulkAnalyzerPage() {
 
     try {
       setLoading(true);
-      // Fetch all chunks for the session
+      // Fetch chunks with pagination (50 at a time to avoid loading all at once)
       try {
         const data = await sessionService.getSessionDetails(
           session.session_id,
           0,
-          session.total_chunks,
+          50, // Load first 50 chunks initially
         );
         setSessionChunks(data.chunks || []);
       } catch (backendError) {
@@ -87,7 +141,7 @@ export default function BulkAnalyzerPage() {
           const data = await chunkCache.getSessionChunks(
             session.session_id,
             0,
-            session.total_chunks,
+            50,
           );
           setSessionChunks(data.chunks || []);
         } else {
@@ -280,13 +334,8 @@ export default function BulkAnalyzerPage() {
                   >
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <h4 className="text-sm font-semibold text-gray-900 dark:text-white truncate flex-1">
-                        {session.metadata?.session_name || session.session_id}
+                        {session.session_name || session.session_id}
                       </h4>
-                      {session.source === "indexeddb" && (
-                        <span className="px-2 py-0.5 text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded-full whitespace-nowrap">
-                          Legacy
-                        </span>
-                      )}
                     </div>
                     <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
                       <div className="flex items-center gap-1">

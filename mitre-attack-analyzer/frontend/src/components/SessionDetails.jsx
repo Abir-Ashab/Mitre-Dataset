@@ -9,11 +9,29 @@ import {
   ChevronRight,
   AlertTriangle,
   X,
+  Shield,
 } from "lucide-react";
 import { chunkCache } from "../services/chunkCache";
 import { sessionService } from "../services/api";
 import AnalysisResult from "./AnalysisResult";
 
+/**
+ * SessionDetails Component
+ *
+ * Displays session chunks with pagination and allows chunk-level analysis.
+ *
+ * ANALYSIS PERSISTENCE:
+ * - When you analyze a chunk, the result is saved to MongoDB (backend database)
+ * - Analysis results include: status, reason, MITRE techniques, raw output, and timestamp
+ * - Results persist across page reloads - when you return to this session, previously
+ *   analyzed chunks will show their saved results automatically
+ * - You can click on the Normal/Suspicious badges to view the full analysis details
+ * - Re-analyze button allows updating the analysis if needed
+ *
+ * DATA SOURCES:
+ * - MongoDB (primary): Recently uploaded sessions with analysis persistence
+ * - IndexedDB (fallback): Legacy sessions stored locally before MongoDB integration
+ */
 export default function SessionDetails({ sessionId, onBack }) {
   const [chunks, setChunks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +49,17 @@ export default function SessionDetails({ sessionId, onBack }) {
     fetchSessionDetails();
   }, [sessionId, page]);
 
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && showModal) {
+        setShowModal(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [showModal]);
+
   const fetchSessionDetails = async () => {
     try {
       setLoading(true);
@@ -38,15 +67,50 @@ export default function SessionDetails({ sessionId, onBack }) {
 
       try {
         // Try to fetch from backend API (MongoDB) first
+        console.log(`[Fetch] Requesting session details for: ${sessionId}`);
+        console.log(
+          `[Fetch] Pagination: skip=${skip}, limit=${CHUNKS_PER_PAGE}`,
+        );
+
         const data = await sessionService.getSessionDetails(
           sessionId,
           skip,
           CHUNKS_PER_PAGE,
         );
 
-        console.log("[Fetch] Retrieved chunks from MongoDB:", data.chunks);
+        console.log("[Fetch] ✅ Retrieved chunks from MongoDB");
+        console.log("[Fetch] Response data:", {
+          session_id: data.session_id,
+          session_name: data.session_name,
+          total_chunks: data.total_chunks,
+          analyzed_chunks: data.analyzed_chunks,
+          chunks_count: data.chunks?.length,
+        });
+
+        // Log each chunk's analysis status
+        data.chunks.forEach((chunk, idx) => {
+          if (chunk.analysis_result || chunk.analysis_status) {
+            console.log(`[Fetch] Chunk ${chunk.chunk_index} has analysis:`, {
+              is_analyzed: chunk.is_analyzed,
+              analysis_status: chunk.analysis_status,
+              has_analysis_result: !!chunk.analysis_result,
+              analysis_result_keys: chunk.analysis_result
+                ? Object.keys(chunk.analysis_result)
+                : [],
+              analyzed_at: chunk.analyzed_at,
+            });
+          }
+        });
+
+        const analyzedCount = data.chunks.filter(
+          (c) => c.analysis_result || c.is_analyzed,
+        ).length;
+        console.log(
+          `[Persistence] ✅ ${analyzedCount}/${data.chunks.length} chunks have saved analysis results from database`,
+        );
+
         setChunks(data.chunks || []);
-        setTotalChunks(data.total || 0);
+        setTotalChunks(data.total_chunks || data.total || 0);
         setError(null);
       } catch (backendError) {
         // If not found in MongoDB (404), fall back to IndexedDB (old sessions)
@@ -99,13 +163,23 @@ export default function SessionDetails({ sessionId, onBack }) {
       }
 
       // Analyze the chunk using the new endpoint (saves to MongoDB)
+      console.log(`[Analysis] Sending analysis request to backend...`);
       const result = await sessionService.analyzeChunk(
         sessionId,
         chunkIndex,
         JSON.stringify(chunkLogs),
       );
 
-      console.log("[Analysis] Backend result:", result);
+      console.log("[Analysis] ✅ Backend response received:", {
+        analysis_id: result.analysis_id,
+        status: result.status,
+        mitre_techniques: result.mitre_techniques,
+        has_reason: !!result.reason,
+        has_raw_output: !!result.raw_output,
+        analyzed_at: result.analyzed_at,
+      });
+      console.log("[Analysis] Full result object:", result);
+      console.log("[Analysis] ✅ Analysis saved to database successfully!");
 
       // Update the local chunks state immediately with analysis results
       setChunks((prevChunks) =>
@@ -113,6 +187,8 @@ export default function SessionDetails({ sessionId, onBack }) {
           chunk.chunk_index === chunkIndex
             ? {
                 ...chunk,
+                is_analyzed: true,
+                analysis_id: result.analysis_id,
                 analysis_status: result.status,
                 analysis_result: {
                   analysis_id: result.analysis_id,
@@ -129,6 +205,13 @@ export default function SessionDetails({ sessionId, onBack }) {
         ),
       );
 
+      console.log(
+        "[Analysis] Chunk state updated. Analysis is now persisted in DB and will be available on page reload.",
+      );
+      console.log(
+        `[Analysis] ✅ Chunk ${chunkIndex} analysis complete! Status: ${result.status}. This result is saved and will persist across page reloads.`,
+      );
+
       console.log(`[Analysis] Chunk ${chunkIndex} analysis complete!`);
     } catch (err) {
       console.error("[Analysis] Error:", err);
@@ -139,6 +222,9 @@ export default function SessionDetails({ sessionId, onBack }) {
   };
 
   const handleViewAnalysis = (chunk) => {
+    console.log("[Modal] Opening analysis modal for chunk:", chunk.chunk_index);
+    console.log("[Modal] Chunk data:", chunk);
+    console.log("[Modal] Analysis result:", chunk.analysis_result);
     setSelectedChunk(chunk);
     setShowModal(true);
   };
@@ -254,9 +340,13 @@ export default function SessionDetails({ sessionId, onBack }) {
                       Chunk {chunk.chunk_index}
                     </span>
                     {chunk.analysis_status && (
-                      <div onClick={() => handleViewAnalysis(chunk)}>
+                      <button
+                        onClick={() => handleViewAnalysis(chunk)}
+                        className="focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-full"
+                        type="button"
+                      >
                         {getStatusBadge(chunk.analysis_status)}
-                      </div>
+                      </button>
                     )}
                   </div>
                   <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
@@ -378,9 +468,17 @@ export default function SessionDetails({ sessionId, onBack }) {
 
       {/* Analysis Details Modal */}
       {showModal && selectedChunk && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={(e) => {
+            // Close modal when clicking on backdrop
+            if (e.target === e.currentTarget) {
+              setShowModal(false);
+            }
+          }}
+        >
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-xl">
-            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
+            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between z-10">
               <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <Shield className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                 Chunk {selectedChunk.chunk_index} - Analysis Details
@@ -388,6 +486,7 @@ export default function SessionDetails({ sessionId, onBack }) {
               <button
                 onClick={() => setShowModal(false)}
                 className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                type="button"
               >
                 <X className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
@@ -396,8 +495,13 @@ export default function SessionDetails({ sessionId, onBack }) {
               {selectedChunk.analysis_result ? (
                 <AnalysisResult result={selectedChunk.analysis_result} />
               ) : (
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  No analysis result available
+                <div className="text-center py-8">
+                  <p className="text-gray-500 dark:text-gray-400 mb-2">
+                    No analysis result available
+                  </p>
+                  <pre className="text-xs text-left bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-auto">
+                    {JSON.stringify(selectedChunk, null, 2)}
+                  </pre>
                 </div>
               )}
             </div>

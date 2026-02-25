@@ -80,6 +80,7 @@ class SessionChunkRepository:
     async def get_all_sessions(self, skip: int = 0, limit: int = 20) -> tuple[List[dict], int]:
         """
         Get list of all unique sessions with metadata (paginated)
+        Optimized approach: Only fetch chunk_index=0 for each session (contains all session metadata)
         
         Args:
             skip: Number of sessions to skip
@@ -89,30 +90,41 @@ class SessionChunkRepository:
             Tuple of (session list, total count)
         """
         try:
-            # Get all chunks and group by session in Python (simpler than aggregation)
-            all_chunks = await SessionChunk.find_all().sort(-SessionChunk.created_at).to_list()
+            # Fetch only the first chunk (index 0) of each session
+            # This contains all the session metadata we need
+            first_chunks = await SessionChunk.find(
+                SessionChunk.chunk_index == 0
+            ).sort(-SessionChunk.created_at).to_list()
             
-            # Group by session_id
-            sessions_dict = {}
-            for chunk in all_chunks:
-                sid = chunk.session_id
-                if sid not in sessions_dict:
-                    sessions_dict[sid] = {
-                        "session_id": sid,
-                        "session_name": chunk.session_name,
-                        "total_chunks": chunk.total_chunks,
-                        "analyzed_chunks": 0,
-                        "created_at": chunk.created_at.isoformat() if chunk.created_at else None
-                    }
-                if chunk.is_analyzed:
-                    sessions_dict[sid]["analyzed_chunks"] += 1
+            logger.info(f"Fetched {len(first_chunks)} session first chunks")
             
-            # Convert to list and sort by created_at
-            sessions = list(sessions_dict.values())
-            sessions.sort(key=lambda x: x["created_at"] or "", reverse=True)
+            # Build session list with metadata
+            sessions = []
+            session_ids = []
+            
+            for chunk in first_chunks:
+                session_ids.append(chunk.session_id)
+                sessions.append({
+                    "session_id": chunk.session_id,
+                    "session_name": chunk.session_name,
+                    "total_chunks": chunk.total_chunks,
+                    "analyzed_chunks": 0,
+                    "created_at": chunk.created_at.isoformat() if chunk.created_at else None
+                })
+            
+            # Count analyzed chunks for each session (optional - can be slow for many sessions)
+            # Only do this for the requested page range
+            paginated_sessions = sessions[skip:skip+limit]
+            for session in paginated_sessions:
+                analyzed_count = await SessionChunk.find(
+                    SessionChunk.session_id == session["session_id"],
+                    SessionChunk.is_analyzed == True
+                ).count()
+                session["analyzed_chunks"] = analyzed_count
             
             total = len(sessions)
-            return sessions[skip:skip+limit], total
+            logger.info(f"Returning {len(paginated_sessions)} sessions out of {total} total")
+            return paginated_sessions, total
         except Exception as e:
             logger.error(f"Error getting sessions: {str(e)}")
             return [], 0

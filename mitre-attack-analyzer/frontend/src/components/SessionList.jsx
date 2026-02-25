@@ -25,50 +25,95 @@ export default function SessionList({ onSelectSession }) {
     fetchSessions();
   }, [page]);
 
-  const fetchSessions = async () => {
+  const fetchSessions = async (forceRefresh = false) => {
     try {
       setLoading(true);
+      const startTime = performance.now();
 
-      // Fetch from both sources
-      const [indexedDBSessions, mongoDBResponse] = await Promise.all([
-        chunkCache.getAllSessions().catch(() => []), // Old sessions from IndexedDB
-        sessionService.getAllSessions().catch(() => ({ sessions: [] })), // New sessions from MongoDB
-      ]);
+      // Try to load from cache first (unless force refresh)
+      if (!forceRefresh) {
+        try {
+          const cached = localStorage.getItem("sessions_cache");
+          const cacheTimestamp = localStorage.getItem(
+            "sessions_cache_timestamp",
+          );
 
-      // Merge sessions from both sources, avoiding duplicates
-      const sessionMap = new Map();
+          if (cached && cacheTimestamp) {
+            const cacheAge = Date.now() - parseInt(cacheTimestamp);
+            const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-      // Add IndexedDB sessions
-      indexedDBSessions.forEach((session) => {
-        sessionMap.set(session.session_id, {
-          ...session,
-          source: "indexeddb",
-        });
-      });
+            // Use cache if less than 5 minutes old
+            if (cacheAge < CACHE_DURATION) {
+              const cachedData = JSON.parse(cached);
+              console.log(
+                `[Sessions] ✅ Loaded from cache (${(cacheAge / 1000).toFixed(0)}s old, ${cachedData.length} sessions)`,
+              );
 
-      // Add or update with MongoDB sessions (MongoDB takes precedence)
-      if (mongoDBResponse.sessions) {
-        mongoDBResponse.sessions.forEach((session) => {
-          sessionMap.set(session.session_id, {
-            ...session,
-            source: "mongodb",
-          });
-        });
+              const skip = (page - 1) * ITEMS_PER_PAGE;
+              const paginatedSessions = cachedData.slice(
+                skip,
+                skip + ITEMS_PER_PAGE,
+              );
+
+              setSessions(paginatedSessions);
+              setTotal(cachedData.length);
+              setError(null);
+              setLoading(false);
+              return;
+            } else {
+              console.log(
+                `[Sessions] Cache expired (${(cacheAge / 1000).toFixed(0)}s old), fetching fresh data...`,
+              );
+            }
+          }
+        } catch (cacheError) {
+          console.log("[Sessions] Cache miss or error, fetching from DB");
+        }
+      } else {
+        console.log("[Sessions] Force refresh requested, clearing cache...");
+        localStorage.removeItem("sessions_cache");
+        localStorage.removeItem("sessions_cache_timestamp");
       }
 
-      // Convert to array and sort by most recent
-      const allSessions = Array.from(sessionMap.values()).sort(
-        (a, b) =>
-          new Date(b.created_at || b.uploaded_at || 0) -
-          new Date(a.created_at || a.uploaded_at || 0),
+      // Fetch from MongoDB
+      console.log("[Sessions] Fetching from MongoDB...");
+      const mongoStart = performance.now();
+      const mongoDBResponse = await sessionService.getAllSessions(0, 100); // Fetch first 100 for caching
+      const mongoTime = performance.now() - mongoStart;
+      console.log(
+        `[Sessions] ✅ MongoDB fetch completed in ${mongoTime.toFixed(2)}ms`,
       );
+
+      const mongoDBSessions = (mongoDBResponse.sessions || []).map((s) => ({
+        ...s,
+        source: "mongodb",
+      }));
+
+      // Store in cache
+      try {
+        localStorage.setItem("sessions_cache", JSON.stringify(mongoDBSessions));
+        localStorage.setItem("sessions_cache_timestamp", Date.now().toString());
+        console.log(
+          `[Sessions] ✅ Cached ${mongoDBSessions.length} sessions in localStorage`,
+        );
+      } catch (storageError) {
+        console.warn("[Sessions] Failed to cache sessions:", storageError);
+      }
 
       // Apply pagination
       const skip = (page - 1) * ITEMS_PER_PAGE;
-      const paginatedSessions = allSessions.slice(skip, skip + ITEMS_PER_PAGE);
+      const paginatedSessions = mongoDBSessions.slice(
+        skip,
+        skip + ITEMS_PER_PAGE,
+      );
+
+      const totalTime = performance.now() - startTime;
+      console.log(
+        `[Sessions] ✅ Total time: ${totalTime.toFixed(2)}ms (${mongoDBSessions.length} sessions loaded, ${mongoDBResponse.total} total)`,
+      );
 
       setSessions(paginatedSessions);
-      setTotal(allSessions.length);
+      setTotal(mongoDBResponse.total || mongoDBSessions.length); // Use total from backend
       setError(null);
     } catch (err) {
       setError("Failed to load sessions");
@@ -88,14 +133,15 @@ export default function SessionList({ onSelectSession }) {
     try {
       setDeleting(sessionId);
 
-      // Delete from both sources (IndexedDB and MongoDB)
-      await Promise.all([
-        chunkCache.deleteSession(sessionId).catch(() => {}), // Old sessions
-        sessionService.deleteSession(sessionId).catch(() => {}), // New sessions
-      ]);
+      // Delete from MongoDB
+      await sessionService.deleteSession(sessionId);
 
-      // Reload current page after deletion
-      await fetchSessions();
+      // Clear cache and reload
+      localStorage.removeItem("sessions_cache");
+      localStorage.removeItem("sessions_cache_timestamp");
+      console.log("[Sessions] Cache cleared after deletion");
+
+      await fetchSessions(true); // Force refresh
     } catch (err) {
       console.error("Delete error:", err);
       alert("Failed to delete session");
@@ -128,8 +174,9 @@ export default function SessionList({ onSelectSession }) {
           Uploaded Sessions
         </h3>
         <button
-          onClick={fetchSessions}
+          onClick={() => fetchSessions(true)}
           className="btn btn-secondary text-xs py-1 px-3"
+          title="Refresh from database"
         >
           <RefreshCw className="w-3 h-3" />
           Refresh
@@ -159,16 +206,11 @@ export default function SessionList({ onSelectSession }) {
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
-                    {session.metadata?.session_name || session.session_id}
+                    {session.session_name || session.session_id}
                   </h4>
                   <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
                     {session.session_id}
                   </span>
-                  {session.source === "indexeddb" && (
-                    <span className="px-2 py-0.5 text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded-full">
-                      Legacy
-                    </span>
-                  )}
                 </div>
                 <div className="flex items-center gap-4 mt-1 text-xs text-gray-600 dark:text-gray-400">
                   <span>{session.total_chunks} chunks</span>
