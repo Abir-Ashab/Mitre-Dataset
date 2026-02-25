@@ -1,0 +1,175 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 170,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:34:53.195Z",
+    "end_time": "2025-09-18T17:34:53.929Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:34:53.195Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Rivet Networks LLC",
+          "OriginalFileName": "KAPS.exe",
+          "ParentUser": "NT AUTHORITY\\SYSTEM",
+          "Image": "C:\\Windows\\System32\\drivers\\RivetNetworks\\Killer\\KAPS.exe",
+          "FileVersion": "2.2.3205.0",
+          "ProcessId": "11212",
+          "CommandLine": "KAPS.exe -u",
+          "ProcessGuid": "{4E88ECB1-42BD-68CC-A717-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "KillerAPS",
+          "Description": "KillerAPS",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Windows\\System32\\drivers\\RivetNetworks\\Killer\\KAPS.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:53.195Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Rivet Networks LLC",
+          "OriginalFileName": "KAPS.exe",
+          "ParentUser": "NT AUTHORITY\\SYSTEM",
+          "Image": "C:\\Windows\\System32\\drivers\\RivetNetworks\\Killer\\KAPS.exe",
+          "ProcessId": "11212",
+          "FileVersion": "2.2.3205.0",
+          "CommandLine": "KAPS.exe -u",
+          "ProcessGuid": "{4E88ECB1-42BD-68CC-A717-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "KillerAPS",
+          "Description": "KillerAPS",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Windows\\System32\\drivers\\RivetNetworks\\Killer\\KAPS.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:53.223Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.14.24 says 10.10.12.1 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "08:55:31:0d:69:e8",
+          "psrc": "10.10.12.1",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.14.24"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:53.226Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Microsoft Corporation",
+          "OriginalFileName": "wmic.exe",
+          "ParentUser": "NT AUTHORITY\\SYSTEM",
+          "Image": "C:\\Windows\\System32\\wbem\\WMIC.exe",
+          "ProcessId": "22604",
+          "FileVersion": "10.0.26100.5074 (WinBuild.160101.0800)",
+          "CommandLine": "wmic computersystem get model,manufacturer /format:csv",
+          "ProcessGuid": "{4E88ECB1-42BD-68CC-A817-010000002400}",
+          "LogonId": "0x3e7",
+          "Product": "Microsoft® Windows® Operating System",
+          "Description": "WMI Commandline Utility",
+          "LogonGuid": "{4E88ECB1-779D-68CB-E703-000000000000}",
+          "User": "NT AUTHORITY\\SYSTEM",
+          "ParentImage": "C:\\Windows\\System32\\drivers\\RivetNetworks\\Killer\\KAPS.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:53.226Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Microsoft Corporation",
+          "OriginalFileName": "wmic.exe",
+          "ParentUser": "NT AUTHORITY\\SYSTEM",
+          "Image": "C:\\Windows\\System32\\wbem\\WMIC.exe",
+          "FileVersion": "10.0.26100.5074 (WinBuild.160101.0800)",
+          "ProcessId": "22604",
+          "CommandLine": "wmic computersystem get model,manufacturer /format:csv",
+          "ProcessGuid": "{4E88ECB1-42BD-68CC-A817-010000002400}",
+          "LogonId": "0x3e7",
+          "Product": "Microsoft® Windows® Operating System",
+          "Description": "WMI Commandline Utility",
+          "LogonGuid": "{4E88ECB1-779D-68CB-E703-000000000000}",
+          "User": "NT AUTHORITY\\SYSTEM",
+          "ParentImage": "C:\\Windows\\System32\\drivers\\RivetNetworks\\Killer\\KAPS.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:53.799Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.12.1 says 10.10.13.171 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "5e:44:cd:44:08:c1",
+          "psrc": "10.10.13.171",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.12.1"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:53.929Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.13.247 says 0.0.0.0 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "c0:74:ad:8b:4d:94",
+          "psrc": "0.0.0.0",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.13.247"
+        }
+      },
+      "session_id": "20250918_233300"
+    }
+  ]
+}

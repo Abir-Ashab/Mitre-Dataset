@@ -1,0 +1,151 @@
+{
+  "metadata": {
+    "session_id": "20250717_200204",
+    "chunk_index": 253,
+    "chunk_size": 7,
+    "start_time": "2025-07-17T14:28:25.719Z",
+    "end_time": "2025-07-17T20:02:55.637Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-17T14:28:25.719Z",
+      "event_type": "network",
+      "length": 676,
+      "summary": "Ether / IP / TCP 192.168.31.105:64303 > 216.239.32.178:http PA / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "192.168.31.105",
+          "dst": "216.239.32.178"
+        },
+        "TCP": {
+          "sport": "64303",
+          "dport": "80",
+          "seq": "2291799018",
+          "ack": "3984883745",
+          "flags": "PA"
+        }
+      },
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T14:28:25.763Z",
+      "event_type": "network",
+      "length": 676,
+      "summary": "Ether / IP / TCP 192.168.31.105:64303 > 216.239.32.178:http PA / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "192.168.31.105",
+          "dst": "216.239.32.178"
+        },
+        "TCP": {
+          "sport": "64303",
+          "dport": "80",
+          "seq": "2291799640",
+          "ack": "3984884575",
+          "flags": "PA"
+        }
+      },
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:02:46.482Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "15",
+        "event_data": {
+          "CreationUtcTime": "2025-07-17 14:02:44.705",
+          "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "ProcessGuid": "{FCBBCFF8-0286-6879-8B04-000000002900}",
+          "ProcessId": "18252",
+          "TargetFilename": "F:\\Downloads\\my_cv.Scr",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:02:46.482Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "11",
+        "event_data": {
+          "CreationUtcTime": "2025-07-17 14:02:44.705",
+          "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "ProcessGuid": "{FCBBCFF8-0286-6879-8B04-000000002900}",
+          "ProcessId": "18252",
+          "TargetFilename": "F:\\Downloads\\my_cv.Scr:Zone.Identifier",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:02:46.483Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "15",
+        "event_data": {
+          "CreationUtcTime": "2025-07-17 14:02:44.705",
+          "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "ProcessGuid": "{FCBBCFF8-0286-6879-8B04-000000002900}",
+          "ProcessId": "18252",
+          "TargetFilename": "F:\\Downloads\\my_cv.Scr:Zone.Identifier",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:02:46.483Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "15",
+        "event_data": {
+          "CreationUtcTime": "2025-07-17 14:02:44.705",
+          "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "ProcessGuid": "{FCBBCFF8-0286-6879-8B04-000000002900}",
+          "ProcessId": "18252",
+          "TargetFilename": "F:\\Downloads\\my_cv.Scr",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:02:55.637Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"F:\\Downloads\\my_cv.Scr\" /S",
+          "Description": " ",
+          "FileVersion": "0.0.0.0",
+          "Image": "F:\\Downloads\\my_cv.Scr",
+          "LogonGuid": "{FCBBCFF8-0133-6879-0CDE-270000000000}",
+          "LogonId": "0x27de0c",
+          "OriginalFileName": "my_cv.Scr",
+          "ParentImage": "C:\\Windows\\explorer.exe",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8D04-000000002900}",
+          "ProcessId": "1520",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    }
+  ]
+}

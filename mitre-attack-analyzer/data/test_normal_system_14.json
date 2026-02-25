@@ -1,0 +1,179 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 117,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:34:16.624Z",
+    "end_time": "2025-09-18T17:34:17.039Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:34:16.624Z",
+      "event_type": "network",
+      "length": 1471,
+      "summary": "Ether / IP / TCP 13.107.246.59:https > 10.10.13.16:65258 PA / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "55",
+          "proto": "6",
+          "src": "13.107.246.59",
+          "dst": "10.10.13.16"
+        },
+        "TCP": {
+          "sport": "443",
+          "dport": "65258",
+          "seq": "1199023343",
+          "ack": "642009293",
+          "flags": "PA"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:16.624Z",
+      "event_type": "network",
+      "length": 66,
+      "summary": "Ether / IP / TCP 10.10.13.16:65258 > 13.107.246.59:https A",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "10.10.13.16",
+          "dst": "13.107.246.59"
+        },
+        "TCP": {
+          "sport": "65258",
+          "dport": "443",
+          "seq": "642009293",
+          "ack": "1199024760",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:16.791Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "8936",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-4298-68CC-8717-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:16.791Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "FileVersion": "28.3.2",
+          "ProcessId": "8936",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-4298-68CC-8717-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:16.821Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.14.24 says 10.10.12.1 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "08:55:31:0d:69:e8",
+          "psrc": "10.10.12.1",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.14.24"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:17.039Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "FileVersion": "28.3.2",
+          "ProcessId": "19488",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-4299-68CC-8917-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:17.039Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "19488",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-4299-68CC-8917-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 6,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:33:10.249Z",
+    "end_time": "2025-09-18T17:33:10.476Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:33:10.249Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "2",
+        "event_data": {
+          "User": "cefalo\\cefalo 1",
+          "Image": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+          "ProcessId": "5112",
+          "CreationUtcTime": "2025-03-03 10:59:28.376",
+          "TargetFilename": "C:\\Users\\cefalo 1\\AppData\\Roaming\\Code\\Network\\5df1be21-a3db-4a02-916e-ba5a2e5b57b9.tmp",
+          "PreviousCreationUtcTime": "2025-09-18 17:33:10.242",
+          "ProcessGuid": "{4E88ECB1-880F-68CB-6E08-000000002400}"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:10.249Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "2",
+        "event_data": {
+          "Image": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+          "User": "cefalo\\cefalo 1",
+          "ProcessId": "5112",
+          "CreationUtcTime": "2025-03-03 10:59:28.376",
+          "ProcessGuid": "{4E88ECB1-880F-68CB-6E08-000000002400}",
+          "PreviousCreationUtcTime": "2025-09-18 17:33:10.242",
+          "TargetFilename": "C:\\Users\\cefalo 1\\AppData\\Roaming\\Code\\Network\\5df1be21-a3db-4a02-916e-ba5a2e5b57b9.tmp"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:10.332Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "The Wireshark developer community",
+          "OriginalFileName": "etwdump.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Wireshark\\extcap\\etwdump.exe",
+          "ProcessId": "27292",
+          "FileVersion": "4.4.9",
+          "CommandLine": "\"C:\\Program Files\\Wireshark\\extcap\\etwdump.exe\" --extcap-interfaces --extcap-version=4.4",
+          "ProcessGuid": "{4E88ECB1-4256-68CC-3617-010000002400}",
+          "LogonId": "0x32b24",
+          "Product": "etwdump",
+          "Description": "etwdump",
+          "LogonGuid": "{4E88ECB1-779E-68CB-242B-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Wireshark\\tshark.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:10.332Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "The Wireshark developer community",
+          "OriginalFileName": "etwdump.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Wireshark\\extcap\\etwdump.exe",
+          "ProcessId": "27292",
+          "FileVersion": "4.4.9",
+          "CommandLine": "\"C:\\Program Files\\Wireshark\\extcap\\etwdump.exe\" --extcap-interfaces --extcap-version=4.4",
+          "ProcessGuid": "{4E88ECB1-4256-68CC-3617-010000002400}",
+          "LogonId": "0x32b24",
+          "Product": "etwdump",
+          "Description": "etwdump",
+          "LogonGuid": "{4E88ECB1-779E-68CB-242B-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Wireshark\\tshark.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:10.402Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "The Wireshark developer community",
+          "OriginalFileName": "etwdump.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Wireshark\\extcap\\etwdump.exe",
+          "FileVersion": "4.4.9",
+          "ProcessId": "10912",
+          "CommandLine": "\"C:\\Program Files\\Wireshark\\extcap\\etwdump.exe\" --extcap-config --extcap-interface etwdump",
+          "ProcessGuid": "{4E88ECB1-4256-68CC-3817-010000002400}",
+          "LogonId": "0x32b24",
+          "Product": "etwdump",
+          "Description": "etwdump",
+          "LogonGuid": "{4E88ECB1-779E-68CB-242B-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Wireshark\\tshark.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:10.402Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "The Wireshark developer community",
+          "OriginalFileName": "etwdump.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Wireshark\\extcap\\etwdump.exe",
+          "ProcessId": "10912",
+          "FileVersion": "4.4.9",
+          "CommandLine": "\"C:\\Program Files\\Wireshark\\extcap\\etwdump.exe\" --extcap-config --extcap-interface etwdump",
+          "ProcessGuid": "{4E88ECB1-4256-68CC-3817-010000002400}",
+          "LogonId": "0x32b24",
+          "Product": "etwdump",
+          "Description": "etwdump",
+          "LogonGuid": "{4E88ECB1-779E-68CB-242B-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Wireshark\\tshark.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:10.476Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "The Wireshark developer community",
+          "OriginalFileName": "Dumpcap.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Wireshark\\dumpcap.exe",
+          "ProcessId": "22008",
+          "FileVersion": "4.4.9",
+          "CommandLine": "\"C:\\Program Files\\Wireshark\\dumpcap.exe\" --log-level MESSAGE -D -Z 752",
+          "ProcessGuid": "{4E88ECB1-4256-68CC-3A17-010000002400}",
+          "LogonId": "0x32b24",
+          "Product": "Dumpcap",
+          "Description": "Dumpcap",
+          "LogonGuid": "{4E88ECB1-779E-68CB-242B-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Wireshark\\tshark.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    }
+  ]
+}

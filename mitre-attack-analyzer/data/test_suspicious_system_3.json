@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "session_id": "20250709_200207",
+    "chunk_index": 359,
+    "chunk_size": 6,
+    "start_time": "2025-07-09T20:05:50.178Z",
+    "end_time": "2025-07-09T20:22:56.763Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-09T20:05:50.178Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "4688",
+        "event_data": {
+          "MandatoryLabel": "S-1-16-12288",
+          "NewProcessId": "0x6d38",
+          "NewProcessName": "F:\\Downloads\\my_cv.Scr",
+          "ParentProcessName": "C:\\Windows\\explorer.exe",
+          "ProcessId": "0x2f68",
+          "SubjectDomainName": "SOMETHING-GREAT",
+          "SubjectLogonId": "0x11c4f6",
+          "SubjectUserName": "User",
+          "SubjectUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001",
+          "TargetLogonId": "0x0",
+          "TargetUserSid": "S-1-0-0",
+          "TokenElevationType": "TokenElevationTypeDefault (1)"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_200207"
+    },
+    {
+      "timestamp": "2025-07-09T20:05:50.423Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "4688",
+        "event_data": {
+          "MandatoryLabel": "S-1-16-12288",
+          "NewProcessId": "0x6b44",
+          "NewProcessName": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ParentProcessName": "F:\\Downloads\\my_cv.Scr",
+          "ProcessId": "0x6d38",
+          "SubjectDomainName": "SOMETHING-GREAT",
+          "SubjectLogonId": "0x11c4f6",
+          "SubjectUserName": "User",
+          "SubjectUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001",
+          "TargetLogonId": "0x0",
+          "TargetUserSid": "S-1-0-0",
+          "TokenElevationType": "TokenElevationTypeDefault (1)"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_200207"
+    },
+    {
+      "timestamp": "2025-07-09T20:05:50.490Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "4688",
+        "event_data": {
+          "MandatoryLabel": "S-1-16-12288",
+          "NewProcessId": "0x6310",
+          "NewProcessName": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+          "ParentProcessName": "F:\\Downloads\\my_cv.Scr",
+          "ProcessId": "0x6d38",
+          "SubjectDomainName": "SOMETHING-GREAT",
+          "SubjectLogonId": "0x11c4f6",
+          "SubjectUserName": "User",
+          "SubjectUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001",
+          "TargetLogonId": "0x0",
+          "TargetUserSid": "S-1-0-0",
+          "TokenElevationType": "TokenElevationTypeDefault (1)"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_200207"
+    },
+    {
+      "timestamp": "2025-07-09T20:05:50.502Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "4689",
+        "event_data": {
+          "ProcessId": "0x6d38",
+          "ProcessName": "F:\\Downloads\\my_cv.Scr",
+          "Status": "0x0",
+          "SubjectDomainName": "SOMETHING-GREAT",
+          "SubjectLogonId": "0x11c4f6",
+          "SubjectUserName": "User",
+          "SubjectUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_200207"
+    },
+    {
+      "timestamp": "2025-07-09T20:05:50.512Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "4703",
+        "event_data": {
+          "EnabledPrivilegeList": "SeDebugPrivilege",
+          "ProcessId": "0x6b44",
+          "ProcessName": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "SubjectDomainName": "SOMETHING-GREAT",
+          "SubjectLogonId": "0x11c4f6",
+          "SubjectUserName": "User",
+          "SubjectUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001",
+          "TargetDomainName": "SOMETHING-GREAT",
+          "TargetLogonId": "0x11c4f6",
+          "TargetUserName": "User",
+          "TargetUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_200207"
+    },
+    {
+      "timestamp": "2025-07-09T20:22:56.763Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "4689",
+        "event_data": {
+          "ProcessId": "0x6b44",
+          "ProcessName": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "Status": "0xffffffff",
+          "SubjectDomainName": "SOMETHING-GREAT",
+          "SubjectLogonId": "0x11c4f6",
+          "SubjectUserName": "User",
+          "SubjectUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_200207"
+    }
+  ]
+}

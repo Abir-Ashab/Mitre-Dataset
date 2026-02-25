@@ -1,0 +1,193 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 11,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:33:11.812Z",
+    "end_time": "2025-09-18T17:33:12.254Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:33:11.812Z",
+      "event_type": "network",
+      "length": 108,
+      "summary": "Ether / IP / TCP 10.10.13.16:58058 > 3.108.30.176:https PA / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "10.10.13.16",
+          "dst": "3.108.30.176"
+        },
+        "TCP": {
+          "sport": "58058",
+          "dport": "443",
+          "seq": "3068121442",
+          "ack": "1820613621",
+          "flags": "PA"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.816Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Microsoft Corporation",
+          "OriginalFileName": "wmic.exe",
+          "ParentUser": "NT AUTHORITY\\SYSTEM",
+          "Image": "C:\\Windows\\System32\\wbem\\WMIC.exe",
+          "FileVersion": "10.0.26100.5074 (WinBuild.160101.0800)",
+          "ProcessId": "4912",
+          "CommandLine": "wmic computersystem get model,manufacturer /format:csv",
+          "ProcessGuid": "{4E88ECB1-4257-68CC-4617-010000002400}",
+          "LogonId": "0x3e7",
+          "Product": "Microsoft® Windows® Operating System",
+          "Description": "WMI Commandline Utility",
+          "LogonGuid": "{4E88ECB1-779D-68CB-E703-000000000000}",
+          "User": "NT AUTHORITY\\SYSTEM",
+          "ParentImage": "C:\\Windows\\System32\\drivers\\RivetNetworks\\Killer\\KAPS.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.816Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Microsoft Corporation",
+          "OriginalFileName": "wmic.exe",
+          "ParentUser": "NT AUTHORITY\\SYSTEM",
+          "Image": "C:\\Windows\\System32\\wbem\\WMIC.exe",
+          "FileVersion": "10.0.26100.5074 (WinBuild.160101.0800)",
+          "ProcessId": "4912",
+          "CommandLine": "wmic computersystem get model,manufacturer /format:csv",
+          "ProcessGuid": "{4E88ECB1-4257-68CC-4617-010000002400}",
+          "LogonId": "0x3e7",
+          "Product": "Microsoft® Windows® Operating System",
+          "Description": "WMI Commandline Utility",
+          "LogonGuid": "{4E88ECB1-779D-68CB-E703-000000000000}",
+          "User": "NT AUTHORITY\\SYSTEM",
+          "ParentImage": "C:\\Windows\\System32\\drivers\\RivetNetworks\\Killer\\KAPS.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.850Z",
+      "event_type": "network",
+      "length": 110,
+      "summary": "Ether / IP / TCP 3.108.30.176:https > 10.10.13.16:58058 PA / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "51",
+          "proto": "6",
+          "src": "3.108.30.176",
+          "dst": "10.10.13.16"
+        },
+        "TCP": {
+          "sport": "443",
+          "dport": "58058",
+          "seq": "1820613621",
+          "ack": "3068121496",
+          "flags": "PA"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.874Z",
+      "event_type": "network",
+      "length": 1427,
+      "summary": "Ether / IPv6 / UDP / mDNS Ans [b'']",
+      "layers": {
+        "IPv6": {
+          "version": "6",
+          "tc": "0",
+          "fl": "920320",
+          "plen": "1373",
+          "nh": "17",
+          "hlim": "255",
+          "src": "fe80::c4d:ebff:c15a:ad9a",
+          "dst": "ff02::fb"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "23",
+          "nscount": "0",
+          "arcount": "6",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' type=TXT cacheflush=1 rclass=IN ttl=4500 rdata=[b''] |>, <DNSRR  rrname=b'_services._dns-sd._udp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'_ssh._tcp.local.' |>, <DNSRR  rrname=b'_ssh._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' |>, <DNSRR  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._device-info._tcp.local.' type=TXT cacheflush=0 rclass=IN ttl=4500 rdata=[b'model=MacBookPro18,3', b'osxvers=24', b'icolor=2'] |>, <DNSRR  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' type=TXT cacheflush=1 rclass=IN ttl=4500 rdata=[b''] |>, <DNSRR  rrname=b'_services._dns-sd._udp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'_sftp-ssh._tcp.local.' |>, <DNSRR  rrname=b'_sftp-ssh._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' |>, <DNSRR  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' type=TXT cacheflush=1 rclass=IN ttl=4500 rdata=[b''] |>, <DNSRR  rrname=b'_services._dns-sd._udp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'_smb._tcp.local.' |>, <DNSRR  rrname=b'_smb._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' type=SRV cacheflush=1 rclass=IN ttl=4500 priority=0 weight=0 port=445 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' type=SRV cacheflush=1 rclass=IN ttl=4500 priority=0 weight=0 port=22 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' type=SRV cacheflush=1 rclass=IN ttl=4500 priority=0 weight=0 port=22 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRR  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' type=TXT cacheflush=1 rclass=IN ttl=4500 rdata=[b'act=2', b'acl=0', b'deviceid=42:35:20:6C:FA:4D', b'fex=1c9/St5PF7g2IQw', b'features=0x4A7FCFD5,0xB8174FDE', b'rsf=0x8', b'flags=0x204', b'gid=BCFE99DD-7DAD-42F4-AED5-66E4DAAA1680', b'igl=0', b'gcgl=0', b'model=MacBookPro18,3', b'at=4', b'protovers=1.1', b'pi=647651b0-d3b4-426b-bc3c-cbcb6c3581ba', b'psi=4035206C-FA4D-432E-B36E-88386D75E750', b'pk=7da980c594c8888d7f297acf4c7115f8e240e53d9d6391d08bfbde25caa2694c', b'srcvers=835.19.5'] |>, <DNSRR  rrname=b'_services._dns-sd._udp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'_airplay._tcp.local.' |>, <DNSRR  rrname=b'_airplay._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' |>, <DNSRR  rrname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' type=TXT cacheflush=1 rclass=IN ttl=4500 rdata=[b'cn=0,1,2,3', b'da=true', b'et=0,3,5', b'ft=0x4A7FCFD5,0xB8174FDE', b'sf=0x204', b'md=0,1,2', b'am=MacBookPro18,3', b'pk=7da980c594c8888d7f297acf4c7115f8e240e53d9d6391d08bfbde25caa2694c', b'tp=UDP', b'vn=65537', b'vs=835.19.5', b'vv=0'] |>, <DNSRR  rrname=b'_services._dns-sd._udp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'_raop._tcp.local.' |>, <DNSRR  rrname=b'_raop._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' type=SRV cacheflush=1 rclass=IN ttl=4500 priority=0 weight=0 port=7000 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' type=SRV cacheflush=1 rclass=IN ttl=4500 priority=0 weight=0 port=7000 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRR  rrname=b'Supankars-MacBook-Pro-2.local.' type=AAAA cacheflush=1 rclass=IN ttl=4500 rdata=fe80::c4d:ebff:c15a:ad9a |>, <DNSRR  rrname=b'Supankars-MacBook-Pro-2.local.' type=A cacheflush=1 rclass=IN ttl=4500 rdata=10.10.12.57 |>]",
+          "ns": "[]",
+          "ar": "[<DNSRRNSEC  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' typebitmaps=['TXT', 'SRV'] |>, <DNSRRNSEC  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' typebitmaps=['TXT', 'SRV'] |>, <DNSRRNSEC  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' typebitmaps=['TXT', 'SRV'] |>, <DNSRRNSEC  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' typebitmaps=['TXT', 'SRV'] |>, <DNSRRNSEC  rrname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' typebitmaps=['TXT', 'SRV'] |>, <DNSRRNSEC  rrname=b'Supankars-MacBook-Pro-2.local.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'Supankars-MacBook-Pro-2.local.' typebitmaps=['A', 'AAAA'] |>]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.906Z",
+      "event_type": "network",
+      "length": 54,
+      "summary": "Ether / IP / TCP 10.10.13.16:58058 > 3.108.30.176:https A",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "10.10.13.16",
+          "dst": "3.108.30.176"
+        },
+        "TCP": {
+          "sport": "58058",
+          "dport": "443",
+          "seq": "3068121496",
+          "ack": "1820613677",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:12.254Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 169.254.169.254 says 10.10.12.112 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "da:5f:64:a0:5c:c3",
+          "psrc": "10.10.12.112",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "169.254.169.254"
+        }
+      },
+      "session_id": "20250918_233300"
+    }
+  ]
+}

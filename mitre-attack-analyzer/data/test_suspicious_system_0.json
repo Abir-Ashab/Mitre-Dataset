@@ -1,0 +1,169 @@
+{
+  "metadata": {
+    "session_id": "20250629_200301",
+    "chunk_index": 553,
+    "chunk_size": 7,
+    "start_time": "2025-06-29T20:14:13.250Z",
+    "end_time": "2025-06-29T20:14:13.548Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-06-29T20:14:13.250Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"F:\\Downloads\\database migration_fdp..Scr\" /S",
+          "Description": " ",
+          "FileVersion": "0.0.0.0",
+          "Image": "F:\\Downloads\\database migration_fdp..Scr",
+          "LogonGuid": "{FCBBCFF8-C2A0-685F-8886-0A0000000000}",
+          "LogonId": "0xa8688",
+          "OriginalFileName": "database migration.Scr",
+          "ParentImage": "C:\\Windows\\explorer.exe",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-4A35-6861-7826-000000001000}",
+          "ProcessId": "18652",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:14:13.411Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "11",
+        "event_data": {
+          "Image": "F:\\Downloads\\database migration_fdp..Scr",
+          "ProcessGuid": "{FCBBCFF8-4A35-6861-7826-000000001000}",
+          "ProcessId": "18652",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:14:13.455Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "4688",
+        "event_data": {
+          "MandatoryLabel": "S-1-16-12288",
+          "NewProcessId": "0x5b98",
+          "NewProcessName": "C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe",
+          "ParentProcessName": "F:\\Downloads\\database migration_fdp..Scr",
+          "ProcessId": "0x48dc",
+          "SubjectDomainName": "SOMETHING-GREAT",
+          "SubjectLogonId": "0xa8688",
+          "SubjectUserName": "User",
+          "SubjectUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001",
+          "TargetLogonId": "0x0",
+          "TargetUserSid": "S-1-0-0",
+          "TokenElevationType": "TokenElevationTypeDefault (1)"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:14:13.455Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe\" ",
+          "Image": "C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe",
+          "LogonGuid": "{FCBBCFF8-C2A0-685F-8886-0A0000000000}",
+          "LogonId": "0xa8688",
+          "ParentImage": "F:\\Downloads\\database migration_fdp..Scr",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-4A35-6861-7926-000000001000}",
+          "ProcessId": "23448",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:14:13.529Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "4688",
+        "event_data": {
+          "MandatoryLabel": "S-1-16-12288",
+          "NewProcessId": "0x3750",
+          "NewProcessName": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+          "ParentProcessName": "F:\\Downloads\\database migration_fdp..Scr",
+          "ProcessId": "0x48dc",
+          "SubjectDomainName": "SOMETHING-GREAT",
+          "SubjectLogonId": "0xa8688",
+          "SubjectUserName": "User",
+          "SubjectUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001",
+          "TargetLogonId": "0x0",
+          "TargetUserSid": "S-1-0-0",
+          "TokenElevationType": "TokenElevationTypeDefault (1)"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:14:13.530Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --single-argument C:\\Users\\User\\AppData\\LocalpWjwaFqECK..pdf",
+          "Company": "Microsoft Corporation",
+          "Description": "Microsoft Edge",
+          "FileVersion": "138.0.3351.55",
+          "Image": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+          "LogonGuid": "{FCBBCFF8-C2A0-685F-8886-0A0000000000}",
+          "LogonId": "0xa8688",
+          "OriginalFileName": "msedge.exe",
+          "ParentImage": "F:\\Downloads\\database migration_fdp..Scr",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-4A35-6861-7A26-000000001000}",
+          "ProcessId": "14160",
+          "Product": "Microsoft Edge",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:14:13.548Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "4703",
+        "event_data": {
+          "EnabledPrivilegeList": "SeDebugPrivilege",
+          "ProcessId": "0x5b98",
+          "ProcessName": "C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe",
+          "SubjectDomainName": "SOMETHING-GREAT",
+          "SubjectLogonId": "0xa8688",
+          "SubjectUserName": "User",
+          "SubjectUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001",
+          "TargetDomainName": "SOMETHING-GREAT",
+          "TargetLogonId": "0xa8688",
+          "TargetUserName": "User",
+          "TargetUserSid": "S-1-5-21-1869652020-2349085804-1297793637-1001"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    }
+  ]
+}

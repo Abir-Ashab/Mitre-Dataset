@@ -1,0 +1,116 @@
+{
+  "metadata": {
+    "session_id": "20250629_200301",
+    "chunk_index": 555,
+    "chunk_size": 5,
+    "start_time": "2025-06-29T20:17:17.623Z",
+    "end_time": "2025-06-29T20:27:46.570Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-06-29T20:17:17.623Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe",
+          "ProcessGuid": "{FCBBCFF8-4A35-6861-7926-000000001000}",
+          "ProcessId": "23448",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "59086",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:17:17.638Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe",
+          "ProcessGuid": "{FCBBCFF8-4A35-6861-7926-000000001000}",
+          "ProcessId": "23448",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "59086",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:17:31.813Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe",
+          "ProcessGuid": "{FCBBCFF8-4A35-6861-7926-000000001000}",
+          "ProcessId": "23448",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "59109",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:20:23.576Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe",
+          "ProcessGuid": "{FCBBCFF8-4A35-6861-7926-000000001000}",
+          "ProcessId": "23448",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "59443",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T20:27:46.570Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalHSoouxEnKa.exe",
+          "ProcessGuid": "{FCBBCFF8-4A35-6861-7926-000000001000}",
+          "ProcessId": "23448",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "60375",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250629_200301"
+    }
+  ]
+}

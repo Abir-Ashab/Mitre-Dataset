@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "session_id": "20250717_200204",
+    "chunk_index": 257,
+    "chunk_size": 7,
+    "start_time": "2025-07-17T20:13:20.226Z",
+    "end_time": "2025-07-17T20:13:20.228Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-17T20:13:20.226Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "2",
+        "event_data": {
+          "CreationUtcTime": "2025-05-21 05:31:02.157",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "PreviousCreationUtcTime": "2025-05-21 05:31:02.157",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "TargetFilename": "C:\\Users\\User\\AppData\\Local\\Microsoft\\Windows\\Explorer\\iconcache_16.db",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:13:20.226Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "2",
+        "event_data": {
+          "CreationUtcTime": "2025-05-21 05:31:02.158",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "PreviousCreationUtcTime": "2025-05-21 05:31:02.158",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "TargetFilename": "C:\\Users\\User\\AppData\\Local\\Microsoft\\Windows\\Explorer\\iconcache_96.db",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:13:20.226Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "2",
+        "event_data": {
+          "CreationUtcTime": "2025-05-21 05:31:02.157",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "PreviousCreationUtcTime": "2025-05-21 05:31:02.157",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "TargetFilename": "C:\\Users\\User\\AppData\\Local\\Microsoft\\Windows\\Explorer\\iconcache_32.db",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:13:20.227Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "2",
+        "event_data": {
+          "CreationUtcTime": "2025-05-21 05:31:02.159",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "PreviousCreationUtcTime": "2025-05-21 05:31:02.159",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "TargetFilename": "C:\\Users\\User\\AppData\\Local\\Microsoft\\Windows\\Explorer\\iconcache_768.db",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:13:20.227Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "2",
+        "event_data": {
+          "CreationUtcTime": "2025-05-21 05:31:02.158",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "PreviousCreationUtcTime": "2025-05-21 05:31:02.158",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "TargetFilename": "C:\\Users\\User\\AppData\\Local\\Microsoft\\Windows\\Explorer\\iconcache_256.db",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:13:20.228Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "2",
+        "event_data": {
+          "CreationUtcTime": "2025-05-21 05:31:02.159",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "PreviousCreationUtcTime": "2025-05-21 05:31:02.159",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "TargetFilename": "C:\\Users\\User\\AppData\\Local\\Microsoft\\Windows\\Explorer\\iconcache_1280.db",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:13:20.228Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "2",
+        "event_data": {
+          "CreationUtcTime": "2025-05-21 05:31:02.159",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "PreviousCreationUtcTime": "2025-05-21 05:31:02.159",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "TargetFilename": "C:\\Users\\User\\AppData\\Local\\Microsoft\\Windows\\Explorer\\iconcache_2560.db",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    }
+  ]
+}

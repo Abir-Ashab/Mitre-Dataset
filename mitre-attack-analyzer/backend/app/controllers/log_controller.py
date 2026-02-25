@@ -277,13 +277,28 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
     1. LogAnalysis collection (for history)
     2. SessionChunk collection (updates the chunk with status)
     """
+    logger.info("="*80)
+    logger.info(f"ANALYZE_CHUNK ENDPOINT CALLED")
+    logger.info(f"  Session ID: {request.session_id}")
+    logger.info(f"  Chunk Index: {request.chunk_index}")
+    logger.info(f"  Log Content Length: {len(request.log_content)} chars")
+    logger.info("="*80)
+    
     start_time = time.time()
     
     try:
         # Analyze using ML service
+        logger.info(f"Calling ml_service.analyze_log for chunk {request.chunk_index}...")
         status_result, reason, mitre_techniques, raw_output, error = await ml_service.analyze_log(
             request.log_content
         )
+        
+        logger.info(f"ML Service returned:")
+        logger.info(f"  Status: {status_result}")
+        logger.info(f"  MITRE Techniques: {mitre_techniques}")
+        logger.info(f"  Reason length: {len(reason)} chars")
+        logger.info(f"  Raw output length: {len(raw_output)} chars")
+        logger.info(f"  Error: {error or 'None'}")
         
         if error:
             raise HTTPException(
@@ -305,6 +320,7 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
         )
         
         saved_analysis = await log_repository.create(log_analysis)
+        logger.info(f"Saved to LogAnalysis collection: {saved_analysis.id}")
         
         # Update the SessionChunk with analysis results
         analysis_result = {
@@ -317,6 +333,11 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
             "analyzed_at": saved_analysis.analyzed_at.isoformat()
         }
         
+        logger.info(f"Saving analysis_result to SessionChunk:")
+        logger.info(f"  Status: {analysis_result['status']}")
+        logger.info(f"  MITRE Techniques: {analysis_result['mitre_techniques']}")
+        logger.info(f"  Reason (first 100 chars): {analysis_result['reason'][:100]}...")
+        
         updated_chunk = await session_chunk_repository.update_chunk_analysis(
             session_id=request.session_id,
             chunk_index=request.chunk_index,
@@ -327,10 +348,13 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
         
         if not updated_chunk:
             logger.warning(f"Chunk not found in DB, but analysis saved: {request.session_id} chunk {request.chunk_index}")
+        else:
+            logger.info(f"SessionChunk updated successfully: {updated_chunk.id}")
         
         logger.info(f"Chunk {request.chunk_index} analyzed: {status_result} ({processing_time_ms:.2f}ms)")
         
-        return AnalyzeLogResponse(
+        # Prepare response to return to frontend
+        response = AnalyzeLogResponse(
             analysis_id=str(saved_analysis.id),
             status=status_result,
             reason=reason,
@@ -339,6 +363,15 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
             processing_time_ms=processing_time_ms,
             analyzed_at=saved_analysis.analyzed_at
         )
+        
+        logger.info(f"Returning response to frontend:")
+        logger.info(f"  Status: {response.status}")
+        logger.info(f"  MITRE Techniques: {response.mitre_techniques}")
+        logger.info(f"  Reason length: {len(response.reason)} chars")
+        logger.info(f"  Full reason being sent: {response.reason}")
+        logger.info("="*80)
+        
+        return response
         
     except HTTPException:
         raise

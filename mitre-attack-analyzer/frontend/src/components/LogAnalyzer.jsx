@@ -82,7 +82,9 @@ export default function LogAnalyzer({ onAnalysisComplete }) {
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Click to upload or drag and drop
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">JSON files only</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                    JSON files only
+                  </p>
                 </div>
                 <input
                   type="file"
@@ -92,21 +94,21 @@ export default function LogAnalyzer({ onAnalysisComplete }) {
                 />
               </label>
             ) : (
-              <div className="flex items-center justify-between p-3 bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <FileJson className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <FileJson className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <span className="text-sm font-medium text-blue-900 dark:text-blue-200">
                     {file.name}
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-blue-700 dark:text-blue-300">
                     ({(file.size / 1024).toFixed(2)} KB)
                   </span>
                 </div>
                 <button
                   onClick={handleRemoveFile}
-                  className="p-1 hover:bg-primary-100 dark:hover:bg-primary-800 rounded"
+                  className="p-1 hover:bg-blue-100 dark:hover:bg-blue-800/50 rounded transition-colors"
                 >
-                  <X className="w-4 h-4 text-gray-600" />
+                  <X className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 </button>
               </div>
             )}
@@ -131,7 +133,9 @@ export default function LogAnalyzer({ onAnalysisComplete }) {
           {/* Error Display */}
           {error && (
             <div className="bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800 rounded-lg p-3">
-              <p className="text-sm text-danger-700 dark:text-danger-400">{error}</p>
+              <p className="text-sm text-danger-700 dark:text-danger-400">
+                {error}
+              </p>
             </div>
           )}
 

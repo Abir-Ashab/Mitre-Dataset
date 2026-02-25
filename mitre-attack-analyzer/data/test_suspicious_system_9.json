@@ -1,0 +1,84 @@
+{
+  "metadata": {
+    "session_id": "20250709_204522",
+    "chunk_index": 482,
+    "chunk_size": 4,
+    "start_time": "2025-07-09T21:03:12.181Z",
+    "end_time": "2025-07-09T21:03:14.304Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-09T21:03:12.181Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "5",
+        "event_data": {
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:03:14.292Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "13",
+        "event_data": {
+          "Details": "c:\\users\\user\\appdata\\localfuwrstpxgw.exe",
+          "EventType": "SetValue",
+          "Image": "C:\\WINDOWS\\system32\\svchost.exe",
+          "ProcessGuid": "{FCBBCFF8-7D39-686E-D400-000000001400}",
+          "ProcessId": "11204",
+          "TargetObject": "\\REGISTRY\\A\\{a8682200-3738-f97c-4ad5-57901cafd362}\\Root\\InventoryApplicationFile\\localfuwrstpxgw.|b4cf096b589aabdc\\LowerCaseLongPath",
+          "User": "NT AUTHORITY\\SYSTEM"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:03:14.293Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "13",
+        "event_data": {
+          "Details": "07/09/2025 13:01:34",
+          "EventType": "SetValue",
+          "Image": "C:\\WINDOWS\\system32\\svchost.exe",
+          "ProcessGuid": "{FCBBCFF8-7D39-686E-D400-000000001400}",
+          "ProcessId": "11204",
+          "TargetObject": "\\REGISTRY\\A\\{a8682200-3738-f97c-4ad5-57901cafd362}\\Root\\InventoryApplicationFile\\localfuwrstpxgw.|b4cf096b589aabdc\\LinkDate",
+          "User": "NT AUTHORITY\\SYSTEM"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:03:14.304Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "13",
+        "event_data": {
+          "Details": "Binary Data",
+          "EventType": "SetValue",
+          "Image": "C:\\WINDOWS\\system32\\svchost.exe",
+          "ProcessGuid": "{FCBBCFF8-7D39-686E-D400-000000001400}",
+          "ProcessId": "11204",
+          "TargetObject": "HKU\\S-1-5-21-1869652020-2349085804-1297793637-1001\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Compatibility Assistant\\Store\\F:\\Downloads\\my_cv (1).Scr",
+          "User": "NT AUTHORITY\\SYSTEM"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    }
+  ]
+}

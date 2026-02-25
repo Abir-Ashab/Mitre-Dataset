@@ -1,0 +1,415 @@
+{
+  "test_normal_system_0.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_1.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_2.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_3.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_4.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_5.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_6.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_7.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_8.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_9.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_10.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_11.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_12.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_13.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_14.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_15.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_16.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_17.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_18.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_system_19.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_0.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_1.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_2.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_3.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_4.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_5.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_6.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_7.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_8.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_normal_network_9.json": {
+    "label": "normal",
+    "mitre_techniques": []
+  },
+  "test_suspicious_system_0.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1134.001",
+      "T1036.007",
+      "T1199",
+      "T1036",
+      "T1204.002"
+    ]
+  },
+  "test_suspicious_system_1.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1071.004",
+      "T1071"
+    ]
+  },
+  "test_suspicious_system_2.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1071"
+    ]
+  },
+  "test_suspicious_system_3.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1027.002",
+      "T1134.001",
+      "T1036.007",
+      "T1055",
+      "T1003.001",
+      "T1204.002",
+      "T1566.001"
+    ]
+  },
+  "test_suspicious_system_4.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1572",
+      "T1090",
+      "T1571",
+      "T1036.007",
+      "T1071.001",
+      "T1564.004"
+    ]
+  },
+  "test_suspicious_system_5.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1112",
+      "T1036.007",
+      "T1199",
+      "T1036",
+      "T1204.002",
+      "T1071"
+    ]
+  },
+  "test_suspicious_system_6.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1036.007",
+      "T1071"
+    ]
+  },
+  "test_suspicious_system_7.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1106",
+      "T1555.004",
+      "T1555.003",
+      "T1071",
+      "T1059.003"
+    ]
+  },
+  "test_suspicious_system_8.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1555.003",
+      "T1071",
+      "T1012"
+    ]
+  },
+  "test_suspicious_system_9.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1112",
+      "T1489"
+    ]
+  },
+  "test_suspicious_system_10.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1036.007",
+      "T1564.004",
+      "T1071.001",
+      "T1199",
+      "T1204.002",
+      "T1036",
+      "T1567.002"
+    ]
+  },
+  "test_suspicious_system_11.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1074.001",
+      "T1036.007",
+      "T1222.001",
+      "T1059.001",
+      "T1562.001",
+      "T1199",
+      "T1106",
+      "T1036",
+      "T1204.002",
+      "T1071"
+    ]
+  },
+  "test_suspicious_system_12.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1059.001",
+      "T1562.001",
+      "T1071.001",
+      "T1071",
+      "T1567.002"
+    ]
+  },
+  "test_suspicious_system_13.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1074.001",
+      "T1222.001",
+      "T1106",
+      "T1059.001",
+      "T1562.001",
+      "T1071",
+      "T1070.006"
+    ]
+  },
+  "test_suspicious_system_14.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1070.006"
+    ]
+  },
+  "test_suspicious_system_15.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1071",
+      "T1070.006"
+    ]
+  },
+  "test_suspicious_system_16.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1027",
+      "T1071",
+      "T1059.001",
+      "T1567.002"
+    ]
+  },
+  "test_suspicious_system_17.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1059.001",
+      "T1562.001",
+      "T1071.001",
+      "T1071",
+      "T1567.002"
+    ]
+  },
+  "test_suspicious_system_18.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1027",
+      "T1071",
+      "T1059.001",
+      "T1567.002"
+    ]
+  },
+  "test_suspicious_system_19.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1027",
+      "T1036.007",
+      "T1199",
+      "T1036",
+      "T1204.002",
+      "T1566.001"
+    ]
+  },
+  "test_suspicious_network_0.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1105",
+      "T1090",
+      "T1572",
+      "T1571",
+      "T1027",
+      "T1071.001",
+      "T1036",
+      "T1566.001"
+    ]
+  },
+  "test_suspicious_network_1.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1572",
+      "T1090",
+      "T1071.001",
+      "T1571"
+    ]
+  },
+  "test_suspicious_network_2.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1572",
+      "T1090",
+      "T1071.001",
+      "T1571"
+    ]
+  },
+  "test_suspicious_network_3.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1572",
+      "T1090",
+      "T1071.001",
+      "T1571"
+    ]
+  },
+  "test_suspicious_network_4.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1572",
+      "T1090",
+      "T1071.001",
+      "T1571"
+    ]
+  },
+  "test_suspicious_network_5.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1572",
+      "T1090",
+      "T1071.001",
+      "T1571"
+    ]
+  },
+  "test_suspicious_network_6.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1572",
+      "T1090",
+      "T1071.001",
+      "T1571"
+    ]
+  },
+  "test_suspicious_network_7.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1572",
+      "T1090",
+      "T1071.001",
+      "T1571"
+    ]
+  },
+  "test_suspicious_network_8.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1572",
+      "T1090",
+      "T1071.001",
+      "T1571"
+    ]
+  },
+  "test_suspicious_network_9.json": {
+    "label": "suspicious",
+    "mitre_techniques": [
+      "T1572",
+      "T1090",
+      "T1071.001",
+      "T1571"
+    ]
+  }
+}

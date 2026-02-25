@@ -45,10 +45,29 @@ export default function AnalysisResult({ result }) {
 
   return (
     <div className="card space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-          Analysis Results
-        </h3>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            Analysis Results
+          </h3>
+          {/* MITRE Techniques - Show prominently if suspicious */}
+          {result?.mitre_techniques && result.mitre_techniques.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {result.mitre_techniques.map((technique, index) => (
+                <a
+                  key={index}
+                  href={`https://attack.mitre.org/techniques/${technique.replace(".", "/")}/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-2 py-1 bg-danger-100 dark:bg-danger-900/30 text-danger-700 dark:text-danger-400 rounded text-xs font-semibold hover:bg-danger-200 dark:hover:bg-danger-900/50 transition-colors"
+                  title="Click to view MITRE ATT&CK technique details"
+                >
+                  {technique}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
         {result?.status && getStatusBadge(result.status)}
       </div>
 
@@ -80,41 +99,20 @@ export default function AnalysisResult({ result }) {
       {/* Reason */}
       <div>
         <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-          Reason
+          Analysis Explanation
         </h4>
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-          <p className="text-gray-900 dark:text-gray-100">
-            {result?.reason || "No reason provided"}
+          <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
+            {result?.reason || "No explanation provided"}
           </p>
         </div>
       </div>
 
-      {/* MITRE Techniques */}
-      {result?.mitre_techniques && result.mitre_techniques.length > 0 && (
-        <div>
-          <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            MITRE ATT&CK Techniques
-          </h4>
-          <div className="flex flex-wrap gap-2">
-            {result.mitre_techniques.map((technique, index) => (
-              <a
-                key={index}
-                href={`https://attack.mitre.org/techniques/${technique.replace(".", "/")}/`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 bg-danger-100 dark:bg-danger-900/30 text-danger-700 dark:text-danger-400 rounded-lg text-sm font-medium hover:bg-danger-200 dark:hover:bg-danger-900/50 transition-colors"
-              >
-                {technique}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Raw Model Output */}
       {result?.raw_output && (
         <details className="group">
-          <summary className="cursor-pointer text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
+          <summary className="cursor-pointer text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 flex items-center gap-2">
+            <span className="group-open:rotate-90 transition-transform">▶</span>
             View Raw Model Output
           </summary>
           <div className="mt-2 bg-gray-900 dark:bg-black rounded-lg p-4 overflow-x-auto">

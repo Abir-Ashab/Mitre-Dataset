@@ -1,0 +1,210 @@
+{
+  "metadata": {
+    "session_id": "20250629_200301",
+    "chunk_index": 1,
+    "chunk_size": 7,
+    "start_time": "2025-06-29T14:14:14.153Z",
+    "end_time": "2025-06-29T14:14:17.547Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-06-29T14:14:14.153Z",
+      "event_type": "network",
+      "length": 66,
+      "summary": "Ether / IP / TCP 147.185.221.22:24547 > 192.168.31.219:58624 SA",
+      "layers": {
+        "IP": {
+          "ttl": "97",
+          "proto": "6",
+          "src": "147.185.221.22",
+          "dst": "192.168.31.219"
+        },
+        "TCP": {
+          "sport": "24547",
+          "dport": "58624",
+          "seq": "2270472964",
+          "ack": "1033972053",
+          "flags": "SA"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:14:14.153Z",
+      "event_type": "network",
+      "length": 54,
+      "summary": "Ether / IP / TCP 192.168.31.219:58624 > 147.185.221.22:24547 A",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "192.168.31.219",
+          "dst": "147.185.221.22"
+        },
+        "TCP": {
+          "sport": "58624",
+          "dport": "24547",
+          "seq": "1033972053",
+          "ack": "2270472965",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:14:16.045Z",
+      "event_type": "network",
+      "length": 92,
+      "summary": "Ether / IP / UDP / NBNSHeader / NBNSNodeStatusRequest who has '\\\\*\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000'",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "17",
+          "src": "192.168.31.219",
+          "dst": "147.185.221.22"
+        },
+        "UDP": {
+          "sport": "137",
+          "dport": "137"
+        },
+        "NBNSHeader": {
+          "NAME_TRN_ID": "59430",
+          "RESPONSE": "0",
+          "OPCODE": "0",
+          "NM_FLAGS": "",
+          "RCODE": "0",
+          "QDCOUNT": "1",
+          "ANCOUNT": "0",
+          "NSCOUNT": "0",
+          "ARCOUNT": "0"
+        },
+        "NBNSNodeStatusRequest": {
+          "QUESTION_NAME": "b'*\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00'",
+          "SUFFIX": "16705",
+          "NULL": "0",
+          "QUESTION_TYPE": "33",
+          "QUESTION_CLASS": "1"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:14:16.045Z",
+      "event_type": "network",
+      "length": 92,
+      "summary": "Ether / IP / UDP / NBNSHeader / NBNSNodeStatusRequest who has '\\\\*\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000'",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "17",
+          "src": "192.168.31.219",
+          "dst": "147.185.221.22"
+        },
+        "UDP": {
+          "sport": "137",
+          "dport": "137"
+        },
+        "NBNSHeader": {
+          "NAME_TRN_ID": "59431",
+          "RESPONSE": "0",
+          "OPCODE": "0",
+          "NM_FLAGS": "",
+          "RCODE": "0",
+          "QDCOUNT": "1",
+          "ANCOUNT": "0",
+          "NSCOUNT": "0",
+          "ARCOUNT": "0"
+        },
+        "NBNSNodeStatusRequest": {
+          "QUESTION_NAME": "b'*\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00'",
+          "SUFFIX": "16705",
+          "NULL": "0",
+          "QUESTION_TYPE": "33",
+          "QUESTION_CLASS": "1"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:14:16.255Z",
+      "event_type": "network",
+      "length": 308,
+      "summary": "Ether / IP / TCP 192.168.31.219:58624 > 147.185.221.22:24547 A / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "192.168.31.219",
+          "dst": "147.185.221.22"
+        },
+        "TCP": {
+          "sport": "58624",
+          "dport": "24547",
+          "seq": "1033972053",
+          "ack": "2270472965",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:14:16.864Z",
+      "event_type": "network",
+      "length": 308,
+      "summary": "Ether / IP / TCP 192.168.31.219:58624 > 147.185.221.22:24547 A / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "192.168.31.219",
+          "dst": "147.185.221.22"
+        },
+        "TCP": {
+          "sport": "58624",
+          "dport": "24547",
+          "seq": "1033972053",
+          "ack": "2270472965",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:14:17.547Z",
+      "event_type": "network",
+      "length": 92,
+      "summary": "Ether / IP / UDP / NBNSHeader / NBNSNodeStatusRequest who has '\\\\*\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000'",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "17",
+          "src": "192.168.31.219",
+          "dst": "147.185.221.22"
+        },
+        "UDP": {
+          "sport": "137",
+          "dport": "137"
+        },
+        "NBNSHeader": {
+          "NAME_TRN_ID": "59431",
+          "RESPONSE": "0",
+          "OPCODE": "0",
+          "NM_FLAGS": "B",
+          "RCODE": "0",
+          "QDCOUNT": "1",
+          "ANCOUNT": "0",
+          "NSCOUNT": "0",
+          "ARCOUNT": "0"
+        },
+        "NBNSNodeStatusRequest": {
+          "QUESTION_NAME": "b'*\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00'",
+          "SUFFIX": "16705",
+          "NULL": "0",
+          "QUESTION_TYPE": "33",
+          "QUESTION_CLASS": "1"
+        }
+      },
+      "session_id": "20250629_200301"
+    }
+  ]
+}

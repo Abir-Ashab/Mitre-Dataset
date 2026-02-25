@@ -1,0 +1,168 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 4,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:33:08.116Z",
+    "end_time": "2025-09-18T17:33:09.416Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:33:08.116Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "5",
+        "event_data": {
+          "User": "cefalo\\cefalo 1",
+          "Image": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "ProcessId": "22188",
+          "ProcessGuid": "{4E88ECB1-4244-68CC-2017-010000002400}"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:08.116Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "5",
+        "event_data": {
+          "Image": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "User": "cefalo\\cefalo 1",
+          "ProcessId": "22188",
+          "ProcessGuid": "{4E88ECB1-4244-68CC-2017-010000002400}"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:09.107Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Python Software Foundation",
+          "OriginalFileName": "python.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "FileVersion": "3.13.3",
+          "ProcessId": "13236",
+          "CommandLine": "python screen_recorder.py 1jOBEYNJ3gvcPAuCQWL4VsOAra4BxWPYG 20250918_233300",
+          "ProcessGuid": "{4E88ECB1-4255-68CC-3317-010000002400}",
+          "LogonId": "0x32b24",
+          "Product": "Python",
+          "Description": "Python",
+          "LogonGuid": "{4E88ECB1-779E-68CB-242B-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:09.107Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Python Software Foundation",
+          "OriginalFileName": "python.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "FileVersion": "3.13.3",
+          "ProcessId": "13236",
+          "CommandLine": "python screen_recorder.py 1jOBEYNJ3gvcPAuCQWL4VsOAra4BxWPYG 20250918_233300",
+          "ProcessGuid": "{4E88ECB1-4255-68CC-3317-010000002400}",
+          "LogonId": "0x32b24",
+          "Product": "Python",
+          "Description": "Python",
+          "LogonGuid": "{4E88ECB1-779E-68CB-242B-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:09.113Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Python Software Foundation",
+          "OriginalFileName": "python.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "ProcessId": "27416",
+          "FileVersion": "3.13.3",
+          "CommandLine": "python packet_capture.py 1jOBEYNJ3gvcPAuCQWL4VsOAra4BxWPYG 20250918_233300",
+          "ProcessGuid": "{4E88ECB1-4255-68CC-3417-010000002400}",
+          "LogonId": "0x32b24",
+          "Product": "Python",
+          "Description": "Python",
+          "LogonGuid": "{4E88ECB1-779E-68CB-242B-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:09.113Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Python Software Foundation",
+          "OriginalFileName": "python.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "FileVersion": "3.13.3",
+          "ProcessId": "27416",
+          "CommandLine": "python packet_capture.py 1jOBEYNJ3gvcPAuCQWL4VsOAra4BxWPYG 20250918_233300",
+          "ProcessGuid": "{4E88ECB1-4255-68CC-3417-010000002400}",
+          "LogonId": "0x32b24",
+          "Product": "Python",
+          "Description": "Python",
+          "LogonGuid": "{4E88ECB1-779E-68CB-242B-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:09.416Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "Protocol": "tcp",
+          "SourcePort": "62488",
+          "DestinationIp": "142.251.223.202",
+          "DestinationPort": "443",
+          "Image": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "User": "cefalo\\cefalo 1",
+          "ProcessId": "15172",
+          "ProcessGuid": "{4E88ECB1-8A05-68CB-DE09-000000002400}",
+          "SourceIp": "10.10.13.16"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 89,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:34:05.817Z",
+    "end_time": "2025-09-18T17:34:06.408Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:34:05.817Z",
+      "event_type": "network",
+      "length": 242,
+      "summary": "Ether / IP / UDP / mDNS Qry b'lb._dns-sd._udp.local.'",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "10.10.13.202",
+          "dst": "224.0.0.251"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "0",
+          "opcode": "0",
+          "aa": "0",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "12",
+          "ancount": "0",
+          "nscount": "0",
+          "arcount": "0",
+          "qd": "[<DNSQR  qname=b'lb._dns-sd._udp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_airport._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_uscan._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_scanner._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ipp._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ptp._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_printer._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ipps._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_pdl-datastream._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_uscans._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ippusb._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_rdlink._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>]",
+          "an": "[]",
+          "ns": "[]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:05.817Z",
+      "event_type": "network",
+      "length": 262,
+      "summary": "Ether / IPv6 / UDP / mDNS Qry b'lb._dns-sd._udp.local.'",
+      "layers": {
+        "IPv6": {
+          "version": "6",
+          "tc": "0",
+          "fl": "65792",
+          "plen": "208",
+          "nh": "17",
+          "hlim": "255",
+          "src": "fe80::1035:94a0:b9a8:4661",
+          "dst": "ff02::fb"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "0",
+          "opcode": "0",
+          "aa": "0",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "12",
+          "ancount": "0",
+          "nscount": "0",
+          "arcount": "0",
+          "qd": "[<DNSQR  qname=b'lb._dns-sd._udp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_airport._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_uscan._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_scanner._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ipp._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ptp._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_printer._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ipps._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_pdl-datastream._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_uscans._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ippusb._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_rdlink._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>]",
+          "an": "[]",
+          "ns": "[]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:05.881Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "The Git Development Community",
+          "OriginalFileName": "git.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Git\\cmd\\git.exe",
+          "FileVersion": "2.48.1.windows.1",
+          "ProcessId": "25812",
+          "CommandLine": "\"C:\\Program Files\\Git\\cmd\\git.exe\" diff --name-status -z --diff-filter=ADMR 8e6f44774395c591b803efcadd461e8c2eca0c4f",
+          "ProcessGuid": "{4E88ECB1-428D-68CC-7B17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Git",
+          "Description": "Git for Windows",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:05.881Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "The Git Development Community",
+          "OriginalFileName": "git.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Git\\cmd\\git.exe",
+          "FileVersion": "2.48.1.windows.1",
+          "ProcessId": "25812",
+          "CommandLine": "\"C:\\Program Files\\Git\\cmd\\git.exe\" diff --name-status -z --diff-filter=ADMR 8e6f44774395c591b803efcadd461e8c2eca0c4f",
+          "ProcessGuid": "{4E88ECB1-428D-68CC-7B17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Git",
+          "Description": "Git for Windows",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Users\\cefalo 1\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:05.916Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "The Git Development Community",
+          "OriginalFileName": "git.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Git\\mingw64\\bin\\git.exe",
+          "FileVersion": "2.48.1.windows.1",
+          "ProcessId": "10172",
+          "CommandLine": "git.exe diff --name-status -z --diff-filter=ADMR 8e6f44774395c591b803efcadd461e8c2eca0c4f",
+          "ProcessGuid": "{4E88ECB1-428D-68CC-7D17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Git",
+          "Description": "Git for Windows",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Git\\cmd\\git.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:05.916Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "The Git Development Community",
+          "OriginalFileName": "git.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Git\\mingw64\\bin\\git.exe",
+          "ProcessId": "10172",
+          "FileVersion": "2.48.1.windows.1",
+          "CommandLine": "git.exe diff --name-status -z --diff-filter=ADMR 8e6f44774395c591b803efcadd461e8c2eca0c4f",
+          "ProcessGuid": "{4E88ECB1-428D-68CC-7D17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Git",
+          "Description": "Git for Windows",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Git\\cmd\\git.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:06.408Z",
+      "event_type": "network",
+      "length": 179,
+      "summary": "Ether / IP / UDP 10.10.12.211:53600 > 239.255.255.250:ssdp / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "1",
+          "proto": "17",
+          "src": "10.10.12.211",
+          "dst": "239.255.255.250"
+        },
+        "UDP": {
+          "sport": "53600",
+          "dport": "1900"
+        }
+      },
+      "session_id": "20250918_233300"
+    }
+  ]
+}

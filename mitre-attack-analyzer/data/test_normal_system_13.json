@@ -1,0 +1,219 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 90,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:34:06.422Z",
+    "end_time": "2025-09-18T17:34:07.034Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:34:06.422Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.14.24 says 10.10.12.1 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "08:55:31:0d:69:e8",
+          "psrc": "10.10.12.1",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.14.24"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:06.728Z",
+      "event_type": "network",
+      "length": 186,
+      "summary": "Ether / IPv6 / UDP / mDNS Ans b'Pranta\\xe2\\x80\\x99s MacBook Air._airplay._tcp.local.'",
+      "layers": {
+        "IPv6": {
+          "version": "6",
+          "tc": "0",
+          "fl": "65792",
+          "plen": "132",
+          "nh": "17",
+          "hlim": "255",
+          "src": "fe80::1035:94a0:b9a8:4661",
+          "dst": "ff02::fb"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "2",
+          "nscount": "0",
+          "arcount": "0",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'_airplay._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=0 rdata=b'Pranta\\xe2\\x80\\x99s MacBook Air._airplay._tcp.local.' |>, <DNSRR  rrname=b'_raop._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=0 rdata=b'A2193EABEC65@Pranta\\xe2\\x80\\x99s MacBook Air._raop._tcp.local.' |>]",
+          "ns": "[]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:06.729Z",
+      "event_type": "network",
+      "length": 166,
+      "summary": "Ether / IP / UDP / mDNS Ans b'Pranta\\xe2\\x80\\x99s MacBook Air._airplay._tcp.local.'",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "10.10.13.202",
+          "dst": "224.0.0.251"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "2",
+          "nscount": "0",
+          "arcount": "0",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'_airplay._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=0 rdata=b'Pranta\\xe2\\x80\\x99s MacBook Air._airplay._tcp.local.' |>, <DNSRR  rrname=b'_raop._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=0 rdata=b'A2193EABEC65@Pranta\\xe2\\x80\\x99s MacBook Air._raop._tcp.local.' |>]",
+          "ns": "[]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:06.785Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "26728",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-428E-68CC-7E17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:06.785Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "26728",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-428E-68CC-7E17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:07.034Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "FileVersion": "28.3.2",
+          "ProcessId": "19296",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-428F-68CC-8017-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:07.034Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "19296",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-428F-68CC-8017-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    }
+  ]
+}

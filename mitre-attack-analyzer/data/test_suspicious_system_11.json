@@ -1,0 +1,165 @@
+{
+  "metadata": {
+    "session_id": "20250717_200204",
+    "chunk_index": 254,
+    "chunk_size": 7,
+    "start_time": "2025-07-17T20:02:55.790Z",
+    "end_time": "2025-07-17T20:07:26.672Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-17T20:02:55.790Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "11",
+        "event_data": {
+          "CreationUtcTime": "2025-07-17 13:48:50.780",
+          "Image": "F:\\Downloads\\my_cv.Scr",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8D04-000000002900}",
+          "ProcessId": "1520",
+          "TargetFilename": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:02:55.823Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe\" ",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "LogonGuid": "{FCBBCFF8-0133-6879-0CDE-270000000000}",
+          "LogonId": "0x27de0c",
+          "ParentImage": "F:\\Downloads\\my_cv.Scr",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:02:55.890Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --single-argument C:\\Users\\User\\AppData\\LocalFbOWUzGoHH..pdf",
+          "Company": "Microsoft Corporation",
+          "Description": "Microsoft Edge",
+          "FileVersion": "138.0.3351.83",
+          "Image": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+          "LogonGuid": "{FCBBCFF8-0133-6879-0CDE-270000000000}",
+          "LogonId": "0x27de0c",
+          "OriginalFileName": "msedge.exe",
+          "ParentImage": "F:\\Downloads\\my_cv.Scr",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8F04-000000002900}",
+          "ProcessId": "5868",
+          "Product": "Microsoft Edge",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:02:58.049Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.105",
+          "SourcePort": "65039",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:02:58.050Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.105",
+          "SourcePort": "65039",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:07:20.575Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.105",
+          "SourcePort": "49358",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:07:26.672Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -ExecutionPolicy Bypass -Command mkdir C:\\PublicRAT\nicacls \"C:\\PublicRAT\" /grant Everyone:(OI)(CI)M",
+          "Company": "Microsoft Corporation",
+          "Description": "Windows PowerShell",
+          "FileVersion": "10.0.26100.3323 (WinBuild.160101.0800)",
+          "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+          "LogonGuid": "{FCBBCFF8-0133-6879-0CDE-270000000000}",
+          "LogonId": "0x27de0c",
+          "OriginalFileName": "PowerShell.EXE",
+          "ParentImage": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-039E-6879-1F07-000000002900}",
+          "ProcessId": "22900",
+          "Product": "Microsoft® Windows® Operating System",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    }
+  ]
+}

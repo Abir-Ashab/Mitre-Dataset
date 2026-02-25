@@ -1,0 +1,151 @@
+{
+  "metadata": {
+    "session_id": "20250709_204522",
+    "chunk_index": 477,
+    "chunk_size": 7,
+    "start_time": "2025-07-09T15:03:12.184Z",
+    "end_time": "2025-07-09T20:47:49.504Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-09T15:03:12.184Z",
+      "event_type": "network",
+      "length": 54,
+      "summary": "Ether / IP / TCP 192.168.31.219:55409 > 147.185.221.22:24547 RA",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "192.168.31.219",
+          "dst": "147.185.221.22"
+        },
+        "TCP": {
+          "sport": "55409",
+          "dport": "24547",
+          "seq": "2557034323",
+          "ack": "1556654954",
+          "flags": "RA"
+        }
+      },
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T15:03:12.185Z",
+      "event_type": "network",
+      "length": 54,
+      "summary": "Ether / IP / TCP 192.168.31.219:54761 > 147.185.221.22:24547 RA",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "192.168.31.219",
+          "dst": "147.185.221.22"
+        },
+        "TCP": {
+          "sport": "54761",
+          "dport": "24547",
+          "seq": "1504005393",
+          "ack": "904834422",
+          "flags": "RA"
+        }
+      },
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:47:49.503Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "11",
+        "event_data": {
+          "CreationUtcTime": "2025-07-09 14:47:47.941",
+          "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "ProcessGuid": "{FCBBCFF8-8115-686E-EE04-000000001400}",
+          "ProcessId": "11932",
+          "TargetFilename": "F:\\Downloads\\my_cv (1).Scr:Zone.Identifier",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:47:49.503Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "15",
+        "event_data": {
+          "CreationUtcTime": "2025-07-09 14:47:47.941",
+          "Hash": "MD5=45DEB9E8381AB53AB159E0239F03F36D,SHA256=861043B2D9BF11298DC84E0E3C46CB2E1ED1BC8F490680F83B43F860361992DF,IMPHASH=F34D5F2D4577ED6D9CEEC516C1F5A744",
+          "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "ProcessGuid": "{FCBBCFF8-8115-686E-EE04-000000001400}",
+          "ProcessId": "11932",
+          "TargetFilename": "F:\\Downloads\\my_cv (1).Scr",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:47:49.504Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "15",
+        "event_data": {
+          "CreationUtcTime": "2025-07-09 14:47:47.941",
+          "Hash": "MD5=45DEB9E8381AB53AB159E0239F03F36D,SHA256=861043B2D9BF11298DC84E0E3C46CB2E1ED1BC8F490680F83B43F860361992DF,IMPHASH=F34D5F2D4577ED6D9CEEC516C1F5A744",
+          "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "ProcessGuid": "{FCBBCFF8-8115-686E-EE04-000000001400}",
+          "ProcessId": "11932",
+          "TargetFilename": "F:\\Downloads\\my_cv (1).Scr",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:47:49.504Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "15",
+        "event_data": {
+          "Contents": "[ZoneTransfer]  ZoneId=3  HostUrl=https://mega.nz/  ",
+          "CreationUtcTime": "2025-07-09 14:47:47.941",
+          "Hash": "MD5=DFCB8DC1E74A5F6F8845BCDF1E3DEE6C,SHA256=161510BD3EA26FF17303DE536054637EF1DE87A9BD6966134E85D47FC4448B67,IMPHASH=00000000000000000000000000000000",
+          "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "ProcessGuid": "{FCBBCFF8-8115-686E-EE04-000000001400}",
+          "ProcessId": "11932",
+          "TargetFilename": "F:\\Downloads\\my_cv (1).Scr:Zone.Identifier",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:47:49.504Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "15",
+        "event_data": {
+          "Contents": "[ZoneTransfer]  ZoneId=3  ",
+          "CreationUtcTime": "2025-07-09 14:47:47.941",
+          "Hash": "MD5=FBCCF14D504B7B2DBCB5A5BDA75BD93B,SHA256=EACD09517CE90D34BA562171D15AC40D302F0E691B439F91BE1B6406E25F5913,IMPHASH=00000000000000000000000000000000",
+          "Image": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "ProcessGuid": "{FCBBCFF8-8115-686E-EE04-000000001400}",
+          "ProcessId": "11932",
+          "TargetFilename": "F:\\Downloads\\my_cv (1).Scr:Zone.Identifier",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    }
+  ]
+}

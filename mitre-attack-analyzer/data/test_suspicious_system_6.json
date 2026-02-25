@@ -1,0 +1,155 @@
+{
+  "metadata": {
+    "session_id": "20250709_204522",
+    "chunk_index": 479,
+    "chunk_size": 7,
+    "start_time": "2025-07-09T20:54:25.218Z",
+    "end_time": "2025-07-09T21:00:10.271Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-09T20:54:25.218Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "54543",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:54:25.356Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "54543",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:54:57.522Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "54581",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:54:57.550Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "54581",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:56:33.382Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "54761",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:56:33.475Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "54761",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:00:10.271Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "11",
+        "event_data": {
+          "CreationUtcTime": "2025-07-09 15:00:10.269",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "TargetFilename": "C:\\Users\\User\\AppData\\Local\\Temp\\62484354.tmp.exe",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    }
+  ]
+}

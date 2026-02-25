@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 13,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:33:13.620Z",
+    "end_time": "2025-09-18T17:33:14.736Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:33:13.620Z",
+      "event_type": "network",
+      "length": 332,
+      "summary": "Ether / IPv6 / UDP / mDNS Ans [b'LKDC:SHA1.8244D649D2F1B3BB56B39F99A0FF125850131306']",
+      "layers": {
+        "IPv6": {
+          "version": "6",
+          "tc": "0",
+          "fl": "920320",
+          "plen": "278",
+          "nh": "17",
+          "hlim": "255",
+          "src": "fe80::c4d:ebff:c15a:ad9a",
+          "dst": "ff02::fb"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "3",
+          "nscount": "0",
+          "arcount": "2",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'_kerberos.Supankars-MacBook-Pro-2.local.' type=TXT cacheflush=0 rclass=IN ttl=4500 rdata=[b'LKDC:SHA1.8244D649D2F1B3BB56B39F99A0FF125850131306'] |>, <DNSRR  rrname=b'A.9.D.A.A.5.1.C.F.F.B.E.D.4.C.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRR  rrname=b'57.12.10.10.in-addr.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Supankars-MacBook-Pro-2.local.' |>]",
+          "ns": "[]",
+          "ar": "[<DNSRRNSEC  rrname=b'A.9.D.A.A.5.1.C.F.F.B.E.D.4.C.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'A.9.D.A.A.5.1.C.F.F.B.E.D.4.C.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' typebitmaps=['PTR'] |>, <DNSRRNSEC  rrname=b'57.12.10.10.in-addr.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'57.12.10.10.in-addr.arpa.' typebitmaps=['PTR'] |>]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:13.761Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 169.254.169.254 says 10.10.12.112 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "da:5f:64:a0:5c:c3",
+          "psrc": "10.10.12.112",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "169.254.169.254"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:13.859Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.12.1 says 10.10.14.174 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "8a:a7:4e:35:63:24",
+          "psrc": "10.10.14.174",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.12.1"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:14.053Z",
+      "event_type": "network",
+      "length": 564,
+      "summary": "c0:74:ad:b1:11:3c > ff:ff:ff:ff:ff:ff (DEBNI) / Raw",
+      "layers": {},
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:14.430Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.14.24 says 10.10.12.1 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "08:55:31:0d:69:e8",
+          "psrc": "10.10.12.1",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.14.24"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:14.430Z",
+      "event_type": "network",
+      "length": 64,
+      "summary": "Ether / IP / UDP 10.10.13.231:14 > 255.255.255.255:14 / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "64",
+          "proto": "17",
+          "src": "10.10.13.231",
+          "dst": "255.255.255.255"
+        },
+        "UDP": {
+          "sport": "14",
+          "dport": "14"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:14.736Z",
+      "event_type": "network",
+      "length": 242,
+      "summary": "Ether / IP / UDP / mDNS Qry b'lb._dns-sd._udp.local.'",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "10.10.12.57",
+          "dst": "224.0.0.251"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "0",
+          "opcode": "0",
+          "aa": "0",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "12",
+          "ancount": "0",
+          "nscount": "0",
+          "arcount": "0",
+          "qd": "[<DNSQR  qname=b'lb._dns-sd._udp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_airport._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_rdlink._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_uscan._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ipp._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_scanner._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_pdl-datastream._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ipps._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_printer._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ptp._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_uscans._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'_ippusb._tcp.local.' qtype=PTR unicastresponse=0 qclass=IN |>]",
+          "an": "[]",
+          "ns": "[]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    }
+  ]
+}

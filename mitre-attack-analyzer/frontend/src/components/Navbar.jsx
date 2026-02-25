@@ -30,7 +30,7 @@ const navigation = [
     icon: Shield,
   },
   {
-    name: "Test Results",
+    name: "Metrics",
     path: "/test-results",
     icon: Award,
   },

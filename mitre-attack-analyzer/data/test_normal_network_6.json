@@ -1,0 +1,270 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 15,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:33:15.751Z",
+    "end_time": "2025-09-18T17:33:16.380Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:33:15.751Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "FileVersion": "28.3.2",
+          "ProcessId": "19992",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-425B-68CC-4817-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:15.751Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "19992",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-425B-68CC-4817-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:16.251Z",
+      "event_type": "network",
+      "length": 236,
+      "summary": "Ether / IP / UDP / mDNS Ans b'Prantas-MacBook-Air.local.'",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "10.10.13.202",
+          "dst": "224.0.0.251"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "2",
+          "nscount": "0",
+          "arcount": "2",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'1.6.6.4.8.A.9.B.0.A.4.9.5.3.0.1.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Prantas-MacBook-Air.local.' |>, <DNSRR  rrname=b'202.13.10.10.in-addr.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Prantas-MacBook-Air.local.' |>]",
+          "ns": "[]",
+          "ar": "[<DNSRRNSEC  rrname=b'1.6.6.4.8.A.9.B.0.A.4.9.5.3.0.1.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'1.6.6.4.8.A.9.B.0.A.4.9.5.3.0.1.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' typebitmaps=['PTR'] |>, <DNSRRNSEC  rrname=b'202.13.10.10.in-addr.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'202.13.10.10.in-addr.arpa.' typebitmaps=['PTR'] |>]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:16.251Z",
+      "event_type": "network",
+      "length": 256,
+      "summary": "Ether / IPv6 / UDP / mDNS Ans b'Prantas-MacBook-Air.local.'",
+      "layers": {
+        "IPv6": {
+          "version": "6",
+          "tc": "0",
+          "fl": "65792",
+          "plen": "202",
+          "nh": "17",
+          "hlim": "255",
+          "src": "fe80::1035:94a0:b9a8:4661",
+          "dst": "ff02::fb"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "2",
+          "nscount": "0",
+          "arcount": "2",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'1.6.6.4.8.A.9.B.0.A.4.9.5.3.0.1.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Prantas-MacBook-Air.local.' |>, <DNSRR  rrname=b'202.13.10.10.in-addr.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Prantas-MacBook-Air.local.' |>]",
+          "ns": "[]",
+          "ar": "[<DNSRRNSEC  rrname=b'1.6.6.4.8.A.9.B.0.A.4.9.5.3.0.1.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'1.6.6.4.8.A.9.B.0.A.4.9.5.3.0.1.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' typebitmaps=['PTR'] |>, <DNSRRNSEC  rrname=b'202.13.10.10.in-addr.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'202.13.10.10.in-addr.arpa.' typebitmaps=['PTR'] |>]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:16.272Z",
+      "event_type": "network",
+      "length": 342,
+      "summary": "Ether / IP / UDP / BOOTP / DHCP Request",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "0.0.0.0",
+          "dst": "255.255.255.255"
+        },
+        "UDP": {
+          "sport": "68",
+          "dport": "67"
+        },
+        "BOOTP": {
+          "op": "1",
+          "htype": "1",
+          "hlen": "6",
+          "hops": "0",
+          "xid": "2272831265",
+          "secs": "0",
+          "flags": "",
+          "ciaddr": "0.0.0.0",
+          "yiaddr": "0.0.0.0",
+          "siaddr": "0.0.0.0",
+          "giaddr": "0.0.0.0",
+          "chaddr": "b'\\x16\\xa5\\xd94P\\xf2\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00'",
+          "sname": "b'\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00'",
+          "file": "b'\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00'",
+          "options": "b'c\\x82Sc'"
+        },
+        "DHCP": {
+          "options": "[('message-type', 3), ('param_req_list', [1, 121, 3, 6, 15, 108, 114, 119, 252, 95, 44, 46]), ('max_dhcp_size', 1500), ('client_id', b'\\x01\\x16\\xa5\\xd94P\\xf2'), ('requested_addr', '10.10.13.202'), ('lease_time', 7776000), ('hostname', b'MacBookAir'), 'end', 'pad', 'pad', 'pad', 'pad', 'pad']"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:16.380Z",
+      "event_type": "network",
+      "length": 242,
+      "summary": "Ether / IP / UDP / mDNS Qry b'lb._dns-sd._udp.local.'",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "10.10.13.202",
+          "dst": "224.0.0.251"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "0",
+          "opcode": "0",
+          "aa": "0",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "12",
+          "ancount": "0",
+          "nscount": "0",
+          "arcount": "0",
+          "qd": "[<DNSQR  qname=b'lb._dns-sd._udp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_airport._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_uscan._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_scanner._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_ipp._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_ptp._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_printer._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_ipps._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_pdl-datastream._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_uscans._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_ippusb._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_rdlink._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>]",
+          "an": "[]",
+          "ns": "[]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:16.380Z",
+      "event_type": "network",
+      "length": 262,
+      "summary": "Ether / IPv6 / UDP / mDNS Qry b'lb._dns-sd._udp.local.'",
+      "layers": {
+        "IPv6": {
+          "version": "6",
+          "tc": "0",
+          "fl": "65792",
+          "plen": "208",
+          "nh": "17",
+          "hlim": "255",
+          "src": "fe80::1035:94a0:b9a8:4661",
+          "dst": "ff02::fb"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "0",
+          "opcode": "0",
+          "aa": "0",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "12",
+          "ancount": "0",
+          "nscount": "0",
+          "arcount": "0",
+          "qd": "[<DNSQR  qname=b'lb._dns-sd._udp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_airport._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_uscan._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_scanner._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_ipp._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_ptp._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_printer._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_ipps._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_pdl-datastream._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_uscans._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_ippusb._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>, <DNSQR  qname=b'_rdlink._tcp.local.' qtype=PTR unicastresponse=1 qclass=IN |>]",
+          "an": "[]",
+          "ns": "[]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    }
+  ]
+}

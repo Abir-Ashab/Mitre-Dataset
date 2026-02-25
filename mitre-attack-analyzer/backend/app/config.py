@@ -27,12 +27,12 @@ class Settings(BaseSettings):
     # CORS Origins
     CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173"
     
-    # Model Parameters
-    MAX_INPUT_CHARS: int = 6000
-    MAX_LENGTH_TOKENS: int = 4096
-    MAX_NEW_TOKENS: int = 256
-    TEMPERATURE: float = 0.3  # Lower temperature for more deterministic classification
-    TOP_P: float = 0.9
+    # Model Parameters (MATCHING METRICS NOTEBOOK + TRAINING DATA EXACTLY)
+    MAX_INPUT_CHARS: int = 6000      # Match metrics notebook
+    MAX_LENGTH_TOKENS: int = 3072    # Match metrics notebook
+    MAX_NEW_TOKENS: int = 512        # Match metrics notebook (CRITICAL: was 256, model needs more tokens)
+    TEMPERATURE: float = 0.7         # Match metrics notebook
+    TOP_P: float = 0.9               # Match metrics notebook
     
     @property
     def cors_origins_list(self) -> List[str]:

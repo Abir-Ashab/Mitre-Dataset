@@ -1,0 +1,175 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 141,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:34:36.594Z",
+    "end_time": "2025-09-18T17:34:37.680Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:34:36.594Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.14.24 says 10.10.12.1 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "08:55:31:0d:69:e8",
+          "psrc": "10.10.12.1",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.14.24"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:36.792Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "6476",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-42AC-68CC-9A17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:36.792Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "6476",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-42AC-68CC-9A17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:37.056Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "FileVersion": "28.3.2",
+          "ProcessId": "19584",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-42AD-68CC-9C17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:37.056Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "FileVersion": "28.3.2",
+          "ProcessId": "19584",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-42AD-68CC-9C17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:37.621Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.14.24 says 10.10.12.1 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "08:55:31:0d:69:e8",
+          "psrc": "10.10.12.1",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.14.24"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:37.680Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP is at 7e:34:2e:60:02:93 says 10.10.12.178 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "2",
+          "hwsrc": "7e:34:2e:60:02:93",
+          "psrc": "10.10.12.178",
+          "hwdst": "ff:ff:ff:ff:ff:ff",
+          "pdst": "10.10.12.178"
+        }
+      },
+      "session_id": "20250918_233300"
+    }
+  ]
+}

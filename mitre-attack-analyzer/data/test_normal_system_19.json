@@ -1,0 +1,219 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 173,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:34:55.832Z",
+    "end_time": "2025-09-18T17:34:56.816Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:34:55.832Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "FileVersion": "28.3.2",
+          "ProcessId": "23220",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-42BF-68CC-AA17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:55.832Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "23220",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-42BF-68CC-AA17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:56.341Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.14.24 says 10.10.12.1 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "08:55:31:0d:69:e8",
+          "psrc": "10.10.12.1",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.14.24"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:56.568Z",
+      "event_type": "network",
+      "length": 506,
+      "summary": "Ether / IPv6 / UDP / mDNS Ans b'Android_U65O9CYD.local.'",
+      "layers": {
+        "IPv6": {
+          "version": "6",
+          "tc": "0",
+          "fl": "527552",
+          "plen": "452",
+          "nh": "17",
+          "hlim": "255",
+          "src": "fe80::d0ee:b6ff:fe67:d0d6",
+          "dst": "ff02::fb"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "8",
+          "nscount": "0",
+          "arcount": "4",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'236.12.10.10.in-addr.arpa.' type=PTR cacheflush=1 rclass=IN ttl=120 rdata=b'Android_U65O9CYD.local.' |>, <DNSRR  rrname=b'Android_U65O9CYD.local.' type=A cacheflush=1 rclass=IN ttl=120 rdata=10.10.12.236 |>, <DNSRR  rrname=b'6.D.0.D.7.6.E.F.F.F.6.B.E.E.0.D.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=PTR cacheflush=1 rclass=IN ttl=120 rdata=b'Android_U65O9CYD.local.' |>, <DNSRR  rrname=b'Android_U65O9CYD.local.' type=AAAA cacheflush=1 rclass=IN ttl=120 rdata=fe80::d0ee:b6ff:fe67:d0d6 |>, <DNSRR  rrname=b'_FC9F5ED42C8A._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' |>, <DNSRRSRV  rrname=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' type=SRV cacheflush=1 rclass=IN ttl=120 priority=0 weight=0 port=53601 target=b'Android_U65O9CYD.local.' |>, <DNSRR  rrname=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' type=TXT cacheflush=1 rclass=IN ttl=4500 rdata=[b'f=2462', b'n=MhuLrZdc-jfmYLOZspSuZjw', b'IPv4=10.10.12.236'] |>, <DNSRR  rrname=b'_services._dns-sd._udp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'_FC9F5ED42C8A._tcp.local.' |>]",
+          "ns": "[]",
+          "ar": "[<DNSRRNSEC  rrname=b'236.12.10.10.in-addr.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=120 nextname=b'236.12.10.10.in-addr.arpa.' typebitmaps=['PTR'] |>, <DNSRRNSEC  rrname=b'Android_U65O9CYD.local.' type=NSEC cacheflush=1 rclass=IN ttl=120 nextname=b'Android_U65O9CYD.local.' typebitmaps=['A', 'AAAA'] |>, <DNSRRNSEC  rrname=b'6.D.0.D.7.6.E.F.F.F.6.B.E.E.0.D.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=120 nextname=b'6.D.0.D.7.6.E.F.F.F.6.B.E.E.0.D.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' typebitmaps=['PTR'] |>, <DNSRRNSEC  rrname=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' type=NSEC cacheflush=1 rclass=IN ttl=120 nextname=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' typebitmaps=['TXT', 'SRV'] |>]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:56.569Z",
+      "event_type": "network",
+      "length": 486,
+      "summary": "Ether / IP / UDP / mDNS Ans b'Android_U65O9CYD.local.'",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "10.10.12.236",
+          "dst": "224.0.0.251"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "8",
+          "nscount": "0",
+          "arcount": "4",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'236.12.10.10.in-addr.arpa.' type=PTR cacheflush=1 rclass=IN ttl=120 rdata=b'Android_U65O9CYD.local.' |>, <DNSRR  rrname=b'Android_U65O9CYD.local.' type=A cacheflush=1 rclass=IN ttl=120 rdata=10.10.12.236 |>, <DNSRR  rrname=b'6.D.0.D.7.6.E.F.F.F.6.B.E.E.0.D.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=PTR cacheflush=1 rclass=IN ttl=120 rdata=b'Android_U65O9CYD.local.' |>, <DNSRR  rrname=b'Android_U65O9CYD.local.' type=AAAA cacheflush=1 rclass=IN ttl=120 rdata=fe80::d0ee:b6ff:fe67:d0d6 |>, <DNSRR  rrname=b'_FC9F5ED42C8A._tcp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' |>, <DNSRRSRV  rrname=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' type=SRV cacheflush=1 rclass=IN ttl=120 priority=0 weight=0 port=53601 target=b'Android_U65O9CYD.local.' |>, <DNSRR  rrname=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' type=TXT cacheflush=1 rclass=IN ttl=4500 rdata=[b'f=2462', b'n=MhuLrZdc-jfmYLOZspSuZjw', b'IPv4=10.10.12.236'] |>, <DNSRR  rrname=b'_services._dns-sd._udp.local.' type=PTR cacheflush=0 rclass=IN ttl=4500 rdata=b'_FC9F5ED42C8A._tcp.local.' |>]",
+          "ns": "[]",
+          "ar": "[<DNSRRNSEC  rrname=b'236.12.10.10.in-addr.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=120 nextname=b'236.12.10.10.in-addr.arpa.' typebitmaps=['PTR'] |>, <DNSRRNSEC  rrname=b'Android_U65O9CYD.local.' type=NSEC cacheflush=1 rclass=IN ttl=120 nextname=b'Android_U65O9CYD.local.' typebitmaps=['A', 'AAAA'] |>, <DNSRRNSEC  rrname=b'6.D.0.D.7.6.E.F.F.F.6.B.E.E.0.D.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=120 nextname=b'6.D.0.D.7.6.E.F.F.F.6.B.E.E.0.D.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' typebitmaps=['PTR'] |>, <DNSRRNSEC  rrname=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' type=NSEC cacheflush=1 rclass=IN ttl=120 nextname=b'I0pIVFP8n14AAA._FC9F5ED42C8A._tcp.local.' typebitmaps=['TXT', 'SRV'] |>]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:56.816Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "19616",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-42C0-68CC-AC17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "7b5b8fac",
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:34:56.816Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "1",
+        "event_data": {
+          "Company": "Docker Inc",
+          "OriginalFileName": "docker-windows-amd64.exe",
+          "ParentUser": "cefalo\\cefalo 1",
+          "Image": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+          "ProcessId": "19616",
+          "FileVersion": "28.3.2",
+          "CommandLine": "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe\" stats --all --no-trunc --no-stream --format \"{{ json .}}\"",
+          "ProcessGuid": "{4E88ECB1-42C0-68CC-AC17-010000002400}",
+          "LogonId": "0x32ca9",
+          "Product": "Docker Client",
+          "Description": "Docker Client",
+          "LogonGuid": "{4E88ECB1-779E-68CB-A92C-030000000000}",
+          "User": "cefalo\\cefalo 1",
+          "ParentImage": "C:\\Program Files\\Docker\\Docker\\frontend\\Docker Desktop.exe"
+        }
+      },
+      "host_id": "6e2070cf",
+      "agent_id": "b3f290a6",
+      "session_id": "20250918_233300"
+    }
+  ]
+}

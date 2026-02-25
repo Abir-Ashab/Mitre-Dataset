@@ -1,0 +1,259 @@
+{
+  "metadata": {
+    "session_id": "20250918_233300",
+    "chunk_index": 9,
+    "chunk_size": 7,
+    "start_time": "2025-09-18T17:33:11.371Z",
+    "end_time": "2025-09-18T17:33:11.622Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-09-18T17:33:11.371Z",
+      "event_type": "network",
+      "length": 441,
+      "summary": "Ether / IP / UDP / mDNS Qry b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.'",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "10.10.12.57",
+          "dst": "224.0.0.251"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "0",
+          "opcode": "0",
+          "aa": "0",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "6",
+          "ancount": "0",
+          "nscount": "7",
+          "arcount": "0",
+          "qd": "[<DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankars-MacBook-Pro-2.local.' qtype=ALL unicastresponse=0 qclass=IN |>]",
+          "an": "[]",
+          "ns": "[<DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=445 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=22 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=22 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=7000 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=7000 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRR  rrname=b'Supankars-MacBook-Pro-2.local.' type=AAAA cacheflush=0 rclass=IN ttl=4500 rdata=fe80::c4d:ebff:c15a:ad9a |>, <DNSRR  rrname=b'Supankars-MacBook-Pro-2.local.' type=A cacheflush=0 rclass=IN ttl=4500 rdata=10.10.12.57 |>]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.373Z",
+      "event_type": "network",
+      "length": 461,
+      "summary": "Ether / IPv6 / UDP / mDNS Qry b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.'",
+      "layers": {
+        "IPv6": {
+          "version": "6",
+          "tc": "0",
+          "fl": "920320",
+          "plen": "407",
+          "nh": "17",
+          "hlim": "255",
+          "src": "fe80::c4d:ebff:c15a:ad9a",
+          "dst": "ff02::fb"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "0",
+          "opcode": "0",
+          "aa": "0",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "6",
+          "ancount": "0",
+          "nscount": "7",
+          "arcount": "0",
+          "qd": "[<DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankars-MacBook-Pro-2.local.' qtype=ALL unicastresponse=0 qclass=IN |>]",
+          "an": "[]",
+          "ns": "[<DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=445 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=22 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=22 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=7000 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=7000 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRR  rrname=b'Supankars-MacBook-Pro-2.local.' type=AAAA cacheflush=0 rclass=IN ttl=4500 rdata=fe80::c4d:ebff:c15a:ad9a |>, <DNSRR  rrname=b'Supankars-MacBook-Pro-2.local.' type=A cacheflush=0 rclass=IN ttl=4500 rdata=10.10.12.57 |>]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.461Z",
+      "event_type": "network",
+      "length": 60,
+      "summary": "Ether / ARP who has 10.10.13.16 says 10.10.12.1 / Padding",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "1",
+          "hwsrc": "08:55:31:0d:69:e8",
+          "psrc": "10.10.12.1",
+          "hwdst": "00:00:00:00:00:00",
+          "pdst": "10.10.13.16"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.461Z",
+      "event_type": "network",
+      "length": 42,
+      "summary": "Ether / ARP is at 70:9c:d1:3e:e9:28 says 10.10.13.16",
+      "layers": {
+        "ARP": {
+          "hwtype": "1",
+          "ptype": "2048",
+          "hwlen": "6",
+          "plen": "4",
+          "op": "2",
+          "hwsrc": "70:9c:d1:3e:e9:28",
+          "psrc": "10.10.13.16",
+          "hwdst": "08:55:31:0d:69:e8",
+          "pdst": "10.10.12.1"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.620Z",
+      "event_type": "network",
+      "length": 312,
+      "summary": "Ether / IP / UDP / mDNS Ans [b'LKDC:SHA1.8244D649D2F1B3BB56B39F99A0FF125850131306']",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "10.10.12.57",
+          "dst": "224.0.0.251"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "3",
+          "nscount": "0",
+          "arcount": "2",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'_kerberos.Supankars-MacBook-Pro-2.local.' type=TXT cacheflush=0 rclass=IN ttl=4500 rdata=[b'LKDC:SHA1.8244D649D2F1B3BB56B39F99A0FF125850131306'] |>, <DNSRR  rrname=b'A.9.D.A.A.5.1.C.F.F.B.E.D.4.C.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRR  rrname=b'57.12.10.10.in-addr.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Supankars-MacBook-Pro-2.local.' |>]",
+          "ns": "[]",
+          "ar": "[<DNSRRNSEC  rrname=b'A.9.D.A.A.5.1.C.F.F.B.E.D.4.C.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'A.9.D.A.A.5.1.C.F.F.B.E.D.4.C.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' typebitmaps=['PTR'] |>, <DNSRRNSEC  rrname=b'57.12.10.10.in-addr.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'57.12.10.10.in-addr.arpa.' typebitmaps=['PTR'] |>]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.620Z",
+      "event_type": "network",
+      "length": 332,
+      "summary": "Ether / IPv6 / UDP / mDNS Ans [b'LKDC:SHA1.8244D649D2F1B3BB56B39F99A0FF125850131306']",
+      "layers": {
+        "IPv6": {
+          "version": "6",
+          "tc": "0",
+          "fl": "920320",
+          "plen": "278",
+          "nh": "17",
+          "hlim": "255",
+          "src": "fe80::c4d:ebff:c15a:ad9a",
+          "dst": "ff02::fb"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "1",
+          "opcode": "0",
+          "aa": "1",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "0",
+          "ancount": "3",
+          "nscount": "0",
+          "arcount": "2",
+          "qd": "[]",
+          "an": "[<DNSRR  rrname=b'_kerberos.Supankars-MacBook-Pro-2.local.' type=TXT cacheflush=0 rclass=IN ttl=4500 rdata=[b'LKDC:SHA1.8244D649D2F1B3BB56B39F99A0FF125850131306'] |>, <DNSRR  rrname=b'A.9.D.A.A.5.1.C.F.F.B.E.D.4.C.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRR  rrname=b'57.12.10.10.in-addr.arpa.' type=PTR cacheflush=1 rclass=IN ttl=4500 rdata=b'Supankars-MacBook-Pro-2.local.' |>]",
+          "ns": "[]",
+          "ar": "[<DNSRRNSEC  rrname=b'A.9.D.A.A.5.1.C.F.F.B.E.D.4.C.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'A.9.D.A.A.5.1.C.F.F.B.E.D.4.C.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.E.F.ip6.arpa.' typebitmaps=['PTR'] |>, <DNSRRNSEC  rrname=b'57.12.10.10.in-addr.arpa.' type=NSEC cacheflush=1 rclass=IN ttl=4500 nextname=b'57.12.10.10.in-addr.arpa.' typebitmaps=['PTR'] |>]"
+        }
+      },
+      "session_id": "20250918_233300"
+    },
+    {
+      "timestamp": "2025-09-18T17:33:11.622Z",
+      "event_type": "network",
+      "length": 441,
+      "summary": "Ether / IP / UDP / mDNS Qry b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.'",
+      "layers": {
+        "IP": {
+          "ttl": "255",
+          "proto": "17",
+          "src": "10.10.12.57",
+          "dst": "224.0.0.251"
+        },
+        "UDP": {
+          "sport": "5353",
+          "dport": "5353"
+        },
+        "DNS": {
+          "id": "0",
+          "qr": "0",
+          "opcode": "0",
+          "aa": "0",
+          "tc": "0",
+          "rd": "0",
+          "ra": "0",
+          "z": "0",
+          "ad": "0",
+          "cd": "0",
+          "rcode": "0",
+          "qdcount": "6",
+          "ancount": "0",
+          "nscount": "7",
+          "arcount": "0",
+          "qd": "[<DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' qtype=ALL unicastresponse=0 qclass=IN |>, <DNSQR  qname=b'Supankars-MacBook-Pro-2.local.' qtype=ALL unicastresponse=0 qclass=IN |>]",
+          "an": "[]",
+          "ns": "[<DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._smb._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=445 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._ssh._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=22 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._sftp-ssh._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=22 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'Supankar\\xe2\\x80\\x99s MacBook Pro._airplay._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=7000 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRRSRV  rrname=b'4235206CFA4D@Supankar\\xe2\\x80\\x99s MacBook Pro._raop._tcp.local.' type=SRV cacheflush=0 rclass=IN ttl=4500 priority=0 weight=0 port=7000 target=b'Supankars-MacBook-Pro-2.local.' |>, <DNSRR  rrname=b'Supankars-MacBook-Pro-2.local.' type=AAAA cacheflush=0 rclass=IN ttl=4500 rdata=fe80::c4d:ebff:c15a:ad9a |>, <DNSRR  rrname=b'Supankars-MacBook-Pro-2.local.' type=A cacheflush=0 rclass=IN ttl=4500 rdata=10.10.12.57 |>]",
+          "ar": "[]"
+        }
+      },
+      "session_id": "20250918_233300"
+    }
+  ]
+}

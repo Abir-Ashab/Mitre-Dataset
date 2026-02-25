@@ -1,0 +1,165 @@
+{
+  "metadata": {
+    "session_id": "20250629_200301",
+    "chunk_index": 0,
+    "chunk_size": 7,
+    "start_time": "2025-06-29T14:13:43.913Z",
+    "end_time": "2025-06-29T14:14:13.884Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-06-29T14:13:43.913Z",
+      "event_type": "network",
+      "length": 1294,
+      "summary": "Ether / IP / TCP 149.154.167.99:https > 192.168.31.219:58543 A / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "50",
+          "proto": "6",
+          "src": "149.154.167.99",
+          "dst": "192.168.31.219"
+        },
+        "TCP": {
+          "sport": "443",
+          "dport": "58543",
+          "seq": "1697214750",
+          "ack": "1440339034",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:13:43.913Z",
+      "event_type": "network",
+      "length": 1294,
+      "summary": "Ether / IP / TCP 149.154.167.99:https > 192.168.31.219:58543 A / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "50",
+          "proto": "6",
+          "src": "149.154.167.99",
+          "dst": "192.168.31.219"
+        },
+        "TCP": {
+          "sport": "443",
+          "dport": "58543",
+          "seq": "1697215990",
+          "ack": "1440339034",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:13:43.913Z",
+      "event_type": "network",
+      "length": 1294,
+      "summary": "Ether / IP / TCP 149.154.167.99:https > 192.168.31.219:58543 A / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "50",
+          "proto": "6",
+          "src": "149.154.167.99",
+          "dst": "192.168.31.219"
+        },
+        "TCP": {
+          "sport": "443",
+          "dport": "58543",
+          "seq": "1697217230",
+          "ack": "1440339034",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:13:43.913Z",
+      "event_type": "network",
+      "length": 1294,
+      "summary": "Ether / IP / TCP 149.154.167.99:https > 192.168.31.219:58543 A / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "50",
+          "proto": "6",
+          "src": "149.154.167.99",
+          "dst": "192.168.31.219"
+        },
+        "TCP": {
+          "sport": "443",
+          "dport": "58543",
+          "seq": "1697218846",
+          "ack": "1440339034",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:13:44.098Z",
+      "event_type": "network",
+      "length": 1294,
+      "summary": "Ether / IP / TCP 149.154.167.99:https > 192.168.31.219:58543 A / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "50",
+          "proto": "6",
+          "src": "149.154.167.99",
+          "dst": "192.168.31.219"
+        },
+        "TCP": {
+          "sport": "443",
+          "dport": "58543",
+          "seq": "1697221002",
+          "ack": "1440339292",
+          "flags": "A"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:13:44.099Z",
+      "event_type": "network",
+      "length": 1294,
+      "summary": "Ether / IP / TCP 149.154.167.99:https > 192.168.31.219:58543 PA / Raw",
+      "layers": {
+        "IP": {
+          "ttl": "50",
+          "proto": "6",
+          "src": "149.154.167.99",
+          "dst": "192.168.31.219"
+        },
+        "TCP": {
+          "sport": "443",
+          "dport": "58543",
+          "seq": "1697222242",
+          "ack": "1440339292",
+          "flags": "PA"
+        }
+      },
+      "session_id": "20250629_200301"
+    },
+    {
+      "timestamp": "2025-06-29T14:14:13.884Z",
+      "event_type": "network",
+      "length": 66,
+      "summary": "Ether / IP / TCP 192.168.31.219:58624 > 147.185.221.22:24547 S",
+      "layers": {
+        "IP": {
+          "ttl": "128",
+          "proto": "6",
+          "src": "192.168.31.219",
+          "dst": "147.185.221.22"
+        },
+        "TCP": {
+          "sport": "58624",
+          "dport": "24547",
+          "seq": "1033972052",
+          "ack": "0",
+          "flags": "S"
+        }
+      },
+      "session_id": "20250629_200301"
+    }
+  ]
+}

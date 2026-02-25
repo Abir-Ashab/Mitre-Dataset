@@ -1,0 +1,145 @@
+{
+  "metadata": {
+    "session_id": "20250709_204522",
+    "chunk_index": 481,
+    "chunk_size": 7,
+    "start_time": "2025-07-09T21:02:37.617Z",
+    "end_time": "2025-07-09T21:02:51.196Z"
+  },
+  "logs": [
+    {
+      "timestamp": "2025-07-09T21:02:37.617Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "55460",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:02:37.622Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "3",
+        "event_data": {
+          "DestinationIp": "147.185.221.22",
+          "DestinationPort": "24547",
+          "Image": "C:\\Users\\User\\AppData\\LocalfUWrSTPxgW.exe",
+          "ProcessGuid": "{FCBBCFF8-8120-686E-F104-000000001400}",
+          "ProcessId": "20232",
+          "Protocol": "tcp",
+          "SourceIp": "192.168.31.219",
+          "SourcePort": "55460",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:02:50.469Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "5",
+        "event_data": {
+          "Image": "C:\\Users\\User\\AppData\\Local\\Temp\\62484354.tmp.exe",
+          "ProcessGuid": "{FCBBCFF8-83FA-686E-7405-000000001400}",
+          "ProcessId": "16696",
+          "User": "SOMETHING-GREAT\\User"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:02:51.195Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "13",
+        "event_data": {
+          "Details": "nirsoft",
+          "EventType": "SetValue",
+          "Image": "C:\\WINDOWS\\System32\\svchost.exe",
+          "ProcessGuid": "{FCBBCFF8-7D2D-686E-4A00-000000001400}",
+          "ProcessId": "4092",
+          "TargetObject": "\\REGISTRY\\A\\{a8682200-3738-f97c-4ad5-57901cafd362}\\Root\\InventoryApplicationFile\\62484354.tmp.exe|86a231d1b098b167\\Publisher",
+          "User": "NT AUTHORITY\\SYSTEM"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:02:51.195Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "13",
+        "event_data": {
+          "Details": "c:\\users\\user\\appdata\\local\\temp\\62484354.tmp.exe",
+          "EventType": "SetValue",
+          "Image": "C:\\WINDOWS\\System32\\svchost.exe",
+          "ProcessGuid": "{FCBBCFF8-7D2D-686E-4A00-000000001400}",
+          "ProcessId": "4092",
+          "TargetObject": "\\REGISTRY\\A\\{a8682200-3738-f97c-4ad5-57901cafd362}\\Root\\InventoryApplicationFile\\62484354.tmp.exe|86a231d1b098b167\\LowerCaseLongPath",
+          "User": "NT AUTHORITY\\SYSTEM"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:02:51.196Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "13",
+        "event_data": {
+          "Details": "2.1.5.0",
+          "EventType": "SetValue",
+          "Image": "C:\\WINDOWS\\System32\\svchost.exe",
+          "ProcessGuid": "{FCBBCFF8-7D2D-686E-4A00-000000001400}",
+          "ProcessId": "4092",
+          "TargetObject": "\\REGISTRY\\A\\{a8682200-3738-f97c-4ad5-57901cafd362}\\Root\\InventoryApplicationFile\\62484354.tmp.exe|86a231d1b098b167\\BinProductVersion",
+          "User": "NT AUTHORITY\\SYSTEM"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    },
+    {
+      "timestamp": "2025-07-09T21:02:51.196Z",
+      "event_type": "system",
+      "winlog": {
+        "event_id": "13",
+        "event_data": {
+          "Details": "04/27/2025 11:46:53",
+          "EventType": "SetValue",
+          "Image": "C:\\WINDOWS\\System32\\svchost.exe",
+          "ProcessGuid": "{FCBBCFF8-7D2D-686E-4A00-000000001400}",
+          "ProcessId": "4092",
+          "TargetObject": "\\REGISTRY\\A\\{a8682200-3738-f97c-4ad5-57901cafd362}\\Root\\InventoryApplicationFile\\62484354.tmp.exe|86a231d1b098b167\\LinkDate",
+          "User": "NT AUTHORITY\\SYSTEM"
+        }
+      },
+      "host_id": "d87c364a",
+      "agent_id": "2a5146a5",
+      "session_id": "20250709_204522"
+    }
+  ]
+}
