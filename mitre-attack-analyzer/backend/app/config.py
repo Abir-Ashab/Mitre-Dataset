@@ -30,8 +30,8 @@ class Settings(BaseSettings):
     # Model Parameters (MATCHING METRICS NOTEBOOK + TRAINING DATA EXACTLY)
     MAX_INPUT_CHARS: int = 6000      # Match metrics notebook
     MAX_LENGTH_TOKENS: int = 3072    # Match metrics notebook
-    MAX_NEW_TOKENS: int = 128        # Limit to prevent conversational rambling: Status (3) + Techniques (25) + Reason (100)
-    TEMPERATURE: float = 0.7         # Match metrics notebook
+    MAX_NEW_TOKENS: int = 100        # Status (3) + Techniques (15) + Reason (80)
+    TEMPERATURE: float = 0.1         # Very low temp = very conservative (minimize false positives)
     TOP_P: float = 0.9               # Match metrics notebook
     
     @property
