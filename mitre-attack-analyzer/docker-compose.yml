@@ -1,0 +1,101 @@
+version: "3.8"
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: mitre-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: mitre_attack_logs
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - mitre-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mitre-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Server Configuration
+      HOST: 0.0.0.0
+      PORT: 8000
+      DEBUG: "False"
+      RELOAD: "False"
+
+      # Model Configuration
+      BASE_MODEL: Qwen/Qwen2.5-1.5B-Instruct
+      MODEL_PATH: /app/model
+      DEVICE: cpu # Change to 'cuda' if using GPU
+
+      # MongoDB Configuration
+      MONGODB_URL: mongodb://mongodb:27017
+      MONGODB_DB_NAME: mitre_attack_logs
+
+      # CORS Origins
+      CORS_ORIGINS: http://localhost,http://localhost:80,http://frontend
+
+      # Model Parameters
+      MAX_INPUT_CHARS: 6000
+      MAX_LENGTH_TOKENS: 3072
+      MAX_NEW_TOKENS: 512
+      TEMPERATURE: 0.7
+      TOP_P: 0.9
+    volumes:
+      # Mount fine-tuned model (update path to your model location)
+      - E:/Hacking/Mitre-Dataset/fine_tuned_model:/app/model:ro
+      # Model cache for HuggingFace downloads
+      - model_cache:/app/model_cache
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - mitre-network
+    # Uncomment below for GPU support (requires nvidia-docker)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mitre-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - mitre-network
+
+networks:
+  mitre-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  model_cache:
+    driver: local
