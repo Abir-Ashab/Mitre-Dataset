@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     # Model Parameters (MATCHING METRICS NOTEBOOK + TRAINING DATA EXACTLY)
     MAX_INPUT_CHARS: int = 6000      # Match metrics notebook
     MAX_LENGTH_TOKENS: int = 3072    # Match metrics notebook
-    MAX_NEW_TOKENS: int = 512        # Match metrics notebook (CRITICAL: was 256, model needs more tokens)
+    MAX_NEW_TOKENS: int = 150        # Reduced to prevent rambling - enough for "Status: X\nReason: Brief explanation"
     TEMPERATURE: float = 0.7         # Match metrics notebook
     TOP_P: float = 0.9               # Match metrics notebook
     

