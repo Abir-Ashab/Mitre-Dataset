@@ -30,7 +30,7 @@ export default function SessionList({ onSelectSession }) {
       setLoading(true);
       const startTime = performance.now();
 
-      // Try to load from cache first (unless force refresh)
+      
       if (!forceRefresh) {
         try {
           const cached = localStorage.getItem("sessions_cache");
@@ -40,9 +40,9 @@ export default function SessionList({ onSelectSession }) {
 
           if (cached && cacheTimestamp) {
             const cacheAge = Date.now() - parseInt(cacheTimestamp);
-            const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+            const CACHE_DURATION = 5 * 60 * 1000; 
 
-            // Use cache if less than 5 minutes old
+            
             if (cacheAge < CACHE_DURATION) {
               const cachedData = JSON.parse(cached);
               console.log(
@@ -75,10 +75,10 @@ export default function SessionList({ onSelectSession }) {
         localStorage.removeItem("sessions_cache_timestamp");
       }
 
-      // Fetch from MongoDB
+      
       console.log("[Sessions] Fetching from MongoDB...");
       const mongoStart = performance.now();
-      const mongoDBResponse = await sessionService.getAllSessions(0, 100); // Fetch first 100 for caching
+      const mongoDBResponse = await sessionService.getAllSessions(0, 100); 
       const mongoTime = performance.now() - mongoStart;
       console.log(
         `[Sessions] ✅ MongoDB fetch completed in ${mongoTime.toFixed(2)}ms`,
@@ -89,7 +89,7 @@ export default function SessionList({ onSelectSession }) {
         source: "mongodb",
       }));
 
-      // Store in cache
+      
       try {
         localStorage.setItem("sessions_cache", JSON.stringify(mongoDBSessions));
         localStorage.setItem("sessions_cache_timestamp", Date.now().toString());
@@ -100,7 +100,7 @@ export default function SessionList({ onSelectSession }) {
         console.warn("[Sessions] Failed to cache sessions:", storageError);
       }
 
-      // Apply pagination
+      
       const skip = (page - 1) * ITEMS_PER_PAGE;
       const paginatedSessions = mongoDBSessions.slice(
         skip,
@@ -113,7 +113,7 @@ export default function SessionList({ onSelectSession }) {
       );
 
       setSessions(paginatedSessions);
-      setTotal(mongoDBResponse.total || mongoDBSessions.length); // Use total from backend
+      setTotal(mongoDBResponse.total || mongoDBSessions.length); 
       setError(null);
     } catch (err) {
       setError("Failed to load sessions");
@@ -133,15 +133,15 @@ export default function SessionList({ onSelectSession }) {
     try {
       setDeleting(sessionId);
 
-      // Delete from MongoDB
+      
       await sessionService.deleteSession(sessionId);
 
-      // Clear cache and reload
+      
       localStorage.removeItem("sessions_cache");
       localStorage.removeItem("sessions_cache_timestamp");
       console.log("[Sessions] Cache cleared after deletion");
 
-      await fetchSessions(true); // Force refresh
+      await fetchSessions(true); 
     } catch (err) {
       console.error("Delete error:", err);
       alert("Failed to delete session");
@@ -243,7 +243,6 @@ export default function SessionList({ onSelectSession }) {
         </div>
       )}
 
-      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
           <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -263,11 +262,11 @@ export default function SessionList({ onSelectSession }) {
             <div className="flex items-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1)
                 .filter((p) => {
-                  // Show first page, last page, current page and neighbors
+                  
                   return p === 1 || p === totalPages || Math.abs(p - page) <= 1;
                 })
                 .map((p, idx, arr) => {
-                  // Add ellipsis if there's a gap
+                  
                   const prevPage = arr[idx - 1];
                   const showEllipsis = prevPage && p - prevPage > 1;
 

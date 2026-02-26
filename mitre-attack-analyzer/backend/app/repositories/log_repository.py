@@ -89,14 +89,14 @@ class LogRepository:
             Dictionary with status counts
         """
         try:
-            # Count each status separately using simple queries
+
             counts = {}
             for status in LogStatus:
                 count = await LogAnalysis.find(LogAnalysis.status == status).count()
                 counts[status.value] = count
             return counts
         except Exception as e:
-            # If counting fails, return empty dict
+
             logger.error(f"Error in count_by_status: {str(e)}")
             return {}
     
@@ -136,5 +136,5 @@ class LogRepository:
         return result.deleted_count if result else 0
 
 
-# Global repository instance
+
 log_repository = LogRepository()

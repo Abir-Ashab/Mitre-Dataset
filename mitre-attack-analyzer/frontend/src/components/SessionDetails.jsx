@@ -15,23 +15,6 @@ import { chunkCache } from "../services/chunkCache";
 import { sessionService } from "../services/api";
 import AnalysisResult from "./AnalysisResult";
 
-/**
- * SessionDetails Component
- *
- * Displays session chunks with pagination and allows chunk-level analysis.
- *
- * ANALYSIS PERSISTENCE:
- * - When you analyze a chunk, the result is saved to MongoDB (backend database)
- * - Analysis results include: status, reason, MITRE techniques, raw output, and timestamp
- * - Results persist across page reloads - when you return to this session, previously
- *   analyzed chunks will show their saved results automatically
- * - You can click on the Normal/Suspicious badges to view the full analysis details
- * - Re-analyze button allows updating the analysis if needed
- *
- * DATA SOURCES:
- * - MongoDB (primary): Recently uploaded sessions with analysis persistence
- * - IndexedDB (fallback): Legacy sessions stored locally before MongoDB integration
- */
 export default function SessionDetails({ sessionId, onBack }) {
   const [chunks, setChunks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,7 +49,7 @@ export default function SessionDetails({ sessionId, onBack }) {
       const skip = (page - 1) * CHUNKS_PER_PAGE;
 
       try {
-        // Try to fetch from backend API (MongoDB) first
+        
         console.log(`[Fetch] Requesting session details for: ${sessionId}`);
         console.log(
           `[Fetch] Pagination: skip=${skip}, limit=${CHUNKS_PER_PAGE}`,
@@ -87,7 +70,7 @@ export default function SessionDetails({ sessionId, onBack }) {
           chunks_count: data.chunks?.length,
         });
 
-        // Log each chunk's analysis status
+        
         data.chunks.forEach((chunk, idx) => {
           if (chunk.analysis_result || chunk.analysis_status) {
             console.log(`[Fetch] Chunk ${chunk.chunk_index} has analysis:`, {
@@ -113,7 +96,7 @@ export default function SessionDetails({ sessionId, onBack }) {
         setTotalChunks(data.total_chunks || data.total || 0);
         setError(null);
       } catch (backendError) {
-        // If not found in MongoDB (404), fall back to IndexedDB (old sessions)
+        
         if (backendError.response?.status === 404) {
           console.log("[Fetch] Session not in MongoDB, trying IndexedDB...");
           const data = await chunkCache.getSessionChunks(
@@ -144,15 +127,15 @@ export default function SessionDetails({ sessionId, onBack }) {
 
       console.log(`[Analysis] Starting analysis for chunk ${chunkIndex}`);
 
-      // Try to get chunk data from current chunks array first
+      
       let chunkLogs;
       let chunkData = chunks.find((c) => c.chunk_index === chunkIndex);
 
       if (chunkData && chunkData.logs_json) {
-        // MongoDB chunk has logs_json directly
+        
         chunkLogs = chunkData.logs_json;
       } else {
-        // Fall back to IndexedDB for old sessions
+        
         const indexedDBChunk = await chunkCache.getChunk(sessionId, chunkIndex);
         console.log(`[Analysis] Chunk data from IndexedDB:`, indexedDBChunk);
         chunkLogs = indexedDBChunk?.logs_json || indexedDBChunk;
@@ -162,7 +145,7 @@ export default function SessionDetails({ sessionId, onBack }) {
         throw new Error("No log data found for this chunk");
       }
 
-      // Analyze the chunk using the new endpoint (saves to MongoDB)
+      
       console.log(`[Analysis] Sending analysis request to backend...`);
       const result = await sessionService.analyzeChunk(
         sessionId,
@@ -181,7 +164,7 @@ export default function SessionDetails({ sessionId, onBack }) {
       console.log("[Analysis] Full result object:", result);
       console.log("[Analysis] ✅ Analysis saved to database successfully!");
 
-      // Update the local chunks state immediately with analysis results
+      
       setChunks((prevChunks) =>
         prevChunks.map((chunk) =>
           chunk.chunk_index === chunkIndex
@@ -272,7 +255,6 @@ export default function SessionDetails({ sessionId, onBack }) {
 
   return (
     <div className="space-y-4">
-      {/* Header */}
       <div className="card">
         <button onClick={onBack} className="btn btn-secondary mb-4">
           <ArrowLeft className="w-4 h-4" />
@@ -287,15 +269,12 @@ export default function SessionDetails({ sessionId, onBack }) {
         <p className="text-sm text-gray-600 dark:text-gray-400 font-mono mb-4">
           {sessionId}
         </p>
-
-        {/* Error Display */}
         {error && (
           <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
             <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
           </div>
         )}
 
-        {/* Stats */}
         <div className="grid grid-cols-2 gap-4">
           <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
             <p className="text-xs text-blue-700 dark:text-blue-400 mb-1">
@@ -316,7 +295,6 @@ export default function SessionDetails({ sessionId, onBack }) {
         </div>
       </div>
 
-      {/* Chunks List */}
       <div className="card">
         <h4 className="text-md font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <Layers className="w-5 h-5 text-primary-600 dark:text-primary-400" />
@@ -400,7 +378,6 @@ export default function SessionDetails({ sessionId, onBack }) {
           </div>
         )}
 
-        {/* Pagination Controls */}
         {totalPages > 1 && (
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -421,13 +398,13 @@ export default function SessionDetails({ sessionId, onBack }) {
               <div className="flex items-center gap-1">
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
                   .filter((p) => {
-                    // Show first page, last page, current page and neighbors
+                    
                     return (
                       p === 1 || p === totalPages || Math.abs(p - page) <= 1
                     );
                   })
                   .map((p, idx, arr) => {
-                    // Add ellipsis if there's a gap
+                    
                     const prevPage = arr[idx - 1];
                     const showEllipsis = prevPage && p - prevPage > 1;
 
@@ -466,12 +443,11 @@ export default function SessionDetails({ sessionId, onBack }) {
         )}
       </div>
 
-      {/* Analysis Details Modal */}
       {showModal && selectedChunk && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
           onClick={(e) => {
-            // Close modal when clicking on backdrop
+            
             if (e.target === e.currentTarget) {
               setShowModal(false);
             }

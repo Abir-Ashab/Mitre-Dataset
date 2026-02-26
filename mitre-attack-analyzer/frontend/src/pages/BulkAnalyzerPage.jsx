@@ -33,7 +33,7 @@ export default function BulkAnalyzerPage() {
       setLoading(true);
       const startTime = performance.now();
 
-      // Try to load from cache first (unless force refresh)
+      
       if (!forceRefresh) {
         try {
           const cached = localStorage.getItem("bulk_sessions_cache");
@@ -43,9 +43,9 @@ export default function BulkAnalyzerPage() {
 
           if (cached && cacheTimestamp) {
             const cacheAge = Date.now() - parseInt(cacheTimestamp);
-            const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+            const CACHE_DURATION = 5 * 60 * 1000; 
 
-            // Use cache if less than 5 minutes old
+            
             if (cacheAge < CACHE_DURATION) {
               const cachedData = JSON.parse(cached);
               console.log(
@@ -71,7 +71,7 @@ export default function BulkAnalyzerPage() {
         localStorage.removeItem("bulk_sessions_cache_timestamp");
       }
 
-      // Fetch from MongoDB
+      
       console.log("[Bulk Analyzer] Fetching from MongoDB...");
       const mongoStart = performance.now();
       const mongoDBResponse = await sessionService.getAllSessions(0, 100);
@@ -91,7 +91,7 @@ export default function BulkAnalyzerPage() {
             new Date(a.created_at || a.uploaded_at || 0),
         );
 
-      // Store in cache
+      
       try {
         localStorage.setItem(
           "bulk_sessions_cache",
@@ -130,12 +130,12 @@ export default function BulkAnalyzerPage() {
 
     try {
       setLoading(true);
-      // Fetch chunks with pagination (50 at a time to avoid loading all at once)
+      
       try {
         const data = await sessionService.getSessionDetails(
           session.session_id,
           0,
-          50, // Load first 50 chunks initially
+          50, 
         );
         setSessionChunks(data.chunks || []);
       } catch (backendError) {
@@ -169,7 +169,7 @@ export default function BulkAnalyzerPage() {
   const handleBulkAnalyze = async () => {
     if (!selectedSession) return;
 
-    // Validate range
+    
     if (startChunk < 0 || endChunk >= selectedSession.total_chunks) {
       alert(
         `Invalid chunk range. Please enter values between 0 and ${selectedSession.total_chunks - 1}`,
@@ -225,7 +225,7 @@ export default function BulkAnalyzerPage() {
 
           results.push(result);
 
-          // Update the chunk in local state
+          
           const chunkIndex = updatedChunks.findIndex(
             (c) => c.chunk_index === i,
           );
@@ -252,7 +252,7 @@ export default function BulkAnalyzerPage() {
 
       setSessionChunks(updatedChunks);
 
-      // Calculate session report
+      
       const normalCount = results.filter(
         (r) => r.status.toLowerCase() === "normal",
       ).length;
@@ -264,13 +264,13 @@ export default function BulkAnalyzerPage() {
 
       const sessionStatus = normalPercentage >= 95 ? "Normal" : "Suspicious";
 
-      // Calculate total processing time
+      
       const totalProcessingTime = results.reduce(
         (sum, r) => sum + (r.processing_time_ms || 0),
         0,
       );
 
-      // Extract all MITRE techniques
+      
       const allMitreTechniques = new Set();
       results.forEach((r) => {
         if (r.mitre_techniques) {
@@ -284,7 +284,7 @@ export default function BulkAnalyzerPage() {
         suspiciousCount,
         totalAnalyzed,
         normalPercentage: normalPercentage.toFixed(1),
-        totalProcessingTime: (totalProcessingTime / 1000).toFixed(2), // Convert to seconds
+        totalProcessingTime: (totalProcessingTime / 1000).toFixed(2), 
         mitreTechniques: Array.from(allMitreTechniques),
         analyzedAt: new Date().toISOString(),
       });

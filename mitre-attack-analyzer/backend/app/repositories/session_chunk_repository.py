@@ -41,7 +41,7 @@ class SessionChunkRepository:
             return []
         
         try:
-            # Use bulk insert for better performance
+
             logger.info(f"Starting bulk insert of {len(chunks)} chunks...")
             await SessionChunk.insert_many(chunks)
             logger.info(f"Successfully inserted {len(chunks)} chunks")
@@ -100,15 +100,15 @@ class SessionChunkRepository:
             Tuple of (session list, total count)
         """
         try:
-            # Fetch only the first chunk (index 0) of each session
-            # This contains all the session metadata we need
+
+
             first_chunks = await SessionChunk.find(
                 SessionChunk.chunk_index == 0
             ).sort(-SessionChunk.created_at).to_list()
             
             logger.info(f"Fetched {len(first_chunks)} session first chunks")
             
-            # Build session list with metadata
+
             sessions = []
             session_ids = []
             
@@ -122,8 +122,8 @@ class SessionChunkRepository:
                     "created_at": chunk.created_at.isoformat() if chunk.created_at else None
                 })
             
-            # Count analyzed chunks for each session (optional - can be slow for many sessions)
-            # Only do this for the requested page range
+
+
             paginated_sessions = sessions[skip:skip+limit]
             for session in paginated_sessions:
                 analyzed_count = await SessionChunk.find(
@@ -196,5 +196,5 @@ class SessionChunkRepository:
         return result.deleted_count if result else 0
 
 
-# Global repository instance
+
 session_chunk_repository = SessionChunkRepository()

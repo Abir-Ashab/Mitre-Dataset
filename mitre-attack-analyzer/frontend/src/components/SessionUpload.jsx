@@ -18,7 +18,7 @@ export default function SessionUpload({ onUploadComplete }) {
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const [uploadMode, setUploadMode] = useState("backend"); // "backend" or "local"
+  const [uploadMode, setUploadMode] = useState("backend"); 
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -47,10 +47,10 @@ export default function SessionUpload({ onUploadComplete }) {
     setResult(null);
 
     try {
-      // Read file content
+      
       const fileContent = await file.text();
 
-      // Generate session ID from filename
+      
       const sessionId = generateSessionId(file.name);
 
       if (uploadMode === "backend") {
