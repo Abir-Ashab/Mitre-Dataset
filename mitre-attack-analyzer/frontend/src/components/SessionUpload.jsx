@@ -5,8 +5,11 @@ import {
   Loader2,
   CheckCircle,
   AlertCircle,
+  Database,
+  HardDrive,
 } from "lucide-react";
 import { chunkCache } from "../services/chunkCache";
+import { sessionService } from "../services/api";
 import { chunkSessionLogs, generateSessionId } from "../utils/chunking";
 
 export default function SessionUpload({ onUploadComplete }) {
@@ -15,6 +18,7 @@ export default function SessionUpload({ onUploadComplete }) {
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [uploadMode, setUploadMode] = useState("backend"); // "backend" or "local"
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -49,33 +53,64 @@ export default function SessionUpload({ onUploadComplete }) {
       // Generate session ID from filename
       const sessionId = generateSessionId(file.name);
 
-      // Parse and chunk logs locally
-      const { chunks, total_logs, total_chunks } =
-        chunkSessionLogs(fileContent);
+      if (uploadMode === "backend") {
+        try {
+          const response = await sessionService.uploadSession(
+            fileContent,
+            sessionId,
+            sessionName || file.name,
+          );
 
-      // Store chunks in IndexedDB
-      await chunkCache.storeSession(sessionId, chunks, {
-        session_name: sessionName || file.name,
-        filename: file.name,
-        file_size: file.size,
-        upload_time: new Date().toISOString(),
-      });
+          setResult({
+            session_id: response.session_id,
+            session_name: response.session_name,
+            total_logs: response.total_logs,
+            total_chunks: response.total_chunks,
+            message:
+              response.message || "Session uploaded to MongoDB successfully",
+            storage: "backend",
+          });
 
-      setResult({
-        session_id: sessionId,
-        session_name: sessionName || file.name,
-        total_logs,
-        total_chunks,
-        message: "Session cached locally and ready for analysis",
-      });
+          console.log(
+            `✅ Session uploaded to backend: ${response.total_logs} logs in ${response.total_chunks} chunks`,
+          );
+        } catch (backendError) {
+          console.error("Backend upload failed:", backendError);
+          throw new Error(
+            backendError.response?.data?.detail ||
+              "Failed to upload to backend. Please try local storage mode.",
+          );
+        }
+      } else {
+        const { chunks, total_logs, total_chunks } =
+          chunkSessionLogs(fileContent);
+
+        await chunkCache.storeSession(sessionId, chunks, {
+          session_name: sessionName || file.name,
+          filename: file.name,
+          file_size: file.size,
+          upload_time: new Date().toISOString(),
+        });
+
+        setResult({
+          session_id: sessionId,
+          session_name: sessionName || file.name,
+          total_logs,
+          total_chunks,
+          message: "Session cached locally and ready for analysis",
+          storage: "local",
+        });
+
+        console.log(
+          `✅ Session stored locally: ${total_logs} logs in ${total_chunks} chunks`,
+        );
+      }
 
       setFile(null);
       setSessionName("");
 
-      // Reset file input
       document.getElementById("file-input").value = "";
 
-      // Notify parent component
       if (onUploadComplete) {
         onUploadComplete();
       }
@@ -118,7 +153,7 @@ export default function SessionUpload({ onUploadComplete }) {
       <div
         onDrop={handleDrop}
         onDragOver={handleDragOver}
-        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-primary-500 dark:hover:border-primary-400 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-primary-500 dark:hover:border-primary-400 transition-colors cursor-pointer bg-gray-50/50 dark:bg-gray-800/30"
       >
         <input
           id="file-input"
@@ -128,11 +163,11 @@ export default function SessionUpload({ onUploadComplete }) {
           className="hidden"
         />
         <label htmlFor="file-input" className="cursor-pointer">
-          <FileJson className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+          <FileJson className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-400 mb-4" />
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
             Click to upload or drag and drop
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             JSON files only
           </p>
         </label>
@@ -166,6 +201,90 @@ export default function SessionUpload({ onUploadComplete }) {
         </div>
       )}
 
+      {/* Storage Mode Selector */}
+      <div className="mt-4">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Storage Mode
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setUploadMode("backend")}
+            className={`p-3 rounded-lg border-2 transition-all text-left ${
+              uploadMode === "backend"
+                ? "border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-500/10 shadow-sm"
+                : "border-gray-300 dark:border-gray-600 hover:border-primary-300 dark:hover:border-primary-500 bg-white dark:bg-gray-800/50"
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <Database
+                className={`w-4 h-4 flex-shrink-0 ${
+                  uploadMode === "backend"
+                    ? "text-primary-600 dark:text-primary-400"
+                    : "text-gray-500 dark:text-gray-400"
+                }`}
+              />
+              <span
+                className={`text-sm font-medium ${
+                  uploadMode === "backend"
+                    ? "text-primary-900 dark:text-primary-200"
+                    : "text-gray-700 dark:text-gray-300"
+                }`}
+              >
+                Backend (MongoDB)
+              </span>
+            </div>
+            <p
+              className={`text-xs ${
+                uploadMode === "backend"
+                  ? "text-gray-700 dark:text-gray-300"
+                  : "text-gray-600 dark:text-gray-400"
+              }`}
+            >
+              Persistent storage, accessible from any device
+            </p>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setUploadMode("local")}
+            className={`p-3 rounded-lg border-2 transition-all text-left ${
+              uploadMode === "local"
+                ? "border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-500/10 shadow-sm"
+                : "border-gray-300 dark:border-gray-600 hover:border-primary-300 dark:hover:border-primary-500 bg-white dark:bg-gray-800/50"
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <HardDrive
+                className={`w-4 h-4 flex-shrink-0 ${
+                  uploadMode === "local"
+                    ? "text-primary-600 dark:text-primary-400"
+                    : "text-gray-500 dark:text-gray-400"
+                }`}
+              />
+              <span
+                className={`text-sm font-medium ${
+                  uploadMode === "local"
+                    ? "text-primary-900 dark:text-primary-200"
+                    : "text-gray-700 dark:text-gray-300"
+                }`}
+              >
+                Local (Browser)
+              </span>
+            </div>
+            <p
+              className={`text-xs ${
+                uploadMode === "local"
+                  ? "text-gray-700 dark:text-gray-300"
+                  : "text-gray-600 dark:text-gray-400"
+              }`}
+            >
+              Fast, offline-capable, this device only
+            </p>
+          </button>
+        </div>
+      </div>
+
       {/* Session Name Input */}
       <div className="mt-4">
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -194,7 +313,7 @@ export default function SessionUpload({ onUploadComplete }) {
         ) : (
           <>
             <Upload className="w-4 h-4" />
-            Upload & Chunk Session
+            {uploadMode === "backend" ? "Upload to MongoDB" : "Store Locally"}
           </>
         )}
       </button>
@@ -206,7 +325,8 @@ export default function SessionUpload({ onUploadComplete }) {
             <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <h4 className="text-sm font-semibold text-green-900 dark:text-green-300 mb-2">
-                Session Uploaded Successfully!
+                Session {result.storage === "backend" ? "Uploaded" : "Stored"}{" "}
+                Successfully!
               </h4>
               <div className="text-xs text-green-800 dark:text-green-400 space-y-1">
                 <p>
@@ -220,6 +340,22 @@ export default function SessionUpload({ onUploadComplete }) {
                 <p>
                   Chunks Created:{" "}
                   <span className="font-semibold">{result.total_chunks}</span>
+                </p>
+                <p className="flex items-center gap-1">
+                  Storage:{" "}
+                  <span className="font-semibold flex items-center gap-1">
+                    {result.storage === "backend" ? (
+                      <>
+                        <Database className="w-3 h-3" />
+                        MongoDB (Backend)
+                      </>
+                    ) : (
+                      <>
+                        <HardDrive className="w-3 h-3" />
+                        Browser (Local)
+                      </>
+                    )}
+                  </span>
                 </p>
                 <p className="mt-2 italic">{result.message}</p>
               </div>
@@ -246,10 +382,11 @@ export default function SessionUpload({ onUploadComplete }) {
       {/* Info Box */}
       <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
         <p className="text-xs text-blue-900 dark:text-blue-300">
-          <strong>Fast Local Storage:</strong> Sessions are chunked and stored
-          locally in your browser using IndexedDB. This provides instant access
-          without database overhead. Only analysis results are sent to the
-          server.
+          <strong>Backend (MongoDB):</strong> Persistent storage accessible from
+          any device. Recommended for team collaboration.
+          <br />
+          <strong>Local (Browser):</strong> Fast, offline-capable storage using
+          IndexedDB. Data stays on this device only.
         </p>
       </div>
     </div>

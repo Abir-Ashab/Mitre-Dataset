@@ -37,8 +37,18 @@ class SessionChunkRepository:
         Returns:
             List of created chunks with IDs
         """
-        await SessionChunk.insert_many(chunks)
-        return chunks
+        if not chunks:
+            return []
+        
+        try:
+            # Use bulk insert for better performance
+            logger.info(f"Starting bulk insert of {len(chunks)} chunks...")
+            await SessionChunk.insert_many(chunks)
+            logger.info(f"Successfully inserted {len(chunks)} chunks")
+            return chunks
+        except Exception as e:
+            logger.error(f"Error inserting chunks: {str(e)}")
+            raise
     
     async def find_by_session(self, session_id: str, skip: int = 0, limit: int = 50) -> tuple[List[SessionChunk], int]:
         """
