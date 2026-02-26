@@ -21,7 +21,8 @@ export default function BulkAnalyzerPage() {
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [sessionReport, setSessionReport] = useState(null);
   const [expandedChunks, setExpandedChunks] = useState(false);
-  const [maxChunks, setMaxChunks] = useState(0);
+  const [startChunk, setStartChunk] = useState(0);
+  const [endChunk, setEndChunk] = useState(0);
 
   useEffect(() => {
     fetchSessions();
@@ -124,7 +125,8 @@ export default function BulkAnalyzerPage() {
     setSelectedSession(session);
     setSessionReport(null);
     setExpandedChunks(false);
-    setMaxChunks(session.total_chunks);
+    setStartChunk(0);
+    setEndChunk(Math.min(50, session.total_chunks - 1));
 
     try {
       setLoading(true);
@@ -167,11 +169,23 @@ export default function BulkAnalyzerPage() {
   const handleBulkAnalyze = async () => {
     if (!selectedSession) return;
 
-    const chunksToAnalyze = Math.min(maxChunks, selectedSession.total_chunks);
+    // Validate range
+    if (startChunk < 0 || endChunk >= selectedSession.total_chunks) {
+      alert(
+        `Invalid chunk range. Please enter values between 0 and ${selectedSession.total_chunks - 1}`,
+      );
+      return;
+    }
+    if (startChunk > endChunk) {
+      alert("Start chunk must be less than or equal to end chunk.");
+      return;
+    }
+
+    const chunksToAnalyze = endChunk - startChunk + 1;
 
     if (
       !confirm(
-        `Analyze ${chunksToAnalyze} chunks in session "${selectedSession.session_id}"?\n\nThis may take several minutes.`,
+        `Analyze chunks ${startChunk} to ${endChunk} (${chunksToAnalyze} chunks) in session "${selectedSession.session_id}"?\n\nThis may take several minutes.`,
       )
     ) {
       return;
@@ -189,12 +203,12 @@ export default function BulkAnalyzerPage() {
       const results = [];
       const updatedChunks = [...sessionChunks];
 
-      for (let i = 0; i < chunksToAnalyze; i++) {
+      for (let i = startChunk; i <= endChunk; i++) {
         try {
           console.log(
-            `[Bulk Analysis] Analyzing chunk ${i} (${i + 1}/${chunksToAnalyze})`,
+            `[Bulk Analysis] Analyzing chunk ${i} (${i - startChunk + 1}/${chunksToAnalyze})`,
           );
-          setProgress({ current: i + 1, total: chunksToAnalyze });
+          setProgress({ current: i - startChunk + 1, total: chunksToAnalyze });
 
           const chunkLogs = await getChunkLogs(selectedSession.session_id, i);
 
@@ -388,27 +402,60 @@ export default function BulkAnalyzerPage() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Number of chunks to analyze
+                      Chunk Range to Analyze
                     </label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        min="1"
-                        max={selectedSession.total_chunks}
-                        value={maxChunks}
-                        onChange={(e) =>
-                          setMaxChunks(
-                            Math.min(
-                              Math.max(1, parseInt(e.target.value) || 1),
-                              selectedSession.total_chunks,
-                            ),
-                          )
-                        }
-                        disabled={analyzing}
-                        className="flex-1 px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 disabled:opacity-50"
-                      />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        / {selectedSession.total_chunks} chunks
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+                          Start Chunk
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          max={selectedSession.total_chunks - 1}
+                          value={startChunk}
+                          onChange={(e) =>
+                            setStartChunk(
+                              Math.min(
+                                Math.max(0, parseInt(e.target.value) || 0),
+                                selectedSession.total_chunks - 1,
+                              ),
+                            )
+                          }
+                          disabled={analyzing}
+                          className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 disabled:opacity-50"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+                          End Chunk
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          max={selectedSession.total_chunks - 1}
+                          value={endChunk}
+                          onChange={(e) =>
+                            setEndChunk(
+                              Math.min(
+                                Math.max(0, parseInt(e.target.value) || 0),
+                                selectedSession.total_chunks - 1,
+                              ),
+                            )
+                          }
+                          disabled={analyzing}
+                          className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 disabled:opacity-50"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between text-xs">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Total: {selectedSession.total_chunks} chunks (0 -{" "}
+                        {selectedSession.total_chunks - 1})
+                      </span>
+                      <span className="text-primary-600 dark:text-primary-400 font-medium">
+                        Will analyze: {Math.max(0, endChunk - startChunk + 1)}{" "}
+                        chunks
                       </span>
                     </div>
                   </div>
