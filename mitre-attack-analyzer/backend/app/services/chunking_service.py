@@ -12,8 +12,8 @@ from loguru import logger
 class ChunkingService:
     """Service to chunk full session logs into smaller pieces"""
     
-    CHUNK_SIZE = 7  # Number of logs per chunk
-    MIN_CHUNK_SIZE = 5  # Minimum logs for a valid chunk
+    CHUNK_SIZE = 7
+    MIN_CHUNK_SIZE = 5
     
     def __init__(self):
         """Initialize chunking service"""
@@ -32,11 +32,11 @@ class ChunkingService:
         try:
             logs = json.loads(log_content)
             
-            # Handle single log object
+
             if isinstance(logs, dict):
                 logs = [logs]
             
-            # Validate it's a list
+
             if not isinstance(logs, list):
                 raise ValueError("Log content must be a JSON array or object")
             
@@ -64,11 +64,11 @@ class ChunkingService:
         ]
         
         for field in timestamp_fields:
-            # Handle simple fields
+
             if field in log:
                 return str(log[field])
             
-            # Handle nested fields (e.g., 'event.created')
+
             if '.' in field:
                 parts = field.split('.')
                 obj = log
@@ -79,7 +79,7 @@ class ChunkingService:
                 except (KeyError, TypeError):
                     continue
         
-        # Fallback to empty string
+
         return ""
     
     def create_chunks(self, logs: List[Dict[str, Any]]) -> List[List[Dict[str, Any]]]:
@@ -92,14 +92,14 @@ class ChunkingService:
         Returns:
             List of chunks (each chunk is a list of logs)
         """
-        # Sort by timestamp
+
         sorted_logs = sorted(logs, key=self.get_timestamp)
         
         chunks = []
         for i in range(0, len(sorted_logs), self.CHUNK_SIZE):
             chunk = sorted_logs[i:i + self.CHUNK_SIZE]
             
-            # Only include chunks that meet minimum size or are the last chunk
+
             if len(chunk) >= self.MIN_CHUNK_SIZE or i + self.CHUNK_SIZE >= len(sorted_logs):
                 chunks.append(chunk)
         
@@ -155,15 +155,15 @@ class ChunkingService:
             List of chunk objects with metadata and logs
         """
         try:
-            # Parse logs
+
             logs = self.parse_session_log(log_content)
             logger.info(f"Parsed {len(logs)} logs from session {session_id}")
             
-            # Create chunks
+
             chunks = self.create_chunks(logs)
             logger.info(f"Created {len(chunks)} chunks from session {session_id}")
             
-            # Add metadata to each chunk
+
             chunk_objects = []
             for idx, chunk in enumerate(chunks):
                 metadata = self.create_chunk_metadata(chunk, idx, session_id, len(chunks))
@@ -183,5 +183,5 @@ class ChunkingService:
             raise
 
 
-# Global service instance
+
 chunking_service = ChunkingService()

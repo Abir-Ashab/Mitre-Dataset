@@ -16,7 +16,7 @@ export default function SessionsPage() {
 
   const handleBackToSessions = () => {
     navigate("/sessions");
-    setRefreshKey((prev) => prev + 1); // Refresh stats after viewing session
+    setRefreshKey((prev) => prev + 1); 
   };
 
   return (

@@ -14,52 +14,52 @@ import {
 } from "lucide-react";
 
 export default function TestResultsPage() {
-  // ACTUAL evaluation metrics from metrics.ipynb (1,000 samples)
+  
   const evaluationMetrics = {
     statusClassification: {
-      accuracy: 0.746, // 746/1000 correct
-      precisionMacro: 0.7146, // Average of Normal & Suspicious precision
-      precisionWeighted: 0.7317, // Weighted by support
-      recallMacro: 0.6186, // Average of Normal & Suspicious recall
-      recallWeighted: 0.746, // Weighted by support
-      f1Macro: 0.6263, // Average F1
-      f1Weighted: 0.7109, // Weighted F1
+      accuracy: 0.746, 
+      precisionMacro: 0.7146, 
+      precisionWeighted: 0.7317, 
+      recallMacro: 0.6186, 
+      recallWeighted: 0.746, 
+      f1Macro: 0.6263, 
+      f1Weighted: 0.7109, 
     },
     perClass: {
       normal: {
-        precision: 0.7575, // 656/(656+210)
-        recall: 0.9371, // 656/(656+44)
-        f1Score: 0.8378, // Harmonic mean
-        support: 700, // Total normal samples
+        precision: 0.7575, 
+        recall: 0.9371, 
+        f1Score: 0.8378, 
+        support: 700, 
       },
       suspicious: {
-        precision: 0.6716, // 90/(90+44)
-        recall: 0.3, // 90/(90+210) - WARNING: High false negatives!
-        f1Score: 0.4147, // Harmonic mean
-        support: 300, // Total suspicious samples
+        precision: 0.6716, 
+        recall: 0.3, 
+        f1Score: 0.4147, 
+        support: 300, 
       },
     },
     wordLevel: {
-      exactMatch: 0, // Not provided in results
-      partialMatch: 0.4715, // Average partial word match
-      f1Score: 0.1684, // Average word-level F1
+      exactMatch: 0, 
+      partialMatch: 0.4715, 
+      f1Score: 0.1684, 
     },
     evaluation: {
       totalSamples: 1000,
-      suspiciousRatio: 0.3, // 300 suspicious
-      normalRatio: 0.7, // 700 normal
-      evaluationTime: "Not recorded", // Update if available
-      timePerSample: "Variable", // Update if available
+      suspiciousRatio: 0.3, 
+      normalRatio: 0.7, 
+      evaluationTime: "Not recorded", 
+      timePerSample: "Variable", 
     },
     confusionMatrix: {
-      trueNormal: 656, // Correctly identified normal
-      falsePositive: 44, // Normal misclassified as suspicious
-      falseNegative: 210, // Suspicious misclassified as normal - CRITICAL ISSUE
-      trueSuspicious: 90, // Correctly identified suspicious
+      trueNormal: 656, 
+      falsePositive: 44, 
+      falseNegative: 210, 
+      trueSuspicious: 90, 
     },
   };
 
-  // Test cases from SRS_Section7_TestPlan.md
+  
   const testCases = [
     {
       id: "T1",
@@ -76,7 +76,7 @@ export default function TestResultsPage() {
     {
       id: "T3",
       title: "Threat Detection Accuracy",
-      status: "warning", // Below 85% target
+      status: "warning", 
       accuracy: "74.6%",
     },
     {
@@ -118,52 +118,52 @@ export default function TestResultsPage() {
     {
       id: "T10",
       title: "Suspicious Activity Detection",
-      status: "failed", // Critical: 70% false negative rate
+      status: "failed", 
       accuracy: "30.0% recall",
     },
   ];
 
-  // Target metrics from test plan vs ACTUAL results
+  
   const targetMetrics = [
     {
       metric: "Classification Accuracy",
       target: "≥ 85%",
       actual: "74.6%",
-      status: "fail", // BELOW TARGET
+      status: "fail", 
     },
     {
       metric: "Precision (Weighted)",
       target: "≥ 80%",
       actual: "73.2%",
-      status: "fail", // BELOW TARGET
+      status: "fail", 
     },
     {
       metric: "Recall (Weighted)",
       target: "≥ 75%",
       actual: "74.6%",
-      status: "fail", // SLIGHTLY BELOW TARGET
+      status: "fail", 
     },
     {
       metric: "False Positive Rate",
       target: "≤ 10%",
       actual: "6.3%",
-      status: "pass", // 44/(44+656) = 6.29%
+      status: "pass", 
     },
     {
       metric: "False Negative Rate",
       target: "≤ 8%",
       actual: "70.0%",
-      status: "fail", // CRITICAL: 210/(210+90) = 70% missed threats!
+      status: "fail", 
     },
     {
       metric: "Suspicious Detection Recall",
       target: "≥ 75%",
       actual: "30.0%",
-      status: "fail", // CRITICAL: Only detecting 30% of threats
+      status: "fail", 
     },
   ];
 
-  // Fine-tuning configuration
+  
   const finetuningConfig = {
     model: "Qwen/Qwen2.5-1.5B-Instruct",
     technique: "LoRA (Low-Rank Adaptation)",
@@ -179,7 +179,7 @@ export default function TestResultsPage() {
     memoryUsage: "12 GB VRAM",
   };
 
-  // Performance benchmarks
+  
   const performanceBenchmarks = [
     {
       category: "Inference Speed",

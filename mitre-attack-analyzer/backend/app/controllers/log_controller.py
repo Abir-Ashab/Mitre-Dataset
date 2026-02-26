@@ -19,7 +19,7 @@ from loguru import logger
 router = APIRouter(prefix="/api/logs", tags=["logs"])
 
 
-# Request/Response Models
+
 class AnalyzeLogRequest(BaseModel):
     """Request model for log analysis."""
     log_content: str = Field(..., description="Log content to analyze (JSON format)")
@@ -68,11 +68,11 @@ class HealthResponse(BaseModel):
 class StatsResponse(BaseModel):
     """Statistics response."""
     total_analyses: int
-    by_status: dict  # Changed from status_counts to match frontend
+    by_status: dict
     recent_analyses: List[dict]
 
 
-# API Endpoints
+
 @router.post("/analyze", response_model=AnalyzeLogResponse, status_code=status.HTTP_201_CREATED)
 async def analyze_log(request: AnalyzeLogRequest):
     """
@@ -86,7 +86,7 @@ async def analyze_log(request: AnalyzeLogRequest):
     start_time = time.time()
     
     try:
-        # Analyze using ML service
+
         status_result, reason, mitre_techniques, raw_output, error = await ml_service.analyze_log(
             request.log_content
         )
@@ -99,7 +99,7 @@ async def analyze_log(request: AnalyzeLogRequest):
         
         processing_time_ms = (time.time() - start_time) * 1000
         
-        # Save to database
+
         log_analysis = LogAnalysis(
             log_content=request.log_content,
             status=LogStatus(status_result),
@@ -217,7 +217,7 @@ async def get_statistics():
         
         total = sum(status_counts.values()) if status_counts else 0
         
-        # Transform status_counts to by_status with lowercase keys
+
         by_status = {
             "normal": status_counts.get("Normal", 0),
             "suspicious": status_counts.get("Suspicious", 0),
@@ -239,7 +239,7 @@ async def get_statistics():
         )
     except Exception as e:
         logger.error(f"Error getting statistics: {str(e)}")
-        # Return empty stats instead of crashing
+
         return StatsResponse(
             total_analyses=0,
             by_status={"normal": 0, "suspicious": 0, "unknown": 0, "error": 0},
@@ -257,9 +257,9 @@ async def health_check():
     )
 
 
-# ============================================================================
-# CHUNK ANALYSIS ENDPOINT
-# ============================================================================
+
+
+
 
 class AnalyzeChunkRequest(BaseModel):
     """Request model for analyzing a specific chunk."""
@@ -287,7 +287,7 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
     start_time = time.time()
     
     try:
-        # Analyze using ML service
+
         logger.info(f"Calling ml_service.analyze_log for chunk {request.chunk_index}...")
         status_result, reason, mitre_techniques, raw_output, error = await ml_service.analyze_log(
             request.log_content
@@ -308,7 +308,7 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
         
         processing_time_ms = (time.time() - start_time) * 1000
         
-        # Save to LogAnalysis collection
+
         log_analysis = LogAnalysis(
             log_content=request.log_content,
             status=LogStatus(status_result),
@@ -322,7 +322,7 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
         saved_analysis = await log_repository.create(log_analysis)
         logger.info(f"Saved to LogAnalysis collection: {saved_analysis.id}")
         
-        # Update the SessionChunk with analysis results
+
         analysis_result = {
             "analysis_id": str(saved_analysis.id),
             "status": status_result,
@@ -353,7 +353,7 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
         
         logger.info(f"Chunk {request.chunk_index} analyzed: {status_result} ({processing_time_ms:.2f}ms)")
         
-        # Prepare response to return to frontend
+
         response = AnalyzeLogResponse(
             analysis_id=str(saved_analysis.id),
             status=status_result,
@@ -383,9 +383,9 @@ async def analyze_chunk(request: AnalyzeChunkRequest):
         )
 
 
-# ============================================================================
-# SESSION UPLOAD & CHUNKING ENDPOINTS
-# ============================================================================
+
+
+
 
 class UploadSessionRequest(BaseModel):
     """Request model for uploading full session logs."""
@@ -437,7 +437,7 @@ async def upload_session_logs(request: UploadSessionRequest):
     The logs will be automatically chunked into 7-log segments and saved to the database.
     """
     try:
-        # Chunk the session logs
+
         chunks_data = chunking_service.chunk_session_logs(
             request.log_content,
             request.session_id
@@ -445,7 +445,7 @@ async def upload_session_logs(request: UploadSessionRequest):
         
         logger.info(f"Created {len(chunks_data)} chunks for session {request.session_id}")
         
-        # Create SessionChunk documents
+
         chunks_to_save = []
         for chunk_data in chunks_data:
             chunk = SessionChunk(
@@ -461,10 +461,10 @@ async def upload_session_logs(request: UploadSessionRequest):
             )
             chunks_to_save.append(chunk)
         
-        # Save all chunks to database
+
         saved_chunks = await session_chunk_repository.create_many_chunks(chunks_to_save)
         
-        # Calculate total logs
+
         total_logs = sum(c.chunk_size for c in saved_chunks)
         
         logger.success(f"Saved {len(saved_chunks)} chunks for session {request.session_id}")
@@ -567,7 +567,7 @@ async def get_chunk_data(session_id: str, chunk_index: int):
     try:
         chunks = await session_chunk_repository.find_by_session(session_id)
         
-        # Find the specific chunk
+
         chunk = next((c for c in chunks if c.chunk_index == chunk_index), None)
         
         if not chunk:

@@ -1,8 +1,3 @@
-/**
- * IndexedDB wrapper for storing session chunks locally
- * This provides fast local caching without database overhead
- */
-
 const DB_NAME = "mitre_analyzer_cache";
 const DB_VERSION = 1;
 const STORE_NAME = "session_chunks";
@@ -12,9 +7,6 @@ class ChunkCacheDB {
     this.db = null;
   }
 
-  /**
-   * Initialize IndexedDB
-   */
   async init() {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -28,13 +20,13 @@ class ChunkCacheDB {
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
 
-        // Create object store if it doesn't exist
+        
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           const objectStore = db.createObjectStore(STORE_NAME, {
             keyPath: "id",
           });
 
-          // Create indexes for efficient querying
+          
           objectStore.createIndex("session_id", "session_id", {
             unique: false,
           });
@@ -89,10 +81,10 @@ class ChunkCacheDB {
 
       request.onsuccess = () => {
         const allChunks = request.result;
-        // Sort by chunk_index
+        
         allChunks.sort((a, b) => a.chunk_index - b.chunk_index);
 
-        // Apply pagination
+        
         const paginatedChunks = allChunks.slice(skip, skip + limit);
 
         resolve({
@@ -132,7 +124,7 @@ class ChunkCacheDB {
       request.onsuccess = () => {
         const allChunks = request.result;
 
-        // Group by session_id
+        
         const sessionMap = {};
         allChunks.forEach((chunk) => {
           if (!sessionMap[chunk.session_id]) {
@@ -147,7 +139,7 @@ class ChunkCacheDB {
         });
 
         const sessions = Object.values(sessionMap);
-        // Sort by created_at desc
+        
         sessions.sort(
           (a, b) => new Date(b.created_at) - new Date(a.created_at),
         );
@@ -158,9 +150,6 @@ class ChunkCacheDB {
     });
   }
 
-  /**
-   * Delete all chunks for a session
-   */
   async deleteSession(sessionId) {
     await this.init();
     const transaction = this.db.transaction([STORE_NAME], "readwrite");
@@ -183,9 +172,6 @@ class ChunkCacheDB {
     });
   }
 
-  /**
-   * Check if a session exists
-   */
   async sessionExists(sessionId) {
     await this.init();
     return new Promise((resolve, reject) => {
@@ -199,9 +185,6 @@ class ChunkCacheDB {
     });
   }
 
-  /**
-   * Get total storage size estimate
-   */
   async getStorageEstimate() {
     if (navigator.storage && navigator.storage.estimate) {
       return await navigator.storage.estimate();
@@ -209,9 +192,6 @@ class ChunkCacheDB {
     return null;
   }
 
-  /**
-   * Clear all data
-   */
   async clearAll() {
     await this.init();
     return new Promise((resolve, reject) => {
@@ -225,5 +205,5 @@ class ChunkCacheDB {
   }
 }
 
-// Export singleton instance
+
 export const chunkCache = new ChunkCacheDB();

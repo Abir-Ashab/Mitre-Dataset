@@ -18,7 +18,7 @@ from app.controllers.log_controller import router as log_router
 from app.services.ml_service import ml_service
 
 
-# Configure logging
+
 logger.remove()
 logger.add(
     sys.stdout,
@@ -33,11 +33,11 @@ async def lifespan(app: FastAPI):
     Application lifespan manager.
     Handles startup and shutdown events.
     """
-    # Startup
+
     logger.info("🚀 Starting MITRE ATT&CK Log Analyzer API")
     
     try:
-        # Initialize MongoDB
+
         logger.info(f"Connecting to MongoDB: {settings.MONGODB_URL}")
         client = AsyncIOMotorClient(settings.MONGODB_URL)
         await init_beanie(
@@ -46,7 +46,7 @@ async def lifespan(app: FastAPI):
         )
         logger.success("✅ MongoDB connected successfully")
         
-        # Load ML model
+
         logger.info("Loading ML model...")
         await ml_service.load_model()
         logger.success("✅ ML model loaded successfully")
@@ -59,12 +59,12 @@ async def lifespan(app: FastAPI):
     
     yield
     
-    # Shutdown
+
     logger.info("Shutting down application...")
     logger.success("✅ Application shutdown complete")
 
 
-# Create FastAPI app
+
 app = FastAPI(
     title="MITRE ATT&CK Log Analyzer API",
     description="Backend API for analyzing security logs and detecting MITRE ATT&CK techniques",
@@ -75,7 +75,7 @@ app = FastAPI(
 )
 
 
-# CORS Middleware
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
@@ -85,7 +85,7 @@ app.add_middleware(
 )
 
 
-# Global exception handler to ensure CORS headers on errors
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Handle all unhandled exceptions and ensure CORS headers are included."""
@@ -100,11 +100,11 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-# Include routers
+
 app.include_router(log_router)
 
 
-# Root endpoint
+
 @app.get("/", tags=["root"])
 async def root():
     """Root endpoint - API information."""
@@ -117,7 +117,7 @@ async def root():
     }
 
 
-# Health check endpoint
+
 @app.get("/health", tags=["health"])
 async def health():
     """Health check endpoint."""
