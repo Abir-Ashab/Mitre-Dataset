@@ -58,7 +58,7 @@ def validate_paths():
         errors.append(f"MITRE mapping file not found: {MITRE_MAPPING_FILE}")
     
     if errors:
-        print("❌ Configuration Errors:")
+        print("[!] Configuration Errors:")
         for error in errors:
             print(f"   - {error}")
         return False
@@ -80,4 +80,4 @@ if __name__ == '__main__':
     if validate_paths():
         print("✅ All paths are valid!")
     else:
-        print("❌ Configuration validation failed!")
+        print("[!] Configuration validation failed!")
