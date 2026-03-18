@@ -22,65 +22,12 @@ from config import (
     INSTRUCTION_TEMPLATE
 )
 
+# Import the NEW modular conversion function
+from convert_to_training_format import create_training_example
 
-def create_training_example(chunk: Dict, mitre_mapping: Dict) -> Dict:
-    """Convert chunk to training format (same as convert_to_training_format.py)"""
-    metadata = chunk.get('metadata', {})
-    logs = chunk.get('logs', [])
-    chunk_label = chunk.get('chunk_label', 'unknown')
-    
-    # Prepare input logs
-    input_logs = []
-    for log in logs:
-        clean_log = {k: v for k, v in log.items() 
-                    if k not in ['label', 'mitre_techniques', 'session_id', 'chunk_label']}
-        input_logs.append(clean_log)
-    
-    input_data = {
-        "metadata": {
-            "session_id": metadata.get('session_id', 'unknown'),
-            "chunk_index": metadata.get('chunk_index', 0),
-            "start_time": metadata.get('start_time', 'unknown'),
-            "end_time": metadata.get('end_time', 'unknown'),
-            "number_of_events": len(input_logs)
-        },
-        "logs": input_logs
-    }
-    
-    input_text = json.dumps(input_data, ensure_ascii=False)
-    
-    # Create output
-    if chunk_label == 'suspicious':
-        all_techniques = set()
-        for log in logs:
-            techniques = log.get('mitre_techniques', [])
-            if techniques:
-                all_techniques.update(techniques)
-        
-        output_parts = ["Status: Suspicious"]
-        
-        if all_techniques:
-            formatted_techniques = []
-            for technique in sorted(all_techniques):
-                technique_name = mitre_mapping.get(technique, "Unknown Technique")
-                formatted_techniques.append(f"{technique} ({technique_name})")
-            
-            output_parts.append(f"MITRE Techniques: {', '.join(formatted_techniques)}")
-        else:
-            output_parts.append("MITRE Techniques: Not specified")
-        
-        suspicious_count = sum(1 for log in logs if log.get('label') == 'suspicious')
-        output_parts.append(f"Reason: Malicious activity detected in {suspicious_count} out of {len(logs)} events based on behavioral patterns and attack signatures")
-        
-        output = "\n".join(output_parts)
-    else:
-        output = "Status: Normal\nReason: Standard system activity with no suspicious indicators across all events"
-    
-    return {
-        "instruction": INSTRUCTION_TEMPLATE,
-        "input": input_text,
-        "output": output
-    }
+
+# OLD template-based conversion removed - now using the new modular system
+# The new create_training_example() provides field-specific analysis
 
 
 def group_chunks_by_session(chunks: List[Dict]) -> Dict[str, List[Dict]]:
@@ -195,7 +142,7 @@ def split_by_label_and_session(chunks: List[Dict], train_ratio: float, val_ratio
     Returns:
         Tuple of (train_chunks, val_chunks, test_chunks)
     """
-    print("\n🔀 Splitting by label and session...")
+    print("\n[*] Splitting by label and session...")
     
     # Separate suspicious and normal chunks
     suspicious_chunks = [c for c in chunks if c.get('chunk_label') == 'suspicious']
@@ -235,7 +182,7 @@ def split_by_label_and_session(chunks: List[Dict], train_ratio: float, val_ratio
     random.shuffle(val_chunks)
     random.shuffle(test_chunks)
     
-    print(f"\n   📊 Final split results:")
+    print(f"\n   [*] Final split results:")
     print(f"   - Train: {len(train_chunks):,} chunks ({len(train_chunks)/len(chunks)*100:.1f}%)")
     print(f"     • Suspicious: {len(sus_train):,} ({len(sus_train)/len(train_chunks)*100:.1f}%)")
     print(f"     • Normal: {len(norm_train):,} ({len(norm_train)/len(train_chunks)*100:.1f}%)")
@@ -256,7 +203,7 @@ def save_training_examples(examples: List[Dict], filepath: Path):
             f.write(json.dumps(example, ensure_ascii=False) + '\n')
     
     file_size_mb = filepath.stat().st_size / (1024 * 1024)
-    print(f"   ✅ Saved to: {filepath} ({len(examples):,} lines, {file_size_mb:.1f} MB)")
+    print(f"   [+] Saved to: {filepath} ({len(examples):,} lines, {file_size_mb:.1f} MB)")
 
 
 def main():
@@ -268,7 +215,7 @@ def main():
     print("="*70)
     
     # Load merged chunks
-    print(f"\n📂 Loading: {MERGED_CHUNKS_FILE}")
+    print("\n[*] Loading: {}".format(MERGED_CHUNKS_FILE))
     with open(MERGED_CHUNKS_FILE, 'r', encoding='utf-8') as f:
         chunks = json.load(f)
     print(f"   Loaded {len(chunks):,} chunks")
@@ -288,14 +235,14 @@ def main():
     test_examples = [create_training_example(chunk, mitre_mapping) for chunk in test_chunks]
     
     # Save splits
-    print("\n💾 Saving splits...")
+    print("\n[*] Saving splits...")
     save_training_examples(train_examples, TRAIN_FILE)
     save_training_examples(val_examples, VAL_FILE)
     save_training_examples(test_examples, TEST_FILE)
     
     # Print statistics
     print("\n" + "="*70)
-    print("✅ SPLITTING COMPLETE")
+    print("[+] SPLITTING COMPLETE")
     print("="*70)
     print(f"Train: {len(train_examples):,} examples")
     print(f"Val:   {len(val_examples):,} examples")
